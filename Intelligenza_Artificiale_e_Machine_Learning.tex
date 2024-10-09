@@ -68,6 +68,106 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
+%% TODO aggiungere lezioni precedenti
+
+
+\section{Algoritmi}
+
+%% TODO algoritmi
+
+\subsection{Problema di Ricerca Globale}
+
+Nei problemi precedenti quando l'algoritmo risolutivo raggiungeva uno stato obiettivo, il cammino verso quello stato rappresenta una soluzione 
+del problema. Tuttavia in alcuni problemi lo stato obiettivo contiene tutte l informazioni rilevanti per la soluzione, dove il cammino è 
+irrilevante. Come esempio si consideri il problema dell otto regine, è indifferente il cammino attraverso gli stadi intermedi, solamente lo 
+stato finale, la disposizione delle regine nello stato finale. 
+
+Algoritmi di ricerca locale si utilizzano per risolvere questo tipi di problemi. In questi problemi è sempre presente uno spazio degli stati 
+ed uno spazio degli stati aventi ciascuno una sua valutazione. Si può immaginare questi stadi su una superficie del territorio, uno spazio dove l'altezza 
+di questo stato rappresenta la sua valutazione. L'algoritmo quindi itera su ognuno di questi stati per cercare quello di altezza maggiore, o minore, identificando 
+quindi la soluzione al problema, indipendentemente dal cammino preso per raggiungerla. Questi punti di massimo rappresentano dei picchi, i cui punti adiacenti sono 
+strettamente minori dello stato di massimo. Quindi l'algoritmo che parte da uno stato iniziale deve cercare un massimo globale in questo spazio, determinando quale sia 
+tra i vari massimi locali ed i massimi locali piatto, e le ``spalle'' massimi locali ``piatti'', prima di un massimo globale. 
+
+%% TODO aggiungere immagine esempio dei massimi
+
+Questi algoritmi chiamati anche di miglioramento iterativo, si muovono sulla superficie cercando questi picchi, senza tenere traccia del cammino effettuato, tenendo 
+solamente traccia dello stato attuale e dei suoi vicini o successori, gli stati immediatamente adiacenti. 
+Bisogna formulare il problema in modo che l'algoritmo non rimanga bloccato tra due massimi locali. 
+
+\subsubsection{Algoritmo di Hill-Climbing}
+
+Questo algoritmo segue sempre le colline più ripide, si muove sempre verso l'alto nella direzione dei valori crescenti, e termina quando raggiunge uno stato per il quale 
+si ha un picco che non ha vicino stati di valore maggiore. Tuttavia questo algoritmo può rimanere intrappolato su massimi globali. 
+
+Non viene memorizzato lo stato corrente, solamente il valore attraverso nodi che contengono lo stato ed il suo valore: \verb|NODO=<STATO, VALORE|. 
+
+Esistono diversi tipi di algoritmi di questo genere per evitare di rimanere bloccati su picchi locali, utilizzando diverse tecniche. 
+%% todo lista diversi hill climbing
+
+%% TODO aggiungere minted
+
+% algoritmo steepest ascent
+Dallo stato corrente si ricava il suo valore, in seguito comincia un ciclo che prende in considerazione tutti i successori e si sceglie come \verb|next| il nodo di 
+valore più alto. Se tutti i nodi adiacenti hanno un valore minore di \verb|next| allora questo rappresenta la soluzione dell'algoritmo e l'algoritmo termina, tuttavia 
+questo stato potrebbe corrispondere ad un massimo locale, invece se esiste uno stato adiacente di valore maggiore, questo diventa \verb|next| e si passa alla nuova 
+iterazione. 
+
+%% todo pseudocodice dell'algoritmo
+
+% algoritmo random restart
+L'algoritmo contiene una componente di ripartenza casuale, questo infatti conduce una serie di ricerche di Hill-Climbing partendo da stati generati casualmente. Questo 
+algoritmo da un punto di vista teorico è completo, poiché con una serie infinita di ripartenze, sicuramente l'algoritmo visita tutti gli stati del sistema, trovando sicuramente 
+la soluzione ottima del problema. 
+
+%% todo pseudocodice random restart e funzionamento componente casuale
+
+Il ciclo interno ad ogni iterazione genera un ottimo locale, e prova ad evitare ottimi locali effettuando una nuova ricerca da un nuovo stato scelto 
+casualmente. 
+
+% algoritmo stochastic 
+L'algoritmo Stochastic Hill-Climbing si ottiene modificando la procedura normale dell'algoritmo. Invece di valutare tutti i vicini dallo stato corrente, l'algoritmo 
+sceglie casualmente uno solo dei suoi successori da valutare per determinare se si tratta il successore, ed in caso diventa il nuovo stato corrente \verb|next|, questo 
+viene accetta con una probabilità che dipende dalla differenza della valutazione tra i due punti: $\Delta E=$\verb|VALUE(current)-VALUE(next)|. 
+
+%%todo pseudocodice 
+
+Il nuovo stato viene scelto con una probabilità $p$, calcolata come:
+\begin{equation}
+  p=\displaystyle\frac{1}{1+e^{\Delta E/T}}
+\end{equation}
+
+In seguito dopo una serie di iterazioni l'algoritmo restituisce uno stato ottimo. L'algoritmo ha quindi un solo ciclo, e può scegliere un nuovo punto con una probabilità 
+$p$, quindi anche di valore minore. Questa probabilità dipende da un parametro $T$ costante durante l'esecuzione dell'algoritmo. Se vale 1, la probabilità di 
+accettazione è sostanzialmente pari al 100\%. 
+
+%% todo tabella / andamento rispetto a T di p
+
+All'aumentare del valore i $T$ la probabilità di accettazione tende al 50\%, diventa quindi sempre meno importante la differenza della valutazione tra i due punti, 
+effettivamente comporta una ricerca casuale, mentre al diminuire di $T$, la procedura rappresenta un semplice algoritmo Hill-Climbing. 
+
+In caso di stati di valore uguale, la probabilità è del 50\%, se il valore dello stato \verb|next| è minore, la probabilità diminuisce, mentre se il valore di \verb|next| 
+è maggiore dello stato corrente, la probabilità aumenta. 
+
+%% todo tabella / andamento rispetto a $\Delta E$
+
+Bisogna trovare una ``link function'' tra l'intervallo $\Delta E/T$ e la probabilità $p$. 
+
+%% todo img andamento link function
+%   ily
+
+La caratteristica di poter scegliere come passo uno stato peggiore questo algoritmo potrebbe evitare massimi locali. 
+
+% algoritmo di simulated annealing
+
+Questo algoritmo prende il nome dall'analogia con il processo di metallurgia per temprare un materiale, questo processo infatti raggiungere uno stato di struttura 
+cristallina ad energia minima. La differenza principale con l'algoritmo stocastico, è la possibilità di variare il valore di $T$ gradualmente durante l'esecuzione 
+dell'algoritmo. Il valore di $T$ parte da un valore elevato, per poi diminuire nel tempo, come se fosse la temperatura durante un processo di temperatura. 
+
+%% todo pseudocodice simulated annealing
+
+%% todo rec cambiamento di funzione probabilità
+
 
 
 \end{document}
