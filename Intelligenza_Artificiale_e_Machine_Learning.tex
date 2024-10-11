@@ -12,7 +12,7 @@
 \usepackage{bookmark}
 \usepackage{fancyhdr}
 \usepackage{romanbarpagenumber}
-%\usepackage{minted}
+\usepackage{minted}
 %\usepackage{subfig}
 \usepackage[italian]{babel}
 %\usepackage{float}
@@ -154,7 +154,6 @@ In caso di stati di valore uguale, la probabilità è del 50\%, se il valore del
 Bisogna trovare una ``link function'' tra l'intervallo $\Delta E/T$ e la probabilità $p$. 
 
 %% todo img andamento link function
-%   ily
 
 La caratteristica di poter scegliere come passo uno stato peggiore questo algoritmo potrebbe evitare massimi locali. 
 
@@ -167,6 +166,88 @@ dell'algoritmo. Il valore di $T$ parte da un valore elevato, per poi diminuire n
 %% todo pseudocodice simulated annealing
 
 %% todo rec cambiamento di funzione probabilità
+
+In questo algoritmo la probabilità di accettazione di un certo nodo viene implementata in modo differente rispetto all'algoritmo stocastico normale, poiché nel simulated 
+annealing si considera solamente un semiasse dell'ascissa, dato che in caso \verb|next| sia migliore non viene calcolata la probabilità di accettazione. Si accetta sempre 
+uno stato di valore migliore, mentre l'accettazione di uno stato peggiore dipende da una probabilità. 
+
+%% todo caratteristiche
+
+Molte implementazioni dell'algoritmo seguono la stessa sequenza di passi. Si assegna la variabile \verb|T|, e si sceglie uno stato corrente casuale al primo passo. Si determina 
+un successore e si ripete per un certo numero di cicli nel secondo, e come passo finale si diminuisce la temperatura e si ripete dal primo passo se la temperatura non ha 
+raggiunto la temperatura minima. Quindi l'algoritmo termina solamente quando la temperatura ha raggiunto la temperatura minima. 
+
+Le aree di applicazione di questo algoritmo sono molto vaste nell'informatica. Proposto negli anni '80 ha avuto un enorme successo, anche solo nella sua versione base. 
+
+
+
+\section{Introduzione a Python}
+
+Python è un linguaggio di programmazione vastamente utilizzato nell'area dell'intelligenza artificiale e nel machine learning. Recentemente è diventato il linguaggio di 
+programmazione più diffuso al mondo. Python è un linguaggio general-purpose, ideato da Guido van Rossum nel 1989, a più alto livello del C, poiché gestisce automaticamente le 
+più fondamentali operazioni. 
+
+La versione di Python utilizzata nel corso è la versione 3, nell'ambiente Anaconda. Può essere avviato tramite un interprete. Alla creazione di una variabile non 
+è necessario definirne il tipo, il nome identificativo è arbitrario e può contenere numeri, ma non cominciare con un numero, viene consigliato di utilizzare un carattere 
+minuscolo come primo carattere del nome. Esistono 33 parole chiave, non utilizzabili come nomi di variabili. Si può assegnare un valore ad una variabile tramite l'operatore 
+\verb|=|, senza specificarne il tipo. 
+
+Esistono una serie di operatori aritmetici come \verb|+|, \verb|-|, \verb|*|, \verb|\|, \verb|**| e \verb|\\| (floor division). Una differenza tra Python 2 consiste nella gestione del resto, infatti in Python 2 
+viene considerata solo la parte intera del resto. 
+
+Si possono inserire dati tramite la funzione \verb|input|, e si può convertire in un tipo specifico come \verb|tipo(var)|. I commenti vengono 
+realizzati tramite il carattere \#. 
+
+In Python sono presenti tutti gli operatori booleani di C, in aggiunta sono presenti altri operatori \verb|is| ed \verb|is not|. 
+
+%% todo add espressioni booleane
+
+Sono presenti gli stessi operatori logici di C, e come in C un qualsiasi valore diverso da zero corrisponde al booleano \verb|true|. 
+
+In Python per identificare funzioni o istruzioni condizionali non si usano parentesi, ma si indenta di quattro posizioni. Dopo la condizione dell'
+istruzione condizionale vanno inserite dei due punti \verb|:|. 
+
+
+Si possono gestire le eccezioni con il costrutto \verb|try| ed \verb|except|:
+\begin{minted}{python}
+  try:
+    # corpo del try
+  except:
+    # corpo dell'except
+\end{minted}
+
+In Python sono integrate tantissime funzioni utili, per svolgere attività comuni, utilizzabili senza doverle definire, queste sono funzioni ``built-in''. 
+Per invocare funzioni presenti in un certo modulo si utilizzata la notazione puntata \verb|nomeModulo.nomeFunzione()|. 
+
+
+Dati gli algoritmi analizzati precedentemente, si nota la necessita di introdurre generatori di numero casuali. La maggior parte di generatori casuali, sono deterministici, 
+ovvero dato lo stesso input, generano gli stessi numeri casuali. Si utilizzano quindi numeri pseudo-casuali, generati da un calcolo deterministico, ma non è quasi possibile 
+distinguerli da numeri generati casualmente. In Python esiste il modulo \verb|random| contenente funzioni pertinenti alla generazione di numeri casuali. 
+
+Per definire nuove funzioni si utilizza la parola chiave \verb|def|, specificando il nome, tra parentesi tonde gli argomenti ed i due punti, indentando di quattro posizioni 
+per scrivere il corpo della funzione:
+\begin{minted}{python}
+  def nomeFunzione(nomeArgomenti):
+    # corpo della funzione
+  # resto del codice
+\end{minted}
+
+Dopo aver passato degli argomenti ad una funzione, questi vengono assegnati a delle variabili locali. Si può utilizzare anche una variabile come argomento. Inoltre 
+tutte le aggiunte possibili alle funzioni built-in, si possono effettuare sulle funzioni definite dall'utente come \verb|_twice|, per ripetere due volte la funzione. 
+
+Si dividono le funzioni in due tipi ``fruitful function'' e ``void function'',  le prime restituiscono un valore, le secondo non restituiscono valore. Le prime quindi 
+vengono usate per assegnare o inizializzare variabili. Se si tenta di assegnare il risultato di una void function ad una variabile, viene ottenuto un valore chiamato ``None''. 
+Questo valore ha un suo proprio tipo. 
+
+Si possono realizzare cicli tramite il costrutto \verb|while| o \verb|for|, seguito da una condizione booleana e dai due punti \verb|:|. 
+Si può interrompere il ciclo con \verb|break|, e si può saltare l'iterazione corrente con \verb|continue|. Quando bisogna iterare su una collezione, si può realizzare 
+un ciclo for-each:
+\begin{minted}{python}
+  for elem in Array
+    # corpo del ciclo
+\end{minted}
+
+
 
 
 
