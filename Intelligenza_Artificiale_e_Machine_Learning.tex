@@ -68,7 +68,184 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
-%% TODO aggiungere lezioni precedenti
+\section{Introduzione}
+
+\subsection{Storia dell'Intelligenza Artificiale}
+
+\clearpage
+
+\section{Risoluzione dei Problemi e Ricerca}
+
+Si definisce un agente risolutore di problemi un agente con uno specifico obiettivo da 
+raggiungere e che deve identificare una sequenza di azioni per raggiungerlo. 
+
+Bisogna determinare l'obiettivo, un insieme degli stati del mondo dove ci si trova, che 
+si vuole raggiungere. 
+Inoltre bisogna formulare il problema, ovvero le azioni e gli stati considerati 
+dall'agente. 
+
+
+Un agente che ha a disposizioni diverse opzioni immediate di valore sconosciuto, può decidere 
+quale scegliere la sua azione analizzando le diverse possibili sequenze di azioni, che portano 
+a stati di valore conosciuto, per scegliere la sequenza di costo migliore. 
+
+Questo processo di selezione viene definito ricerca, un algoritmo di ricerca quindi  
+prende un problema e restituisce una soluzione costituita da una sequenza di azioni. 
+
+Nella formulazione si definisce uno stato iniziale e dell'obiettivo, come un insieme di stati 
+e si definiscono le azioni come transizioni tra stati. Dopo aver trovato la sequenza di azioni 
+corrispondente alla soluzione, la esegue. 
+
+
+Si possono distinguere due tipi di problemi, i problemi giocattolo o ``toy problems'', sono 
+ideati come illustrazione o esercitazione dei metodi risolutivi. Rappresentano delle 
+astrazioni, anche semplificate, dei problemi del mondo reale in generale più difficili a cui 
+si è effettivamente interessati. 
+
+I problemi del mondo reale possono essere la configurazione VLSI, la navigazione dei robot, 
+la sequenza di montaggio, la ricerca dell'itinerario e generali problemi di viaggio come il 
+commesso viaggiatore. 
+
+
+
+Si possono utilizzare due tipi diversi di formulazione di un problema. Si può partire da uno 
+stato vuoto, ed utilizzando operatori si può estendere progressivamente la descrizione 
+dello stato. 
+Invece nella formulazione a stato completo consiste nel partire da uno stato iniziale completo, 
+ed ogni operatore altera questo stato per cercare una soluzione. 
+
+
+Lo spazio degli stati è un grafo che rappresenta tutti i possibili stati, come nodi, collegati 
+tra archi che rappresentano le possibili azioni. Il problema consiste nel trovare un 
+percorso in questo spazio degli stati, dallo stato iniziale ad uno dei possibili stati 
+soluzione. L'algoritmo deve decidere ad ogni stato quale azione prendere e quindi a quale nodo 
+del grafo spostarsi. 
+Per definire il costo della soluzione, si considera il costo del cammino delle azioni 
+intraprese dall'agente. 
+
+Per definire formalmente un problema, sono necessarie quattro componenti. Uno stato iniziale 
+in cui si trova l'agente. Una descrizione delle azioni possibili, questa può utilizzare una 
+funzione successore che dato uno stato restituisce i suoi possibili successori. Tramite la 
+funzione successore e lo stato iniziale si può costruire lo spazio degli stati. Oppure si 
+può utilizzare un insieme di operatori. Un test obiettivo per determinare se un particolare 
+stato è uno stato obiettivo. Come ultimo componente è necessaria una funzione di costo del 
+cammino per determinare il costo di una data soluzione, assegnando un valore numerico ad 
+ogni cammino. 
+
+Il tipo di dato problema è rappresentato da questi quattro componenti, le istanze di questo 
+tipo di dato rappresentano gli input degli algoritmi di ricerca. 
+
+
+Il mondo reale è estremamente complesso, e lo spazio degli stati deve essere creato mediante un 
+processo di astrazione. In questo processo, lo stato astratto rappresenta un insieme di 
+stati reali più complessi. Analogamente per le azioni astratte, queste rappresentano combinazioni 
+di azioni reali. Nei problemi giocattolo non è necessario effettuare questo processo di astrazione, 
+poiché rappresenta un problema semplice. 
+
+
+Per individuare queste possibili sequenze di azioni l'algoritmo si può costruire un albero di 
+ricerca, dove il nodo radice corrisponde allo stato iniziale, ed i rami rappresentano 
+le azioni possibili, ed i nodi figli rappresentano gli stati successori di un certo stato. 
+Tuttavia i nodi dell'albero di ricerca e gli stati dello spazio degli stati sono differenti, poiché 
+è possibile che più nodi condividano lo stesso stato, mentre ogni stato nello spazio è univoco. 
+Generalmente si vuole evitare di ripetere stati all'interno di un cammino, questo rappresenta il 
+problema degli stati ripetuti, e sarà analizzato successivamente. 
+
+Ad ogni nodo si possono inserire altre informazioni utili, oltre allo stato, un riferimento al 
+genitore, l'operatore che ha generato lo stato, la profondità, il costo del cammino parziale 
+fino a questo stato, etc. 
+\begin{minted}{python}
+    NODO = <stato, genitore, operatore, profondità, costo parziale, ...>
+\end{minted}
+
+Il processo di ricerca comporta la stessa sequenza di azioni. Deve scegliere tra le foglie 
+dell'albero corrente un nodo da ``espandere'', secondo un certo criterio o strategia. 
+In seguito bisogna determinare se questo nodo rappresenta un'obiettivo del problema, 
+altrimenti vengono generati i suoi nodi figli, ed i corrispondenti stati successori, e tutte 
+le componenti dei nodi figli. 
+La collezione dei nodi in attesa di essere espansi viene chiamata in vari modi: confine, 
+frontiera, frangia o lista aperta. 
+
+\subsection{Algoritmo di Ricerca Generale: Tree Search}
+
+Un algoritmo generale di ricerca può essere chiamato \color{red}\verb|TREE-SEARCH|\color{black}. Quest'algoritmo 
+prende un problema ed una strategia come input e restituisce una soluzione oppure un fallimento. 
+Viene realizzato semplicemente ad un ciclo che ripete le operazioni precedentemente descritte, 
+fino a quando non identifica una soluzione o viene sollevato un problema, e quindi restituisce 
+un fallimento. Il primo passo è la generazione dell'albero di ricerca del problema, se la frontiera è 
+vuota, ovvero non esistono nodi candidati per l'espansione viene riportato un fallimento, poiché 
+non è stato ancora trovato uno stato obiettivo. Se si arriva ad un nodo corrispondente ad uno 
+stato obiettivo viene restituita rappresenta la sequenza di nodi ottenuta come soluzione. 
+
+La frontiera può contenere un nodo relativo ad uno stato obiettivo, ma l'algoritmo non 
+termina fino a quando non viene scelto per essere espanso. 
+
+
+Una strategia di ricerca rappresenta un criterio per decidere quale nodo da espandere. 
+Può essere definita come una funzione per la scelta di un elemento tra un insieme di nodi, la 
+frontiera. Oppure si può considerare come una funzione di inserimento di un elemento in una 
+sequenza. Se già nella fase di inserimento si analizza tramite una metrica il valore di ognuno 
+di questi stati, allora l'elemento in prima posizione in questa struttura dati rappresenta il 
+nodo migliore. 
+
+\subsubsection{Operazioni su Frontiera, Nodi e Problemi}
+
+La frontiera viene implementata con una struttura dati chiamata coda, ma non necessariamente 
+segue la disciplina FIFO. Su questa coda sono definite una serie di operazioni:
+\begin{itemize}
+    \item \color{magenta}\verb|MAKE-QUEUE|\color{black}: prende come input un nodo \verb|n| e restituisce una coda \verb|q|, realizza una coda contenente solo il nodo \verb|n|;
+    \item \color{magenta}\verb|EMPTY|\color{black}: prende come input una coda \verb|q| e restituisce un booleano, verifica se la coda è vuota;
+    \item \color{magenta}\verb|REMOVE-FRONT|\color{black}: prende come input una coda \verb|q| e restituisce il primo nodo \verb|n| della lista; 
+    \item \color{magenta}\verb|QUEUING-FN|\color{black}: prende come input una coda \verb|q| ed una lista di nodi \verb|n|, e restituisce la coda con aggiunti tutti questi nodi. 
+\end{itemize}
+L'ultima funzione si utilizza quando si producono tutti i nodi successori e si vogliono aggiungere 
+alla lista. 
+Questa funzione non inserisce generalmente in coda, ma dipende dalla strategia di ricerca 
+utilizzata. 
+
+Assumendo che esistano le operazioni sul tipo di dato problema, e sul tipo di dato nodo. Le 
+operazioni sul tipo di dato problema sono:
+\begin{itemize}
+    \item \color{magenta}\verb|INITIAL-STATE|\color{black}: prende come input un problema \verb|p| e restituisce lo stato iniziale del problema \verb|n|;
+    \item \color{magenta}\verb |GOAL-TEST|\color{black}: prende come input un problema \verb|p| ed uno stato \verb|n| e verifica se questo rappresenta una soluzione, restituendo un booleano;
+    \item \color{magenta}\verb|OPERATORS|\color{black}: prende come input un problema \verb|p| e restituisce una lista con tutti gli operatori del problema \verb|ops|. Ogni operatore \verb|op| applicato ad uno stato \verb|n| restituisce una lista di stati \verb|ss|. 
+\end{itemize}
+
+Le operazioni sul tipo di dato nodo sono:
+\begin{itemize}
+    \item \color{magenta}{\verb|MAKE-NODE|}\color{black}: prende come input uno stato \verb|s| e costruisce un nodo su di esso \verb|n|;
+    \item \color{magenta}\verb|STATE|\color{black}: prende come input un nodo \verb|n| e ne restituisce lo stato contenuto \verb|s|;
+    \item \color{magenta}\verb|EXPAND|\color{black}: prende come input un nodo \verb|n| ed una lista di operatori \verb|ops| e restituisce una lista di nodi successori \verb|ns|. 
+\end{itemize}
+
+\subsubsection{Implementazione}
+
+Date queste operazioni, si può rappresentare in pseudocodice l'algoritmo di \verb|TREE-SEARCH| in modo più 
+semplice:
+\begin{minted}[escapeinside=||]{python}
+function |\textcolor{red}{TREE-SEARCH}|(problem) returns a solution or failure
+
+fringe <- |\textcolor{magenta}{MAKE-QUEUE}|(|\textcolor{magenta}{MAKE-NODE}|(|\textcolor{magenta}{INITIAL-STATE}|(problem)))
+loop do
+    if |\textcolor{magenta}{EMPTY}|(fringe) then return failure
+    node <- |\textcolor{magenta}{REMOVE-FRONT}|(fringe)
+    if |\textcolor{magenta}{GOAL-TEST}|(problem, |\textcolor{magenta}{STATE}|(node)) then return |\textcolor{magenta}{SOLUTION}|(node)
+    fringe <- |\textcolor{magenta}{QUEUING-FN}|(fringe, |\textcolor{magenta}{EXPAND}|(node, |\textcolor{magenta}{OPERATOR}|(problem)))
+end
+\end{minted}
+
+In questa variazione non viene conservato l'intero albero, ma solamente la coda con i nodi della 
+frontiera. 
+
+\subsection{Criteri di Valutazione}
+
+Per valutare questi algoritmi oltre alla complessità temporale e spaziale, si utilizzano 
+altre due criteri, la completezza e l'ottimalità. Un'algoritmo si definisce completo, se 
+quando esiste una soluzione è garantito sia in grado di trovarla. Un algoritmo si dice 
+ottimo se dato un problema con diverse soluzioni, individua sempre la migliore, quella a costo 
+minimo. 
+La complessità dell'algoritmo dipende dal fattore di ramificazione dello spazio degli stati e dalla profondità 
+della soluzione più superficiale. 
 
 
 \section{Algoritmi}
@@ -76,6 +253,7 @@ Università degli Studi ``Roma Tre"}}
 %% TODO algoritmi
 
 \subsection{Problema di Ricerca Globale}
+
 
 Nei problemi precedenti quando l'algoritmo risolutivo raggiungeva uno stato obiettivo, il cammino verso quello stato rappresenta una soluzione 
 del problema. Tuttavia in alcuni problemi lo stato obiettivo contiene tutte l informazioni rilevanti per la soluzione, dove il cammino è 
@@ -179,8 +357,6 @@ raggiunto la temperatura minima. Quindi l'algoritmo termina solamente quando la 
 
 Le aree di applicazione di questo algoritmo sono molto vaste nell'informatica. Proposto negli anni '80 ha avuto un enorme successo, anche solo nella sua versione base. 
 
-
-
 \section{Introduzione a Python}
 
 Python è un linguaggio di programmazione vastamente utilizzato nell'area dell'intelligenza artificiale e nel machine learning. Recentemente è diventato il linguaggio di 
@@ -246,9 +422,5 @@ un ciclo for-each:
   for elem in Array
     # corpo del ciclo
 \end{minted}
-
-
-
-
 
 \end{document}
