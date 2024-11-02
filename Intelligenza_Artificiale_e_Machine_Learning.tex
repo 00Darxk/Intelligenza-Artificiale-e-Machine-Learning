@@ -223,15 +223,15 @@ Le operazioni sul tipo di dato nodo sono:
 Date queste operazioni, si può rappresentare in pseudocodice l'algoritmo di \verb|TREE-SEARCH| in modo più 
 semplice:
 \begin{minted}[escapeinside=||]{python}
-function |\textcolor{red}{TREE-SEARCH}|(problem) returns a solution or failure
+    function |\textcolor{red}{TREE-SEARCH}|(problem) returns a solution or failure
 
-fringe <- |\textcolor{magenta}{MAKE-QUEUE}|(|\textcolor{magenta}{MAKE-NODE}|(|\textcolor{magenta}{INITIAL-STATE}|(problem)))
-loop do
-    if |\textcolor{magenta}{EMPTY}|(fringe) then return failure
-    node <- |\textcolor{magenta}{REMOVE-FRONT}|(fringe)
-    if |\textcolor{magenta}{GOAL-TEST}|(problem, |\textcolor{magenta}{STATE}|(node)) then return |\textcolor{magenta}{SOLUTION}|(node)
-    fringe <- |\textcolor{magenta}{QUEUING-FN}|(fringe, |\textcolor{magenta}{EXPAND}|(node, |\textcolor{magenta}{OPERATOR}|(problem)))
-end
+    fringe <- |\textcolor{magenta}{MAKE-QUEUE}|(|\textcolor{magenta}{MAKE-NODE}|(|\textcolor{magenta}{INITIAL-STATE}|(problem)))
+    loop do
+        if |\textcolor{magenta}{EMPTY}|(fringe) then return failure
+        node <- |\textcolor{magenta}{REMOVE-FRONT}|(fringe)
+        if |\textcolor{magenta}{GOAL-TEST}|(problem, |\textcolor{magenta}{STATE}|(node)) then return |\textcolor{magenta}{SOLUTION}|(node)
+        fringe <- |\textcolor{magenta}{QUEUING-FN}|(fringe, |\textcolor{magenta}{EXPAND}|(node, |\textcolor{magenta}{OPERATOR}|(problem)))
+    end
 \end{minted}
 
 In questa variazione non viene conservato l'intero albero, ma solamente la coda con i nodi della 
@@ -244,8 +244,227 @@ altre due criteri, la completezza e l'ottimalità. Un'algoritmo si definisce com
 quando esiste una soluzione è garantito sia in grado di trovarla. Un algoritmo si dice 
 ottimo se dato un problema con diverse soluzioni, individua sempre la migliore, quella a costo 
 minimo. 
-La complessità dell'algoritmo dipende dal fattore di ramificazione dello spazio degli stati e dalla profondità 
-della soluzione più superficiale. 
+La complessità dell'algoritmo dipende dal fattore di ramificazione $b$ dello spazio degli stati e dalla profondità $d$ 
+della soluzione più superficiale. Il fattore di ramificazione $b$ rappresenta il massimo numero di 
+figli che un nodo può avere. Mentre la profondità $d$ è la minima lunghezza di un cammino dal 
+nodo iniziale alla radice. 
+
+\subsection{Ricerca non Informata o Cieca}
+Questi algoritmi non sono molto efficienti in generale, ma sono utili per comprendere il 
+comportamento gli algoritmi di ricerca informata o di euristica, che si avvalgono della 
+conoscenza sul domino dello spazio degli stati e dalla creazione dell'albero di 
+ricerca per scegliere il percorso più promettente. Nel caso medio quest'ultimi sono certamente 
+più efficienti degli algoritmi trattati in questa sezione. 
+
+\subsubsection{Algotimo di Ricerca in Ampiezza: Breadth First Search (BFS)}
+
+Nella ricerca in ampiezza si espande il nodo radice, e si espandono i nodi generati dalla 
+radice, e si ripete per ogni nodo successore. Per implementare un algoritmo che utilizza una 
+strategia di ricerca non informata in ampiezza, la ``Queueing Function'' inserisce i nodi 
+appena generati in coda. Questa funzione quindi rappresenta sempre un inserimento in coda 
+e si può chiamare ``Enqueue at the End'': \color{magenta}\verb|ENQUEUE-AT-END|\color{black}. 
+
+Un algoritmo che utilizza questo tipo di strategia viene chiamato ``Breadth First Search'' o 
+in ampiezza, e si può implementare in modo analogo all'algoritmo di ricerca generale trattato 
+precedentemente:
+\begin{minted}[escapeinside=||]{python}
+    function |\textcolor{red}{BREADTH-FIRST-SEARCH}|(problem) returns a solution or failure
+    
+    fringe <- |\textcolor{magenta}{MAKE-QUEUE}|(|\textcolor{magenta}{MAKE-NODE}|(|\textcolor{magenta}{INITIAL-STATE}|(problem)))
+    loop do
+        if |\textcolor{magenta}{EMPTY}|(fringe) then return failure
+        node <- |\textcolor{magenta}{REMOVE-FRONT}|(fringe)
+        if |\textcolor{magenta}{GOAL-TEST}|(problem, |\textcolor{magenta}{STATE}|(node)) then return |\textcolor{magenta}{SOLUTION}|(node)
+        fringe <- |\textcolor{magenta}{ENQUEUE-AT-END}|(fringe, |\textcolor{magenta}{EXPAND}|(node, |\textcolor{magenta}{OPERATOR}|(problem)))
+    end
+\end{minted}
+
+In questo approccio, tutti i nodi di profondità $d$ vengono espansi prima dei nodi di profondità 
+$d+1$. Rappresenta una strategia sistematica, ma permette di individuare solamente i nodi 
+obiettivi più superficiali, non è garantito che questo rappresenta la soluzione ottima. Questo 
+algoritmo è quindi completo, ma non è ottimo. 
+Invece è ottimale se il costo del cammino $g(n)$ è una funzione monotona non decrescente della 
+profondità del nodo $p(n)$:
+\begin{gather*}
+    p(n)<p(n)\implies g(n)\leq g(m)\\
+    p(n)=p(m)\implies g(n)=g(m)
+\end{gather*} 
+
+Ovvero se due nodi $n$ ed $m$ sono a profondità diverse, dove il nodo $m$ è a profondità maggiore, 
+il costo del cammino dalla radice al nodo $n$ è al massimo uguale al costo del cammino dalla radice 
+al nodo $m$. Inoltre se i nodi sono alla stessa profondità, allora i costi dei loro cammini dalla radice 
+sono uguali. 
+
+
+Utilizzando questo algoritmo, bisogna generare un numero di nodi, prima di trovare una soluzione,  
+almeno pari a tutti i nodi precedenti al nodo soluzione. Nel caso peggiore questo nodo è 
+l'ultimo nodo espanso alla profondità $d$, e per ogni nodo vengono generati esattamente $b$ 
+figli, quindi bisogna espandere al massimo un numero di nodi $N$ pari a:
+\begin{gather*}
+    N=\left(\displaystyle\sum_{i=1}^{d+1}b^i\right)-b
+\end{gather*}
+
+Supponendo che ogni generazione rappresenta un'operazione semplice allora la complessità 
+temporale di questa ricerca è $O(N)=O(b^d)$. La complessità temporale è analogamente 
+$O(b^d)$ poiché bisogna memorizzare tutte le foglie generate. 
+
+\subsubsection{Algoritmo di Ricerca Guidata dal Costo: Dijkstra}
+
+Modificando la ricerca in ampiezza espandendo il nodo della frontiera di costo più basso, si può 
+aumentare l'efficienza dell'algoritmo precedente. 
+
+Si definisce con $g(n)$ il costo del cammino dalla radice al nodo $n$. Questo valore viene 
+salvato nella struttura dati nodo, e viene scelto il nodo di costo $g(n)$ minore per essere 
+espanso. Se il costo del cammino corrisponde alla funzione di profondità, si ha la ricerca 
+in ampiezza. 
+Questo algoritmo è completo e ottimale quando il costo di ogni step è sempre 
+maggiore o uguale ad una costante positiva $\varepsilon$. Per cui è garantito che non attraversi 
+costantemente lo stesso cammino, senza espandere altri nodi di profondità minore. 
+
+I costi di ogni nodo vengono salvati in un campo etichetta nella struttura dati nodo. 
+Dalla frontiera si estrae sempre il nodo a costo minore, questa collezione viene quindi 
+ordinata in base al costo delle etichette di ogni nodo. 
+
+\subsubsection{Algoritmo di Ricerca in Profondità: Depth First Search (DFS)}
+
+La ricerca in profondità consiste nell'espansione del nodo più profondo, dopo aver espanso 
+la radice. 
+Per implementare questa funzione, si utilizza una queueing function che inserisce i nodi 
+appena espansi all'inizio della lista, con una ``Enqueue at the Front'': \color{magenta}\verb|ENQUEUE-AT-FRONT|\color{black}:
+
+\begin{minted}[escapeinside=||]{python}
+    function |\textcolor{red}{BREADTH-FIRST-SEARCH}|(problem) returns a solution or failure
+    
+    fringe <- |\textcolor{magenta}{MAKE-QUEUE}|(|\textcolor{magenta}{MAKE-NODE}|(|\textcolor{magenta}{INITIAL-STATE}|(problem)))
+    loop do
+        if |\textcolor{magenta}{EMPTY}|(fringe) then return failure
+        node <- |\textcolor{magenta}{REMOVE-FRONT}|(fringe)
+        if |\textcolor{magenta}{GOAL-TEST}|(problem, |\textcolor{magenta}{STATE}|(node)) then return |\textcolor{magenta}{SOLUTION}|(node)
+        fringe <- |\textcolor{magenta}{ENQUEUE-AT-FRONT}|(fringe, |\textcolor{magenta}{EXPAND}|(node, |\textcolor{magenta}{OPERATOR}|(problem)))
+    end
+\end{minted}
+
+Questa funzione si può implementare mediante una funzione ricorsiva, dove viene 
+passata una versione del problema, dove i nodi appena generati rappresentano i nuovi 
+nodi radice. Quindi per ogni espansione vengono generati al massimo $b$ sotto-problemi, risolti 
+dallo stesso algoritmo. La lista dei nodi da visitare viene conservata implicitamente nello 
+stack dei record di attivazione delle varie chiamate ricorsive. Quando si raggiunge un nodo 
+foglia non obiettivo, si effettua il backtracking, ovvero si risale l'albero fino a trovare il 
+nodo a profondità maggiore non ancora espanso su cui è possibile effettuare una scelta. 
+
+Questa ricerca non è né completa né ottimale, ha una complessità temporale di $O(b^m)$, dove 
+$m$ rappresenta la profondità massima dell'albero di ricerca. Se una soluzione è presente a 
+profondità minore nel sotto-albero di destra, non verrà mai individuata se non è stato già 
+espanso tutto il sotto-albero di sinistra, senza aver trovato una soluzione. Quindi se individua 
+una soluzione la restituisce indipendentemente dalla sua ottimalità. 
+
+Si guadagna rispetto alla ricerca in ampiezza nella complessità spaziale. Infatti non bisogna 
+memorizzare l'intero albero, ma solamente il cammino dalla radice alla foglia, ed i 
+fratelli non espansi di ciascun nodo del cammino di profondità $m$: $O(b\cdot m)$. Se 
+l'albero ha rami infiniti, allora la ricerca non termina. 
+
+\subsubsection{Algoritmo di Ricerca in Profondità Limitata}
+
+Nella ricerca in profondità limitata si impone un limite alla profondità massima, per impedire 
+di proseguire all'infinito su uno stesso cammino. Un nodo viene espanso solo se la lunghezza 
+del cammino dalla radice al nodo è minore del massimo stabilito. Se non viene trovata 
+alcuna soluzione restituisce il valore speciale taglio se alcuni nodi non sono stati espansi, 
+altrimenti fallisce. 
+
+Si possono utilizzare conoscenze specifiche al problema per fissare questo limite. Se si 
+lavora su di un grafo si potrebbe utilizzare il diametro del grafo come la profondità. Se non 
+si sceglie un valore adeguato per questo limite allora l'algoritmo non funzionerà correttamente. 
+L'algoritmo è completo, se la soluzione è ad una profondità minore della lunghezza $l$ imposta, 
+mentre non è ottimale. La complessità temporale e spaziale è rispettivamente $O(b^l)$ e $O(b\cdot l)$. 
+Risolve il problema della completezza, ma non risolve l'ottimale.  
+
+\subsubsection{Algoritmo di Ricerca Iterative-Deepening Search}
+
+Questo algoritmo risolve il problema dell'ottimalità sugli algoritmo di ricerca in profondità 
+senza conoscere un limite adeguato. Evita il problema della scelta del limite provando 
+iterativamente tutti i limiti possibili fino a quando non individua una soluzione:
+\begin{minted}[mathescape, escapeinside=||]{python}
+    function |\textcolor{red}{ITERATIVE-DEEPENING-SEARCH}|(problem) returns solution or failure
+
+    |\textcolor{black}{for}| depth = 0 to |$ \infty $|   do
+        if |\textcolor{red}{DEPTH-LIMITED-SEARCH}|(problem, depth) succeeds
+        then return ist result
+    end
+\end{minted}
+
+Questo approccio combina i benefici di una ricerca in ampiezza con i benefici di una ricerca 
+in profondità, poiché per ogni profondità vengono analizzati tutti i nodi. 
+
+Quindi questo algoritmo è ottimale e completo per le condizioni della ricerca in ampiezza. 
+La complessità spaziale è $O(b\cdot d)$, quindi non è esponenziale. Mentre la complessità 
+temporale è simile a quella a quella della ricerca in ampiezza. L'algoritmo viene richiamato 
+ogni volta che si aumenta il limite, quindi i nodi a profondità minore vengono generati 
+ogni volta che viene eseguito nuovamente l'algoritmo. Quindi vengono generati in totale $N$ nodi:
+\begin{gather*}
+    N=\displaystyle\sum_{i=1}^db^i\cdot(d+1-i)
+\end{gather*}
+I primi $b$ nodi a profondità 1 vengono generati $d$ volte, fino ai nodi al livello $d$ generati 
+una sola volta. Questo algoritmo è quindi circa l'11\% meno efficiente rispetto alla ricerca in 
+ampiezza. Ma non rappresenta un incremento considerevole rispetto alla ricerca in ampiezza, 
+quindi è accettabile. 
+
+\subsection{Problema della Ripetizione degli Stati: Graph-Search}
+
+Il problema della ripetizioni degli stati può provocare gravi complicazioni nel processo 
+di ricerca. Questo problema sorge sopratutto quando sono possibili azioni bidirezionali ed 
+in questo caso è possibile che gli alberi di ricerca siano infiniti. Si vuole quindi evitare 
+quando è possibile di ripetere gli stessi stati in più nodi dell'albero di ricerca. 
+
+Questi stati ripetuti possono in certi casi rendere il problema irrisolvibile, è conveniente 
+controllare se uno stato è replicato. Se un algoritmo arriva ad uno stesso stato attraverso 
+due cammini differenti, allora ha individuato uno stato ripetuto e deve scartare uno di questi 
+due cammini, per determinare quale scartare si sceglie generalmente l'ultimo cammino ottenuto. 
+Si scarta anche se questo cammino è migliore del cammino precedente. Si utilizza questo 
+approccio poiché negli algoritmi di ricerca euristica, sotto alcune condizioni, quando trova 
+un percorso questo è ottimo, quindi non sorgono problemi nello scartare cammini che portano allo 
+stesso stato. 
+
+In altre implementazioni dove non è garantito che il primo percorso trovato sia il migliore, 
+bisogna controllare quale dei due cammini presenti il costo migliore. 
+Per evitare la ripetizione bisogna contenere gli stati già visitati in memoria, tramite 
+un'altra struttura dati chiamata insieme esplorato o lista chiusa, contenente ogni nodo 
+espanso. 
+
+Si modifica l'algoritmo Tree Search nell'aggiunta alla frontiera per verificare la ripetizione 
+degli stati:
+\begin{minted}[mathescape, escapeinside=||]{python}
+    function |\textcolor{red}{GRAPH-SEARCH}|(problem) returns a solution or failure
+
+    close  <- empty set
+    fringe <- |\textcolor{magenta}{MAKE-QUEUE}|(|\textcolor{magenta}{MAKE-NODE}|(|\textcolor{magenta}{INITIAL-STATE}|(problem)))
+    loop do
+        if |\textcolor{magenta}{EMPTY}|(fringe) then return failure
+        node <- |\textcolor{magenta}{REMOVE-FRONT}|(fringe)
+        if |\textcolor{magenta}{GOAL-TEST}|(problem, |\textcolor{magenta}{STATE}|(node)) then return |\textcolor{magenta}{SOLUTION}|(node)
+        if |\textcolor{magenta}{STATE}|(node) not in close
+            then |\textcolor{magenta}{ADD}|(close, node)
+            child_list <- |\textcolor{magenta}{EXPAND}|(node, |\textcolor{magenta}{OPERATOR}|(problem))
+            |\textcolor{black}{for}| child_node in child_list 
+                if |\textcolor{magenta}{STATE}|(child_node) not in close then 
+                    fringe <- |\textcolor{magenta}{QUEUING-FN}|(fringe, child_node)
+    end
+\end{minted}
+
+Questo approccio si chiama Graph Search, dove prima di aggiungere un nodo alla frontiera, si controlla 
+se il suo stato è già stato avvistato. Si suppone che il primo cammino che raggiunge nuo stato $s$ 
+è il più conveniente. 
+Questo algoritmo realizza un albero direttamente sul grafo dello spazio degli stati, poiché 
+è presente al massimo una singola copia di ogni stato. La frontiera separa nel grafo dello 
+spazio degli stati in due regioni, una esplorata, ed una da esplorare. In questo modo ogni 
+cammino dallo stato iniziale ad uno stato inesplorato deve passare attraverso uno stato 
+sulla frontiera. 
+
+L'algoritmo scarta sempre il cammino appena trovato, se lo stato raggiunto è ripetuto, quindi 
+potrebbe scartare un cammino corrispondente ad una soluzione migliore. Potrebbe quindi 
+non essere un algoritmo ottimale. 
+
+Inoltre l'uso della lista chiusa significa che la ricerca in profondità e quella ad 
+approfondimento iterativo non richiedono requisiti spaziali lineari. 
 
 
 \section{Algoritmi}
