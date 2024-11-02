@@ -8,6 +8,7 @@ Appunti tratti dal corso di Intelligenza Artificiale e Machine Learning, Anno Ac
 
 ## Materiale Aggiuntivo
 - [Python](https://www.python.org/): lignaggio utilizzato durante il corso, nell'ambiente di sviluppo [Anaconda](https://www.anaconda.com/);
+- [Google Colab](https://colab.research.google.com/): ambiente di sviluppo Python "on-the-fly", fornito da Google;
 
 
 
