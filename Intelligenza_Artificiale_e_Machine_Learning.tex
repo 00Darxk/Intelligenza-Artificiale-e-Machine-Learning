@@ -260,7 +260,7 @@ più efficienti degli algoritmi trattati in questa sezione.
 
 Nella ricerca in ampiezza si espande il nodo radice, e si espandono i nodi generati dalla 
 radice, e si ripete per ogni nodo successore. Per implementare un algoritmo che utilizza una 
-strategia di ricerca non informata in ampiezza, la ``Queueing Function'' inserisce i nodi 
+strategia di ricerca non informata in ampiezza, la ``Queuing Function'' inserisce i nodi 
 appena generati in coda. Questa funzione quindi rappresenta sempre un inserimento in coda 
 e si può chiamare ``Enqueue at the End'': \color{magenta}\verb|ENQUEUE-AT-END|\color{black}. 
 
@@ -309,7 +309,7 @@ temporale di questa ricerca è $O(N)=O(b^d)$. La complessità temporale è analo
 $O(b^d)$ poiché bisogna memorizzare tutte le foglie generate. 
 
 \subsubsection{Algoritmo di Ricerca Guidata dal Costo: Dijkstra}
-
+\label{sec:Dijkstra}
 Modificando la ricerca in ampiezza espandendo il nodo della frontiera di costo più basso, si può 
 aumentare l'efficienza dell'algoritmo precedente. 
 
@@ -329,7 +329,7 @@ ordinata in base al costo delle etichette di ogni nodo.
 
 La ricerca in profondità consiste nell'espansione del nodo più profondo, dopo aver espanso 
 la radice. 
-Per implementare questa funzione, si utilizza una queueing function che inserisce i nodi 
+Per implementare questa funzione, si utilizza una queuing function che inserisce i nodi 
 appena espansi all'inizio della lista, con una ``Enqueue at the Front'': \color{magenta}\verb|ENQUEUE-AT-FRONT|\color{black}:
 
 \begin{minted}[escapeinside=||]{python}
@@ -466,6 +466,108 @@ non essere un algoritmo ottimale.
 Inoltre l'uso della lista chiusa significa che la ricerca in profondità e quella ad 
 approfondimento iterativo non richiedono requisiti spaziali lineari. 
 
+\subsection{Ricerca Informata o Euristica: Algoritmo di Best First Search}
+
+Quando si parla di ricerca euristica, l'algoritmo può sfruttare conoscenze specifiche sul problema in questione, aiutandolo nella scoperta della soluzione. 
+Questa modifica si inserisce nella funzione di inserimento in coda \color{magenta}\verb|QUEUING-FN|\color{black}. Questa conoscenza sul dominio del problema viene implementata tramite una funzione di valutazione $f$ 
+applicata ai nodi dell'albero di ricerca. 
+Questa funzione stima quanto un nodo sia più o meno ``promettente'', ovvero stima della desiderabilità di espandere il nodo associato. Generalmente la funzione $f$ è 
+una funzione di stima del costo della soluzione, per si considera il nodo $n$ appartenente alla frontiera con $f(n)$ minore. 
+
+L'algoritmo ``Best First Search'' ordina i nodi inseriti nella frontiera dal migliore al peggiore secondo una data funzione di valutazione $f$. Il nodo scelto da espandere 
+è quello valutazione migliore, in genere con $f(n)$ minore, per cui a differenza di funzioni di valutazione $f$ si hanno diverse versioni di questo algoritmo di ricerca. 
+
+La ricerca guidata dal costo (\ref{sec:Dijkstra})si può considerare un caso particolare della ricerca best first dove la funzione di valutazione $f(n)$ coincide 
+con la funzione di costo del cammino $g(n)$ dallo stato iniziale al nodo $n$. Queste rappresenta un'informazione di euristica nulla. 
+
+\begin{minted}[escapeinside=||]{python}
+    function |\textcolor{red}{BEST-FIRST-SEARCH}|(problem, EVAL-FN) returns a solution or failure
+    
+    |\textcolor{magenta}{QUEUING-FN}| <- function that orders nodes by EVAL-FN
+    fringe <- |\textcolor{magenta}{MAKE-QUEUE}|(|\textcolor{magenta}{MAKE-NODE}|(|\textcolor{magenta}{INITIAL-STATE}|(problem)))
+    loop do
+        if |\textcolor{magenta}{EMPTY}|(fringe) then return failure
+        node <- |\textcolor{magenta}{REMOVE-FRONT}|(fringe)
+        if |\textcolor{magenta}{GOAL-TEST}|(problem, |\textcolor{magenta}{STATE}|(node)) then return |\textcolor{magenta}{SOLUTION}|(node)
+        fringe <- |\textcolor{magenta}{QUEUING-FN}|(fringe, |\textcolor{magenta}{EXPAND}|(node, |\textcolor{magenta}{OPERATOR}|(problem)))
+    end
+\end{minted}
+
+Dove \verb|EVAL-FN| rappresenta la funzione di valutazione. 
+
+Per favorire la comprensione si utilizza una serie di notazioni:
+\begin{itemize}
+    \item $s,s_0,s_1,\cdots,s_i$: stati del problema;
+    \item $s_0$: stato iniziale;
+    \item $k^*(s_i,s_j)$: costo del cammino minimo da $s_i$ a $s_j$, se esiste;
+    \item $g^*(s_i)=k^*(s_0,s_i)$: costo del cammino minimo dallo stato iniziale a $s_i$;
+    \item $h^*(s_i)$: costo effettivo, non una stima, di un cammino da uno stato $s_i$ ad uno stato obiettivo;
+    \item $f^*(s_i)=g^*(s_i)+h^*(s_i)$: il costo minimo di una soluzione vincolata a passare per $s_i$. 
+\end{itemize}
+Si introducono ulteriori notazioni per l'albero di ricerca:
+\begin{itemize}
+    \item $n,n_1,n_2,\cdots,n_i$: nodi dell'albero di ricerca;
+    \item $g*(n)$: costo del cammino dallo stato iniziale allo stato associato al nodo $n$;
+    \item $h^*(n)$: costo effettivo di un cammino dallo stato associato al nodo $n$ ad uno stato obiettivo;
+    \item $g(n)$: costo del cammino dallo stato iniziale allo stato di $n$, $g(n)\leq g^*(n)$;
+    \item $h(n)$: stima di $h^*(n)$. 
+\end{itemize}
+
+Le funzioni senza asterisco all'apice si riferiscono a funzioni di stima, altrimenti sono funzioni di costi effettivi. La funzione $h$ si dice funzione euristica. 
+
+\subsubsection{Algoritmo Greedy}
+
+Questo algoritmo ``goloso'' utilizza la funzione $h$ come funzione di valutazione, si espande quindi il primo nodo che si ritiene sia vicino all'obiettivo. Se $n$ 
+corrisponde allo stato obiettivo, deve essere $h(n)=0$. Minimizza il costo stimato per raggiungere l'obiettivo. 
+
+Una possibile funzione euristica è la distanza a linea d'aria `` Straight Line Distance" SLD: $h_{\mathrm{SLD}}(n)$, per problemi di viaggio. Questo algoritmo non 
+espande nodi inutilmente, ma la soluzione trovata dall'algoritmo potrebbe non essere la soluzione ottima del problema. In generale la ricerca golosa non è 
+ottimale. Inoltre non è neanche completa, poiché se una soluzione richiedesse allontanarsi dall'obiettivo e quindi andare verso stati con una valutazione peggiore, non 
+sarebbe mai scoperta da questo algoritmo. 
+
+Nel caso peggiore è anche esponenziale spazialmente e temporalmente con una complessità asintotica di $O(b^m)$. Nonostante questi risultati con una buona euristica è 
+possibile ottenere buoni risultati anche con un algoritmo greedy. 
+Uno dei difetti è che la scelta del nuovo stato è effettuata interamente dalla stima della distanza, senza considerare il percorso parziale. 
+
+\subsubsection{Algoritmo A*}
+
+%% TODO A^* in math_mode?
+
+L'algoritmo A* risolve ip roble dell'algoritmo greedy, considerando anche il percorso parziale nella sua funzione di valutazione: $f(n)=g(n)+h(n)$, fornisce 
+quindi una stima del costo del cammino dallo stato iniziale ad uno stato obiettivo, vincolato a passare per il nodo $n$. 
+
+Con questa semplice aggiunta è possibile migliorare notevolmente l'algoritmo precedente, inoltre sotto certe condizioni è possibile recuperare l'ottimalità e la 
+completezza. Date queste due ipotesi sul grafo di partenza:
+\begin{itemize}
+    \item Ogni nodo del grafo abbia un numero finito di successori;
+    \item Tutti i costi abbiano costi maggiori di una quantità positiva $\delta$. 
+\end{itemize}
+
+Se $h$ è un'euristica ammissibile, ovvero se per ogni nodo $n$ del grafo vale la condizione $h(n)<\leq h^*(n)$, allora l'algoritmo A* è ottimale e completo:
+\begin{equation}
+    \forall n\mbox{ t.c. }h(n)\leq h^*(n)\implies \text{A*: completo ed ottimale}
+\end{equation}
+
+In generale per un dato problema è possibile identificare diverse funzioni di euristica che soddisfano la condizione di limite inferiore. Nei problemi della ricerca 
+di itinerari, e non solo, un'altra possibile alternativa è la funzione di Manhattan che considera ogni mossa, o spostamento, sicuramente ammissibile. La ricerca 
+guidata dal costo è un approccio molto particolare della ricerca A* $\lceil f(n)=g(n)\rceil$, dove la funzione di euristica $h$ è nulla per ogni nodo, è quindi uno stimatore 
+super ottimistico. 
+
+Date due versioni dell'algoritmo A* con due euristiche diverse $h_1<h_2$, per tutti i nodi non obiettivo, si dice che l'algoritmo A*$_2$ è più informato dell'algoritmo 
+A*$_1$. 
+Vale allora il teorema secondo cui al termine delle loro ricerche su un qualsiasi grafo con un percorso dal nodo iniziale $n_o$ al nodo obiettivo, allora ogni nodo 
+espando da A*$_2$ sarà anche espando da A*$_1$. Quindi il primo algoritmo espande almeno tanti nodi quanto il secondo algoritmo, quindi l'algoritmo più informato A*$_2$ 
+è più efficiente di A*$_1$. 
+
+%% TODO dim teorema a-star
+
+In generale è più conveniente scegliere un'euristica per cui l'algoritmo è più informato. Per determinare una funzione euristica, un buon approccio consiste nel 
+determinare la funzione di costo effettivo per un problema simile all'originale con minori restrizioni sugli operatori. Infatti il costo effettivo di una soluzione 
+in questi ``Relaxed Problems'' è una buona euristica per il problema originale. Ma il calcolo della funzione euristica potrebbe avere un calcolo computazionale 
+elevato, quindi bisogna scegliere l'euristica considerando anche la loro complessità.  
+
+L'algoritmo A* può essere eseguito sia in modalità Tree Search che Graph Search, ma in queste due modalità potrebbe trovare due soluzioni differenti allo stesso 
+problema. 
 
 \section{Algoritmi}
 
