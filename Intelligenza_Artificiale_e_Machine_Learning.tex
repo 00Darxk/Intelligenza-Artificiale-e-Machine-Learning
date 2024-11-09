@@ -36,6 +36,7 @@
 
 \numberwithin{equation}{subsection}
 \newcommand{\tageq}{\tag{\stepcounter{equation}\theequation}}
+\newcommand{\vv}[1]{\verb{\text{#1}}}
 \AtBeginDocument{%
   \renewcommand{\figurename}{Fig.}
 }
@@ -69,8 +70,6 @@ Università degli Studi ``Roma Tre"}}
 \pagenumbering{arabic}
 
 \section{Introduzione all'Intelligenza Artificiale}
-
-%% TODO manca parte della lezione prima della storia 25/9/24 
 
 L'intelligenza artificiale è l'area di studio che analizza come permettere ai computer di 
 compiere operazioni che eseguite da un essere umano richiederebbero intelligenza. 
@@ -466,7 +465,7 @@ Per implementare questa funzione, si utilizza una queuing function che inserisce
 appena espansi all'inizio della lista, con una ``Enqueue at the Front'': \color{magenta}\verb|ENQUEUE-AT-FRONT|\color{black}:
 
 \begin{minted}[escapeinside=||]{c}
-    function |\textcolor{red}{BREADTH-FIRST-SEARCH}|(problem) returns a solution or failure
+    function |\textcolor{red}{DEPTH-FIRST-SEARCH}|(problem) returns a solution or failure
     
     fringe <- |\textcolor{magenta}{MAKE-QUEUE}|(|\textcolor{magenta}{MAKE-NODE}|(|\textcolor{magenta}{INITIAL-STATE}|(problem)))
     loop do
@@ -742,7 +741,6 @@ Se la condizione di consistenza è soddisfatta su $h$, allora quando l'algoritmo
 $n$ ha già trovato il percorso ottimo per $n$. In questo modo la ricerca su grafo non è 
 differente dalla ricerca su un albero per quanto riguarda l'ottimalità della soluzione. 
 
-
 \subsection{Algoritmo di Ricerca Locale: Hill-Climbing}
 
 
@@ -884,6 +882,12 @@ La caratteristica di poter scegliere come passo uno stato peggiore questo algori
 
 \subsubsection{Algoritmo di Simulated Annealing}
 
+L'algoritmo di Simulated Annealing, introdotto nel 1983 da S. Kirkpatrick, C.D. Gelatt, Jr. e M.P. Vecchi nella rivista Science, è un algoritmo che migliora 
+considerevolmente l'approccio dell'algoritmo precedente. Ha causato una vera e propria rivoluzione in termini di ottimizzazione, ebbe un enorme successo in ogni 
+settore dell'informatica come l'algoritmo migliore per problemi di ricerca locale, anche solo nella sua versione base.  
+Questo algoritmo è talmente importante che ogni anno vengono riuniti congressi annuali internazionali per discutere possibili ottimizzazioni. 
+
+
 Questo algoritmo prende il nome dall'analogia con il processo di metallurgia per temprare un materiale, questo processo infatti raggiungere uno stato di struttura 
 cristallina ad energia minima. La differenza principale con l'algoritmo stocastico, è la possibilità di variare il valore di $T$ diminuisce gradualmente durante l'esecuzione 
 dell'algoritmo. Il valore di $T$ parte da un valore elevato, per poi diminuire nel tempo, come se fosse la temperatura durante un processo di temperatura, per cui l'algoritmo si 
@@ -891,7 +895,7 @@ comporta in modo molto simile ad un normale hill-climber. Inoltre sceglie sempre
 se è migliore del punto corrente. 
 
 \begin{minted}[mathescape, escapeinside=||]{c}
-    function |\textcolor{red}{STOCHASTIC-HILL-CLIMBING}|(problem) returns a state solution
+    function |\textcolor{red}{SIMULATED-ANNEALING}|(problem) returns a state solution
 
     t <- 0
     current <- |\textcolor{magenta}{RANDOM}|(problem)
@@ -916,7 +920,8 @@ se è migliore del punto corrente.
 
 La probabilità di accettazione è leggermente diversa rispetto all'algoritmo precedente, poiché nel simulated annealing si considera solamente un semiasse dell'ascissa, dato che in caso \verb|next| sia migliore non viene calcolata la probabilità di accettazione. Si accetta sempre 
 uno stato di valore migliore, mentre l'accettazione di uno stato peggiore dipende da una probabilità. 
-Quindi il mapping della link function non viene realizzata sull'intero intervallo $(-\infty,+\infty)$, ma solo su metà dell'ascissa, su $(0,+\infty)$. 
+Quindi il mapping della link function non viene realizzata sull'intero intervallo $(-\infty,+\infty)$, ma solo su metà dell'ascissa, su $[0,+\infty)$, per cui è 
+sufficiente utilizzare la funzione $e^{-\Delta E/T}$ avente come dominio il semiasse $[0,+\infty)$ e come codominio $(0,1]$. 
 
 Questo ciclo interno viene effettuato un certo numero di volte fino ad una condizione di 
 terminazione, che verrà trattata nelle implementazioni future. 
@@ -926,14 +931,11 @@ Anche la condizione di terminazione dell'algoritmo dipende dallo specifico probl
 e verranno trattate in futuro. 
 
 
-Molte implementazioni dell'algoritmo seguono la stessa sequenza di passi. Si assegna la variabile \verb|T|, e si sceglie uno stato corrente casuale al primo passo. Si determina 
-un successore e si ripete per un certo numero di cicli nel secondo, e come passo finale si diminuisce la temperatura e si ripete dal primo passo se la temperatura non ha 
-raggiunto la temperatura minima. Quindi l'algoritmo termina solamente quando la temperatura ha raggiunto la temperatura minima. 
-
-Le aree di applicazione di questo algoritmo sono molto vaste nell'informatica. Proposto negli anni '80 ha avuto un enorme successo, anche solo nella sua versione base. 
-
-Questo algoritmo è talmente importante che ogni anno vengono riuniti convegni per discutere possibili 
-ottimizzazioni di quest'ultimo. 
+Molte implementazioni dell'algoritmo seguono la stessa sequenza di passi. Si assegna la variabile \verb|T| alla temperatura massima, e si sceglie uno stato corrente 
+casuale al primo passo. Si determina un successore assegnandolo direttamente se è migliore oppure tramite la funzione di probabilità e si ripete per un certo numero di 
+cicli, e come passo finale si diminuisce la temperatura e si ripete dal secondo passo se la temperatura non ha 
+raggiunto la temperatura minima. Quando la temperatura ha raggiunto la temperatura minima, si può scegliere se terminare l'algoritmo o ripeterlo un certo numero di 
+volte, ripartendo dal primo passo. 
 
 \clearpage
 
@@ -941,66 +943,305 @@ ottimizzazioni di quest'ultimo.
 
 Python è un linguaggio di programmazione vastamente utilizzato nell'area dell'intelligenza artificiale e nel machine learning. Recentemente è diventato il linguaggio di 
 programmazione più diffuso al mondo. Python è un linguaggio general-purpose, ideato da Guido van Rossum nel 1989, a più alto livello del C, poiché gestisce automaticamente le 
-più fondamentali operazioni. 
+più fondamentali operazioni. Per cui è molto semplice e spesso utilizzato a fine didattico tra i primi linguaggi di programmazione insegnati. 
 
 La versione di Python utilizzata nel corso è la versione 3, nell'ambiente Anaconda. Può essere avviato tramite un interprete. Alla creazione di una variabile non 
 è necessario definirne il tipo, il nome identificativo è arbitrario e può contenere numeri, ma non cominciare con un numero, viene consigliato di utilizzare un carattere 
 minuscolo come primo carattere del nome. Esistono 33 parole chiave, non utilizzabili come nomi di variabili. Si può assegnare un valore ad una variabile tramite l'operatore 
 \verb|=|, senza specificarne il tipo. 
 
-Esistono una serie di operatori aritmetici come \verb|+|, \verb|-|, \verb|*|, \verb|\|, \verb|**| e \verb|\\| (floor division). Una differenza tra Python 2 consiste nella gestione del resto, infatti in Python 2 
-viene considerata solo la parte intera del resto. 
+\subsection{Operatori}
 
-Si possono inserire dati tramite la funzione \verb|input|, e si può convertire in un tipo specifico come \verb|tipo(var)|. I commenti vengono 
-realizzati tramite il carattere \#. 
+Esistono una serie di operatori aritmetici come \verb|+|, \verb|-|, \verb|*|, \verb|\|, \verb|**|, per l'elevamento a potenza, \verb|%| per il modulo. Una differenza 
+tra Python 2 consiste nella gestione della divisione, infatti in Python 2 viene considerata solo la parte intera dell'operazione. Per ottenere lo stesso risultato 
+esiste l'operatore \verb|\\|, chiamato ``floor division''. 
 
-In Python sono presenti tutti gli operatori booleani di C, in aggiunta sono presenti altri operatori \verb|is| ed \verb|is not|. 
+Gli operatori seguono un ordine di precedenza naturale, come la sintassi moderna matematica:
+\begin{enumerate}
+    \item Parentesi;
+    \item Elevamento a potenza;
+    \item Moltiplicazione e divisione;
+    \item Addizione e sottrazione;
+    \item Operatori con lo stesso ordine valutati da sinistra verso destra. 
+\end{enumerate}
 
-%% todo add espressioni booleane
+In Python sono presenti tutti gli operatori booleani del C come \verb|==| ed operatori di confronto come \verb|<, <=, >, >=|, in aggiunta sono presenti 
+altri operatori \verb|is| ed \verb|is not|. Inoltre sono presenti due versione degli operatori logici \verb|&&| e \verb|and|, || e \verb|or| e \verb|!=| e \verb|not|. 
+Come in C un qualsiasi valore diverso da zero corrisponde al booleano \verb|true|. 
 
-Sono presenti gli stessi operatori logici di C, e come in C un qualsiasi valore diverso da zero corrisponde al booleano \verb|true|. 
+Si possono inserire dati dall'utente tramite la funzione \verb|input()| e la funzione \verb|raw_input()| per lo stesso comportamento di Python 2, e si può convertire in un tipo 
+specifico con \verb|tipo(var)|. I commenti vengono realizzati tramite il carattere \#. 
+
+\subsection{Istruzioni Condizionali}
 
 In Python per identificare funzioni o istruzioni condizionali non si usano parentesi, ma si indenta di quattro posizioni. Dopo la condizione dell'
-istruzione condizionale vanno inserite dei due punti \verb|:|. 
+istruzione condizionale vanno inserite dei due punti \verb|:|:
+\begin{minted}{python}
+    if condizione: 
+        # corpo dell'if
+    else:
+        # corpo dell'else
+\end{minted}
 
 
 Si possono gestire le eccezioni con il costrutto \verb|try| ed \verb|except|:
 \begin{minted}{python}
-  try:
-    # corpo del try
-  except:
-    # corpo dell'except
+    try:
+        # corpo del try
+    except:
+        # corpo dell'except
 \end{minted}
 
+\subsection{Funzioni Built-In, Moduli e Definizione di Funzioni}
+
 In Python sono integrate tantissime funzioni utili, per svolgere attività comuni, utilizzabili senza doverle definire, queste sono funzioni ``built-in''. 
-Per invocare funzioni presenti in un certo modulo si utilizzata la notazione puntata \verb|nomeModulo.nomeFunzione()|. 
+Per invocare funzioni presenti in un certo modulo e non built-in si utilizzata la notazione puntata \verb|nomeModulo.nomeFunzione()|. Alcune tra le funzioni 
+built-in più utili sono \verb|max()| e \verb|min()| che restituiscono il carattere più grande e più piccolo in una stringa; la funzione \verb|len()| che restituisce 
+la lunghezza della stringa. Per convertire variabili in certi tipi è già stata mostrata la funzione \verb|tipo()|, dove al posto di \verb|tipo| si inerisce il 
+tipo specifico, si usa \verb|str| per convertire in una stringa. 
+
+Per importare moduli contenenti altre funzioni si utilizza \verb|importa| seguito dal nome del modulo da scaricare, che crea un object module con quel nome, si può 
+rinominare seguendo questa istruzione con \verb|as| seguito dall'alias del modulo. Si utilizza un alias per semplificare la notazione puntata. 
 
 
 Dati gli algoritmi analizzati precedentemente, si nota la necessita di introdurre generatori di numero casuali. La maggior parte di generatori casuali, sono deterministici, 
-ovvero dato lo stesso input, generano gli stessi numeri casuali. Si utilizzano quindi numeri pseudo-casuali, generati da un calcolo deterministico, ma non è quasi possibile 
-distinguerli da numeri generati casualmente. In Python esiste il modulo \verb|random| contenente funzioni pertinenti alla generazione di numeri casuali. 
+ovvero dato lo stesso input, generano la stessa sequenza di numeri casuali. Si utilizzano quindi numeri pseudo-casuali, generati da un calcolo deterministico, ma non è quasi possibile 
+distinguerli da numeri generati casualmente. In Python esiste il modulo \verb|random| contenente funzioni pertinenti alla generazione di numeri casuali. La 
+funzione \verb|random()| genera un numero casuale tra 0.0, compreso e 1.0, non compreso. Un altra funzione \verb|randint()| accetta due parametri, estremi 
+dell'intervallo, inclusi, per generare un numero intero tra loro compreso. Con la funzione \verb|choice()| si può scegliere un elemento casualmente da una sequenza 
+passata come argomento. 
 
 Per definire nuove funzioni si utilizza la parola chiave \verb|def|, specificando il nome, tra parentesi tonde gli argomenti ed i due punti, indentando di quattro posizioni 
 per scrivere il corpo della funzione:
 \begin{minted}{python}
-  def nomeFunzione(nomeArgomenti):
-    # corpo della funzione
-  # resto del codice
+    def nomeFunzione(listaArgomenti):
+        # corpo della funzione
+        # resto del codice
 \end{minted}
 
 Dopo aver passato degli argomenti ad una funzione, questi vengono assegnati a delle variabili locali. Si può utilizzare anche una variabile come argomento. Inoltre 
-tutte le aggiunte possibili alle funzioni built-in, si possono effettuare sulle funzioni definite dall'utente come \verb|_twice|, per ripetere due volte la funzione. 
+tutte le aggiunte possibili alle funzioni built-in, si possono effettuare sulle funzioni definite dall'utente. 
 
-Si dividono le funzioni in due tipi ``fruitful function'' e ``void function'',  le prime restituiscono un valore, le secondo non restituiscono valore. Le prime quindi 
-vengono usate per assegnare o inizializzare variabili. Se si tenta di assegnare il risultato di una void function ad una variabile, viene ottenuto un valore chiamato ``None''. 
-Questo valore ha un suo proprio tipo. 
+Si dividono le funzioni in due tipi ``fruitful function'', funzioni produttive, e ``void function'', funzioni vuote,  le prime restituiscono un valore, le seconde non restituiscono valore. Le prime quindi 
+vengono usate per assegnare o inizializzare variabili. Se si tenta di assegnare il risultato di una void function ad una variabile, viene ottenuto un valore chiamato \verb|None|. 
+Questo valore ha un suo proprio tipo. Per definire una funzione produttiva, nel corpo si inserisce la parola chiave \verb|return| seguita dai parametri da restituire come 
+risultato della funzione. 
 
-Si possono realizzare cicli tramite il costrutto \verb|while| o \verb|for|, seguito da una condizione booleana e dai due punti \verb|:|. 
-Si può interrompere il ciclo con \verb|break|, e si può saltare l'iterazione corrente con \verb|continue|. Quando bisogna iterare su una collezione, si può realizzare 
-un ciclo for-each:
+\subsection{Cicli}
+
+Si possono realizzare cicli tramite il costrutto \verb|while| o \verb|for|, seguito da una condizione booleana e dai due punti \verb|:|:
 \begin{minted}{python}
-   for elem in Array
-    # corpo del ciclo
+    while condizione: 
+        # corpo del ciclo
 \end{minted}
+
+Si può interrompere il ciclo con \verb|break|, e si può saltare l'iterazione corrente con \verb|continue|. Quando bisogna iterare su una collezione, un insieme di elementi, 
+si può realizzare un ciclo ``for-each'': 
+\begin{minted}{python}
+    for elemento in collezione: 
+        # corpo del ciclo
+\end{minted}
+
+\subsection{Stringhe}
+
+Le stringhe sono sequenze di caratteri, indicizzati come fosse un array:
+\begin{minted}{python}
+    stringa[i] # (i+1)-esimo carattere
+\end{minted}
+La funzione già discussa \verb|len()| restituisce il numero di caratteri di una stringa, 
+anche se può essere utilizzata per altri tipi di dati come dizionari. Poiché è strutturata come un array è possibile scandire ogni carattere della stringa individualmente 
+con un ciclo for-each. 
+
+Talvolta è comodo accedere ad una sottostringa, o ``slice'', della stringa di partenza. La selezione di una sottostringa è simile alla selezione di un carattere, 
+utilizzando due indici divisi da due punti per indicare l'inizio e la fine della sottostringa, il primo estremo è compreso, mentre il secondo no:
+\begin{minted}{python}
+    stringa[i:j] # slice contenente i caratteri da i a j-1
+\end{minted}
+
+A volte si ha la necessità si realizzare una sottostringa che parte dall'inizio o la fine della stringa originaria, per effettuarlo si può omettere l'estremo 
+corrispondente:
+\begin{minted}{python}
+    stringa[:j] # slice dall'inizio della stringa
+    stringa[i:] # slice fino alla fine della stringa
+\end{minted}
+
+I valori di una stringa sono immutabili una volta definiti, per cui non è possibile modificarne il valore accedendo tramite indice, verrà sollevato un messaggio di errore. 
+Si può modificare una stringa realizzando una nuova stringa, come variante, tramite l'operatore di concatenazione \verb|+|:
+\begin{minted}{python}
+    stringa = stringa_1 + stringa_2 
+\end{minted}
+
+L'operatore \verb|*| applicato su una lista, la replica un certo numero di volte specificato. 
+
+L'operatore \verb|in| è estremamente importante, permette di individuare se una stringa è sottostringa di un'altra, restituisce un valore booleano vero o falso:
+\begin{minted}{python}
+    stringa_1 in stringa_2
+\end{minted}
+
+Si possono inoltre utilizzare operatori di confronto tra stringhe all'uguaglianza con \verb|==|, oppure con \verb|<, >|, per confrontarle in ordine alfabetico. 
+In Python le maiuscole vengono prima delle minuscole. 
+Le stringhe sono degli oggetti che oltre alla sequenza di caratteri contengono oltre i dati anche i metodi disponibili per ogni istanza dell'oggetto stringa. 
+
+Con la funzione \verb|type| si ha la possibilità di identificare il tipo dell'oggetto su cui viene operata e \verb|dir| mostra i metodi disponibili. 
+Per utilizzare un metodo si utilizza la notazione puntata con il nome dell'istanza dell'oggetto. 
+Uno dei metodi sulle stringhe è \verb|find()| che prende come argomento una sottostringa, ed un indice opzionale da cui cercare il carattere, e restituisce la prima 
+posizione dell'occorrenza della sottostringa specificata. 
+
+Il metodo \verb|strip()| rimuove lo spazio bianco prima e dopo la stringa. Il metodo \verb|startswith()| restituisce un valore booleano se la stringa comincia 
+con la sottostringa passata come argomento. Il metodo \verb|capitalize()| consente di impostare a maiuscolo il primo carattere, per mettere tutti i caratteri in 
+maiuscolo si utilizza il metodo \verb|upper()|. 
+
+L'operatore ``format'' \verb|%| permette di costruire stringhe formattando la stringa rispetto a dati contenuti in altre variabili. All'interno di una stringa 
+chiamata ``format string'' si può inserire questo operatore seguito da una lettera per specificare il tipo di dato associato, chiamate ``format sequences''. Questa 
+viene utilizzata come il primo argomento, mentre il secondo operando è la variabile da formattare, questo produce una stringa:
+\begin{minted}{python}
+    >>> x = 1
+    >>> 'il numero è %d' % x
+    'il numero è 1' 
+\end{minted}
+
+Se in una stringa compare una sequenza di format sequences si specifica l'operando come una sequenza, una tupla, tra parentesi tonde, separando gli elementi con virgole:
+\begin{minted}{python}
+    >>> x = 1
+    >>> 'il %s è %d' % ('numero', x)
+    'il numero è 1' 
+\end{minted}
+La tupla deve corrispondere in numero, ordine e tipo alle format sequences nella stringa. 
+Si utilizza \verb|%d| per numeri interi \verb|%g| per floating point e \verb|%s| per stringhe. 
+
+Esiste un nuovo operatore format, scrivendo tra parentesi graffe \verb|:| seguito dal carattere corrispondente al tipo, dopo la stringa si invoca il metodo \verb|format()| 
+specificando nell'argomento il valore da inserire:
+\begin{minted}{python}
+    >>> 'il {:s} è {:d}' .format('numero', 1)
+    'il numero è 1' 
+\end{minted}
+Questa implementa tutte le caratteristiche già trattate per il format \verb|%|. 
+
+\subsection{Liste}
+
+Una lista è una sequenza di item di qualsiasi tipo, per cui a differenza di una stringa il tipo non è omogeneo. All'interno di una lista è possible 
+inserire una lista, creando una lista annidata.  
+Una lista si realizza specificando gli elementi tra parentesi quadre:
+\begin{minted}{python}
+    [item_1, item_2, [item_3, item_4]]
+\end{minted}
+
+Una lista che non contiene elementi si chiama lista vuota mediante \verb|[]|, oppure con il comando \verb|list()|. Si può assegnare ad una variabile una lista allo 
+stesso modo di un valore:
+\begin{minted}{python}
+    >>> lista = [item_1, item_2, [item_3, item_4]]
+\end{minted}
+
+Le liste al contrario delle stringhe sono modificabili, con la stessa sintassi per le stringhe, specificando tra parentesi quadre l'indice corrispondente, ed è possibile 
+aggiornare il valore contenuto in questo indice. Se ad un certo indice è presente una lista, questo elemento viene trattato come lista e quindi si possono utilizzare 
+due coppie di parentesi quadre per indicizzare questi elementi annidati:
+\begin{minted}{python}
+    >>> lista[2][2]
+    item_4
+\end{minted}
+Si può considerare una lista come un mapping tra indici ed elementi, come nelle stringhe possono essere variabili ed espressioni, se si prova a leggere o scrivere 
+ad un indice non esistente si solleva un \verb|IndexError|. Mentre se si utilizza un indice negativo, si conta all'indietro partendo dalla fine della stringa. 
+L'operatore \verb|in| ha un funzionamento analogo a quello per le stringhe. 
+
+Un modo per scandire la lista è con un ciclo for-each, come per le stringhe, oppure iterando manualmente su ogni elemento. Questo si può effettuare tramite 
+la funzione \verb|range()| che permette di iterare su un insieme di valori, fornito l'ultimo come argomento:
+\begin{minted}{python}
+    for i in range(len(lista)):
+        # corpo del for
+\end{minted}
+
+L'operatore di concatenazione vale anche per le liste, analogamente per l'operatore \verb|*| che replica una lista un certo numero di volte. 
+L'operatore slice può essere utilizzato anche sulle liste per ottenere una sottolista:
+\begin{minted}{python}
+    lista[i:j] # sottolista da i a j-1
+    lista[:j]  # sottolista da 0 a j-1
+    lista[i:]  # sottolista da i a len(lista)
+    lista[:]   # copia della lista
+\end{minted}
+L'operatore slice può essere utilizzato per aggiornare una sequenza di elementi in una lista. La sottolista da aggiornare deve avere lo stesso numero dei valori della 
+lista originaria. 
+
+Come per le stringhe, le liste sono oggetti e contengono metodi built-in. 
+Il metodo \verb|append()|. aggiunge un nuovo elemento alla fine di una lista, il metodo \verb|extend()| prende come argomento una lista e la concatena alla lista su cui 
+si è operato. Se si passa una lista al metodo \verb|append()| si genera una lista annidata. 
+Si può ordinare gli elementi di una lista dal minore al maggiore con \verb|sort()| in ordine alfabetico. Molti dei metodi su liste, come questi, sono metodi void. 
+
+Per estrarre un elemento dalla lista si utilizza il metodo \verb|pop()| che estrae dalla lista l'ultimo elemento, oppure l'elemento di indice specificato, 
+lo restituisce rimuovendolo dalla lista:
+\begin{minted}{python}
+    >>> lista.pop(1)
+    item_2
+    >>> print(lista)
+    [item_1, [item_3, item_4]]
+\end{minted}
+L'operatore \verb|del| rimuove un elemento dalla lista:
+\begin{minted}{python}
+    >>> del lista[1]
+    >>> print(lista)
+    [item_1, [item_3, item_4]]
+\end{minted}
+Utilizzando lo slice si può rimuovere una sottostringa allo stesso modo:
+\begin{minted}{python}
+    >>> del lista[:1]
+    >>> print(lista)
+    [[item_3, item_4]]
+\end{minted}
+
+Se non si conosce l'indice dell'elemento da cancellare si può utilizzare il metodo \verb|remove()|, ma non restituisce alcun valore:
+\begin{minted}{python}
+    >>> lista.remove(item_2)
+    >>> print(lista)
+    [item_1, [item_3, item_4]]
+\end{minted}
+
+Alcuni metodi come \verb|sum()| possono essere invocati solamente se la lista contiene solo numeri, altri metodi possono essere invocati se la lista contiene dati 
+confrontabili tra di loro. 
+Si può convertire una stringa in una lista tramite la funzione \verb|list()|, suddividendo la stringa in caratteri singoli, mentre si può suddividere in parole singole, 
+separate da spazi con la funzione \verb|split()|. Si può specificare un delimitatore in questa funzione \verb|split()| da utilizzare al posto del delimitatore di default 
+spazio. La funzione inversa della \verb|split()| è il metodo \verb|join()|, permette di realizzare una stringa, applicato su una stringa contenente il delimitatore 
+da utilizzare per separare gli elementi. Si può concatenare senza spazi con la stringa vuota \verb|[]|. 
+
+In Python si possono confrontare due oggetti con l'operatore \verb|is|, se si creano due stringhe di contenuto uguale, Python realizza un unico oggetto stringa, 
+mentre se vengono realizzare due liste, contenenti gli stessi elementi, sono due oggetti distinti.  
+Le due liste sono equivalenti poiché hanno lo stesso valore, ma non sono identiche, poiché non sono lo stesso oggetto. Due oggetti identici sono anche equivalenti. 
+
+Si può assegnare ad una variabile ad un'altra in modo che entrambe si riferiscano allo stesso oggetto, e quindi anche se si tratta di liste il confronto \verb|is| sarà 
+verificato. Un oggetto che ha più di riferimenti ha un ``alias'', più di un nome, e si dice un oggetto ``aliased''. Se gli oggetti sono mutabili questo può essere 
+fonte di errore. 
+Si consiglia di evitare di utilizzare alias quando si lavora con liste ed oggetti mutabili. Si distingue tra operazioni che creano nuove liste ed operazioni che modificano 
+lista, come l'operatore di concatenazione \verb|+| ed il metodo \verb|append()|, quest'ultimo modifica la lista su cui è invocato analogamente di \verb|extend()|, mentre l'operatore di 
+concatenazione genera una nuova lista. 
+
+
+C'è uno speciale costrutto per accedere a tutti gi elementi di una lista effettuando la stessa operazione su di loro e memorizzare i nuovi elementi in un'altra 
+lista:
+\begin{minted}{python}
+    >>> lista_1 = [1, 2, 3]
+    >>> lista_2 = [item * 2 for item in lista_1]
+    >>> print(lista_2)
+    [2, 4, 6]
+\end{minted}
+
+Quando bisogna accedere contemporaneamente a più liste si può utilizzare la sintassi che utilizza la parola chiave \verb|zip| per trattare la sequenza di liste 
+passate contemporaneamente:
+\begin{minted}{python}
+    for item_1, item_2, ... in zip(lista_1, lista_2, ...):
+        # corpo del ciclo, per ogni iterazione si ha
+        # item_1 = lista_1[i], item_2 = lista_2[i], ...
+\end{minted}
+In questo modo si può iterare su tutte le liste insieme, senza dover specificare per ognuna il loro indice. Questa funziona associa le liste e termina alla lista più 
+corta. 
+
+\subsection{Dizionari}
+
+
+
+
+
+
+
+
+
+\clearpage
 
 \end{document}
