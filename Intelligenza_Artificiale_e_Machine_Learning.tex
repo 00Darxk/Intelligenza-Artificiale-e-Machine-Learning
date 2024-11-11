@@ -1232,13 +1232,104 @@ passate contemporaneamente:
 In questo modo si può iterare su tutte le liste insieme, senza dover specificare per ognuna il loro indice. Questa funziona associa le liste e termina alla lista più 
 corta. 
 
-\subsection{Dizionari}
+\subsection{Dizionari e Set}
+
+Un dizionario è simile ad una lista, ma più generale, permette di accedere agli elementi contenuti tramite una chiave definita 
+a priori. Rappresenta un mapping tra due insiemi, uno di chiavi ed uno di valori, ogni chiave individua un valore, ogni item 
+del dizionario è quindi una coppia tra una chiave ed un valore. 
+Può essere costruito un dizionario vuoto tramite la funzione \verb|dict()|, e se stampato produce \verb|{}|. 
+\begin{minted}{python}
+    >>> str2num = dict()
+    >>> print(str2num)
+    {}
+    >>>
+\end{minted}
+
+Per aggiungere un item nel dizionario, si utilizzano parentesi quadre per specificare la chiave e si assegna il suo valore contenuto, 
+come se fosse l'indice di una lista:
+\begin{minted}{python}
+    >>> str2num['uno'] = 1
+    >>> print(str2num)
+    {'uno' : 1}
+\end{minted}
+Questo formato di output di un dizionario è un formato che può essere utilizzato per popolare un dizionario:
+\begin{minted}{python}
+    >>> str2num = {'uno' : 1, 'due' : 2, 'tre' : 3}
+\end{minted}
+Ma l'ordine in cui sono stati inseriti gli elementi non viene mantenuto, questo non costituisce un problema, poiché gli elementi non 
+vengono identificati dalla loro posizione, ma attraverso una chiave. Se si prova ad accedere ad un elemento la cui chiave 
+non esiste viene sollevato un errore. Per accedere ad un valore nel dizionario si utilizza la chiave come fosse un incide:
+\begin{minted}{python}
+    >>> str2num['uno']
+    1
+\end{minted}
+
+Si può utilizzare la funzione \verb|len()| per determinare il numero di elementi in un dizionario e la parola chiave \verb|in| 
+per determinare se una data chiave è presente in un dizionario, non controlla se è presente un valore:
+\begin{minted}{python}
+    >>> len(str2num)
+    3
+\end{minted}
+Per visualizzare i valori si può utilizzare il metodo \verb|values()| che restituisce elementi su cui si può costruire una lista, su cui è possibile 
+verificare la presenza di certi valori tramite \verb|in|. Questo operatore utilizza diversi algoritmi per le liste e per i 
+dizionari, utilizza una ricerca lineare per le liste ed una tabella di hash per i dizionari. 
 
 
 
+Una tupla è una sequenza di valori, simili ad una lista, di qualsiasi tipo, indicizzati da interi. Le tuple a differenza delle liste 
+sono immutabili, ed è possibile confrontarle tra di loro, quindi è possibile siano utilizzate per realizzare chiavi di 
+dizionari. 
+Si definisce una tupla come una sequenza di valori divisi da virgole, ma convenzionalmente si tende ad includere questi valori 
+in parentesi graffe per semplificare la leggibilità:
+\begin{minted}{python}
+    >>> t={1, 2, 3}
+\end{minted}
+
+Per creare una tupla con un unico valore, bisogna comunque inserire la prima virgola, altrimenti si creerebbe o una stringa o 
+un dato di tipo uguale al tipo del primo elemento. 
+
+Si può creare una tupla vuota con la funzione \verb|tuple()|, invece è possible inserire un argomento in questa funzione per 
+generare una tupla dagli elementi della sequenza. Se si tratta di una stringa ogni carattere viene trattato come un 
+elemento distinto, quindi viene scomposta. I vari operatori analizzati per le liste si possono utilizzare anche per le 
+tuple:
+\begin{minted}{python}
+    t[i]        # valore all'indice i
+    t[i:j]      # valori dall'indice i a j-1
+    t[:j]       # valori dall'indice 0 a j-1
+    t[i:]       # valori dall'indice i a len(t)
+    t[:]        # copia della tupla
+\end{minted}
+
+Se si provasse a modificare un elemento verrebbe sollevato un errore, è comunque possibile creare una copia sostituendo solamente 
+certi valori, così come per le stringhe, effettuando una concatenazione. 
+
+Gli operatori di confronto funzionano sulle tuple e su altre sequenze su Python. Cominciano a confrontare dal primo elemento 
+di ciascuna sequenza, se sono uguali passa all'elemento successivo fino a trovare una coppia di elementi diversi. Quindi gli 
+elementi successivi non vengono presi in considerazione. 
+
+Si può utilizzare la funzione \verb|sort()|, può essere utile con lo schema DSU, ``Decorate, Sort, Undecorate''. Secondo questo 
+approccio si decora una sequenza costruendo un elenco di tuple con una o più chiavi di ordinamento che precedono gli elementi 
+della sequenza, si ordina tramite questa funzione ed in seguito si rimuove questa decorazione estraendo gli elementi della 
+sequenza. 
+
+Una caratteristica di Python consente di assegnare più di una variabile alla volta, potendo inserire una 
+tupla sul lato sinistro dell'assegnazione, senza parentesi tonde per convenzione. 
+Un'applicazione interessante permette di scambiare i valori tra due variabili con una singola istruzione:
+\begin{minted}{python}
+    >>> a, b = b, a
+\end{minted}
+
+Il numero di valori a destra e sinistra dell'assegnazione devon corrispondere per non sollevare errori. 
+Un altro metodo chiamato \verb|items()| permette di restituire una lista di tuple dove ogni tupla è una coppia 
+chiave-valore. Questa lista non è ordinata, ma essendo le tuple comparabili, si può ordinare con il metodo \verb|sort()|. 
 
 
+Gli insiemi sono collezioni non ordinate di altri oggetti. L'istruzione per creare un insieme è \verb|set()|, inserendo 
+una sequenza di elementi. In un insieme non possono esserci elementi ripetuti quindi vengono rimossi 
+al momento della creazione. 
 
+Si possono effettuare le classi operazioni su insiemi, con metodi di unione \verb|union()|, 
+intersezione \verb|intersection()|, differenza \verb|difference()| e differenza simmetrica \verb|symmetric_difference()|. 
 
 \subsection{Ambienti di Sviluppo}
 
@@ -1326,6 +1417,5 @@ Inoltre esistono ambienti dedicati all'ambito scientifico con un'analisi più de
 Python Development Environment''. 
 
 \clearpage
-
 
 \end{document}
