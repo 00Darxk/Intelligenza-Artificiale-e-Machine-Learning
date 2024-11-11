@@ -1240,8 +1240,92 @@ corta.
 
 
 
+\subsection{Ambienti di Sviluppo}
 
+I principali ambienti di programmazione di Python sono Anaconda, Eclipse e Google Colab. Tutte e 
+tre permettono di programmare in modo semplificato. 
+Esistono due approcci alla traduzione ed esecuzione dei programmi per i linguaggi di alto 
+livello. Possono essere trasformati in un programma in linguaggio macchina ed eseguiti, 
+compilazione, oppure ciascuna istruzione di alto livello può essere trasformata in almeno un'
+istruzione di linguaggio macchina ed eseguita direttamente, interpretazione. 
+Storicamente la modalità interpretata viene associata alla programmazione su linea di comando, 
+e solamente su rari casi viene utilizzata, anche se con Python ha cominciato ad essere riutilizzata. 
+
+Quindi non è presente una fase intermedia di compilazione o un programma compilato da 
+eseguire, ma il programma viene eseguito direttamente istruzione per istruzione tramite un 
+interprete. 
+I linguaggi compilati sono specifici per ogni piattaforma, ma estremamente ottimizzati 
+per quella esatta piattaforma. Mentre i linguaggi interpretati prevedono la 
+distribuzione diretta del file sorgente, uguale per tutte le piattaforme, ma deve essere 
+disponibile il programma interprete e sono generalmente più lenti poiché l'esecuzione attende 
+ogni nuova istruzione da eseguire. 
+In assenza di vincoli sul tempo dell'esecuzione il ritardo introdotto dall'interpretazione 
+è accettabile. 
+
+Linguaggi come C e C++ sono linguaggi compilati, mentre Python è un linguaggio interpretato. 
+Java ha un approccio ibrido generando il bytecode, una versione di linguaggio macchina eseguibile 
+dalla JVM, elaboratore virtuale simile ad un hardware tradizionale, con una conversione 
+quasi uno ad uno delle istruzioni. 
+
+Python è un linguaggio interpretata ad alto livello simbolico. Un programma Python può 
+essere eseguito in modalità interattiva, dove ogni istruzione viene eseguita singolarmente, 
+ed il suo output viene visualizzato sulla console in sequenza. Questo programma può essere 
+interrotto, si possono rieseguire certe istruzioni, etc. Si può quindi modificare il flusso 
+e le istruzioni sulla base dell'output ottenuto. Questo tipo di codice viene utilizzato 
+per data analytics e exploration. 
+Altrimenti all'interprete può essere passato l'intero programma come un file di estensione \verb|.py|. 
+L'output viene visualizzato solamente se si invoca la funzione di stampa. 
+
+Per utilizzare la modalità interattiva serve un ambiente di interazione, l'interprete 
+più diffuso è Cpython. 
+
+Può essere scaricato su tutte le piattaforme, aprendo una console si può entrare nella modalità interattiva con il comando \verb|python3|. 
+Per uscire da questa modalità è sufficiente invocare la funzione \verb|quit()|. 
+
+Anaconda è una distribuzione di Python che semplifica la gestione ed il deployment delle librerie. Permette di creare ambiente 
+in cui installare versioni specifiche delle librerie compatibili con certi software. Il gestore di queste librerie o package 
+si chiama conda e si usa principalmente da linea di comando e gestisce queste librerie e le mantiene aggiornate. Può essere 
+installato insieme a Cpython. 
+
+I principali comandi in Anaconda sono:
+\begin{minted}{python}
+    conda create -n myenv python=3.7 # crea un nuovo environment di versione specificata
+    conda info -envs                 # visualizza la lista di environment creati
+    source activate myenv            # attiva l'ambiente di sviluppo
+    conda install scipy              # installa il package scipy all'interno di quell'ambiente
+    conda install pandas=0.13.e      # installa la versione 0.13.e del package panda 
+\end{minted}
+
+%% TODO fix comandi conda 
+
+Le principali librerie utilizzate in questo corso sono pandas, matplotlib, NumPy, SciPy, IPython e scikit-learn. 
+Dentro Anaconda c'è un'interfaccia browser per avere un ambiente di programmazione per programmare chiamato Jupiter, dove è 
+possibile attivare la linea di comando per programmare in modalità interattiva. Si può attivare con il comando \verb|jupiter notebook|, 
+che mostra a schermo l'indirizzo a cui collegarsi per accedere, generalmente \verb|127.0.0.1|. Si analizzerà in seguito insieme 
+all'ambiente Google Colab, anch'esso su un'interfaccia browser. 
+
+Eclipse è un ambiente di sviluppo storico, multi-linguaggio, installando dal marketplace il plugin pydev per poter programmare in 
+Python. 
+
+Google Colab è un ambiente di sviluppo fornito gratuitamente da Google, utilizzando risorse cloud, su di un singolo 
+notebook, direttamente collegato all'account google. 
+Ha un'interfaccia a blocchi interattiva, da data scientist, e permette di scegliere il runtime e la GPU da utilizzare per 
+eseguire il programma. Il codice viene salvato su un notebook, quindi su un file di estensione \verb|.ipynb|, ed è possibile 
+passare al Python tradizionale e viceversa. Su dispositivi mobile è possibile programmare con un'interfaccia molto simile ad un 
+computer. 
+
+Si divide il programma in celle per dividere il codice e permettere di elaborare singoli blocchi, senza dover ricalcolare 
+tutti i blocchi già eseguiti. Questo inoltre rende il codice più chiaro e comprensibile. 
+
+JupyterLab è un estensione di Jupyter che aggiunge funzionalità per programmare a progetto per visualizzare e gestire diverse 
+tipologie di file. 
+
+
+Si possono utilizzare anche ambienti virtuali come Docker per eseguire il codice su container isolati. 
+Inoltre esistono ambienti dedicati all'ambito scientifico con un'analisi più dettagliata dei dati prodotti come spyder, ``The Scientific 
+Python Development Environment''. 
 
 \clearpage
+
 
 \end{document}
