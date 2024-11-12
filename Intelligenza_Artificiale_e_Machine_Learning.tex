@@ -69,7 +69,7 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
-\section{Introduzione all'Intelligenza Artificiale}
+\section{Introduzione: Intelligenza Artificiale e Machine Learning}
 
 L'intelligenza artificiale è l'area di studio che analizza come permettere ai computer di 
 compiere operazioni che eseguite da un essere umano richiederebbero intelligenza. 
@@ -80,7 +80,7 @@ Un modo per poter riepilogare la storia dell'intelligenza artificiale consiste n
 i vincitori del Turing Award, in questo campo. Questo premio rappresenta l'analogo del 
 premio Nobel per l'informatica. 
 
-\subsection{Storia}
+\subsection{Storia dell'IA}
 
 La prima fase di questa storia si può attribuire a personaggi come Alan Turing, che introdusse 
 il concetto di ``test di Turing'' per determinare se una macchina si può considerare 
@@ -203,6 +203,116 @@ gravitazionali è stato velocizzato di un fattore di $10^7$.
 
 Nel 2022 venne rilasciato ChatGPT, ``Generative Pre-trained Transformer'', il chatbot di OpenAI 
 progettato per rendere efficace la comunicazione con un utente umano. 
+
+\subsection{Il Machine Learning}
+
+L'intelligenza artificiale è una disciplina molto vasta, non copre solo tematiche sulla ricerca di una 
+soluzione ottima. Esistono sistemi esperti per effettuare decisioni, offrire raccomandazioni, aiutare nella 
+programmazione. 
+
+Dopo il 2006 le aziende hanno capito l'impatto che le raccomandazioni hanno nel mantenere l'attenzione del 
+cliente e migliorare il loro servizio, quando Netflix ha annunciato un concorso di un milione di dollari 
+per migliorare il suo programma di raccomandazioni del 10\%. Da allora tutte le principali aziende di 
+investimenti, di viaggi, di intrattenimento, etc. Tutte le aziende che hanno di interesse l'interazione 
+degli utenti. 
+
+Ora è veramente di interesse, infatti la massima conferenza sulla ricerca SIGIR
+``Special Interest Group on Information Retrieval'', prima trattava principalmente problemi di ricerca, 
+mentre recentemente la sua attenzione si è rivolta su sistemi di raccomandazione. 
+
+Un sistema di Machine Learning ML, all'interno di un dominio, dove ci sono dati validi con una loro 
+consistenza, rappresenta un processo di apprendimento supervisionato o meno su questi dati per 
+poter gestire e generalizzare i nuovi dati nello stesso dominio applicativo. 
+
+Uno dei grandi passi avanti nel campo delle immagini si deve al grande dataset ImageNet, grazie ad una 
+ricercatrice e professoressa di Stanford, che ha investito il suo tempo nel progetto. Questo insieme contiene 
+milioni di immagini descritte e la loro classe di appartenenza dell'oggetto raffigurato, sono infatti 
+principalmente immagini in primo piano. Tramite insiemi di dati come questi, il sistema apprende in un 
+approccio supervisionato, poiché ad ogni immagine viene indicata la classe di appartenenza, ed in alcuni casi 
+si indica dov'è presente l'oggetto nell'immagine. Date queste due indicazioni si possono creare sistemi di 
+identificazione o individuazione di un'immagine. 
+Questo approccio può realizzare sistemi di riconoscimento facciale, individuando le facce da un'immagine ed in 
+seguito riconoscere le facce dall'immagine. 
+
+La maggior parte dei dataset saranno supervisionati, ma esistono moltissimi dataset i cui data-point non sono 
+indicati o descritti. Questo tipo di apprendimento prevede l'assenza delle classi dell'appartenenza, questo 
+viene utilizzato per creare sistemi che possono essere in grado di identificare il rischio di una certa 
+malattia, tramite delle caratteristiche comportamentali o genetiche. Oppure si assegnano a degli algoritmi 
+di clustering un insieme di utente, che sulla base delle caratteristiche di quest'ultimi individua 
+delle classi di utenti. Nel diagramma di dispersione dove sono presenti questi data-point si possono quindi 
+individuare cluster diverse. Si utilizza questo approccio nelle comunità social per identificare 
+comunità distinte. 
+
+Se si trattano fenomeni fisici che non sono caratterizzabili a priori si effettuano degli studi per vedere se 
+sono presenti correlazioni tra i data-point e quindi dei cluster, ed eventualmente individuare informazioni 
+da questi dati. 
+
+L'apprendimento per rinforzo è molto comune, ed è un sistema dove un agente interagisce con un ambiente, senza 
+un dataset, per permettere all'agente di operare sull'ambiente, questo fornisce delle ricompense all'agente in caso 
+effettui un certo tipo di azioni. Queste ricompense possono essere positive o negative, e sulla base di queste, 
+si realizza il meccanismo di apprendimento. 
+Alcune aree di dominio che si predispongono a questo tipo di apprendimento, dove sulla base delle ricompense 
+si possono suscitare reazioni e quindi comportamenti desiderati dall'agente, sono i videogiochi. 
+
+Grazie al DL si ha una sistema di ``Deep Reinforcement Learning'', dove il sistema è in grado di imparare 
+direttamente da un'immagine, un video, uno spettrogramma, etc. 
+
+Nel 2013 la DeepMind, di proprietà di Google ha dimostrato la possibilità di un agente di apprendere 
+tramite DRL, su numerose partite di Breakout un comportamento ``super-umano'', e diversi altri giochi arcade 
+della Atari. 
+Un altro grande dominio dove questo tipo di approccio è utile è la robotica, dimostrato dalla Boston Dynamics 
+e dal loro robot umanoide Atlas, in grado di camminare, saltare, portare pesi, su diversi tipi di terreni 
+autonomamente. Il loro successivo robot Spot, ha risolto alcuni dei problemi, non dovendo imparare 
+una locomozione su due piedi molto più complessa, basandosi invece sullo scheletro di un animale quadrupede 
+come un cane. 
+
+
+Il reinforcement learning venne introdotto per la prima volta una ventina di anni fa da Richard Button e Andrew Barto, 
+degli psicologi cognitivi, senza tutta la serie di risorse di calcolo e di data per favorire questo approccio. 
+Quindi non si è affermato per molto tempo. 
+
+Nel 1997 venne proposta l'idea della RoboCup, un campionato di calcio composto da squadre di robot autonomi, 
+da parte di diverse università entro il 2050, in grado di confrontarsi con la squadra di calcio campione 
+al mondo. 
+
+Il ML quindi ha l'obiettivo di generalizzare ed effettuare decisioni, il quanto più accurate, su un relativo dominio 
+i cui dati non ha ancora visto. 
+
+
+L'apprendimento è una componente chiave del ragionamento, ma non è sufficiente a generare IA in grado di 
+generare nuova conoscenza. Tecniche di generazione del testo, delle immagini e musica, etc., sono note 
+già da anni, ma solo recentemente con ChatGPT utilizzando una serie di tecniche che consentono un 
+addestramento molto accurato ed efficiente su di un patrimonio di dati che è sterminato. 
+Tutte le aziende informatiche, capiscono che questo è una minaccia, poiché permetterebbe di catturare 
+oltre alla frequenza dei termini anche il loro contesto. Dal contesto è quindi in grado di determinare 
+la probabilità che una certa parola appaia. 
+Infatti ChatGPT è uno strumento statistico, poiché non ha alcun tipo di ragionamento, per questo si 
+parla anche di allucinazioni, poiché non può creare nuova conoscenza, ma offre esempi dove lo strumento 
+non rinuncia di predire, ma produce un risultato scorretto. 
+
+
+Il processo di ML permetterebbe di realizzare software 2.0, tramite una rete neurale in grado di identificare 
+le istruzioni da dover eseguire per effettuare una data azione, senza l'appoggio di un programmatore esterno. 
+Questo solleva una serie di problematiche relativo ai pericolo del ML. 
+
+
+Jeremy Howard ha esposto su una ``TED talk'' un problema analogo alla rivoluzione industriale in 
+termini di occupazione, dove l'80\% delle persone lavora sui servizi, un dominio di interesse dove 
+l'intelligenza artificiale è in grado di lavorare molto bene. Per cui quando questi sistemi entreranno 
+a regime e le aziende si renderanno conto di questi strumenti così potenti a disposizione, allora 
+sostituiranno questa occupazione umana, creando problemi occupazionali. 
+Già nel 2015 nel concorso ImageNet, sullo stesso dataset, il tasso di errore di agenti intelligenti è sceso 
+al disotto del tasso di errore umano nel riconoscimento delle immagini. Anche se l'essere umano è in grado 
+di identificare in più classi distinte rispetto all'agente artificiale ed è in grado di contestualizzare 
+queste immagine. 
+Ma in alcune professioni quello che le macchine possono offrire, in termini economici, è più conveniente 
+rispetto a quello che lavoratori umani possono offrire. 
+Nel 2023 c'è stato lo sciopero più lungo nell'ambito di Hollywood, per l'introduzione dell'IA nel cinema, 
+poiché questo avrebbe messo a rischio il loro lavoro e la loro occupazione. In seguito a questo sciopero 
+le case cinematografiche hanno imposto dei limiti per evitare questo caso peggiore.  
+
+Il ML rappresenta solo una piccola parte dell'intelligenza artificiale, ma comprende parti da altre discipline 
+come il ``neurocomputing'', la statistica come classificatori bayesiani, il riconoscimento di andamenti. 
 
 \clearpage
 
@@ -1380,14 +1490,18 @@ installato insieme a Cpython.
 
 I principali comandi in Anaconda sono:
 \begin{minted}{python}
-    conda create -n myenv python=3.7 # crea un nuovo environment di versione specificata
-    conda info -envs                 # visualizza la lista di environment creati
-    source activate myenv            # attiva l'ambiente di sviluppo
-    conda install scipy              # installa il package scipy all'interno di quell'ambiente
-    conda install pandas=0.13.e      # installa la versione 0.13.e del package panda 
+    # crea un nuovo environment di versione specificata: 
+    conda create -n nomeEnv python=versionePython 
+    # visualizza la lista di environment creati:
+    conda info -envs                 
+    # attiva l'ambiente di sviluppo
+    source activate nomeEnv            
+    # installa il package specificato all'interno dell'ambiente corrente
+    conda install nomePackage=versionePackage
 \end{minted}
+Se non viene specificata la versione, sia per Python che per i pacchetti da installare, 
+conda utilizzerà l'ultima versione come default. 
 
-%% TODO fix comandi conda 
 
 Le principali librerie utilizzate in questo corso sono pandas, matplotlib, NumPy, SciPy, IPython e scikit-learn. 
 Dentro Anaconda c'è un'interfaccia browser per avere un ambiente di programmazione per programmare chiamato Jupiter, dove è 
@@ -1417,5 +1531,6 @@ Inoltre esistono ambienti dedicati all'ambito scientifico con un'analisi più de
 Python Development Environment''. 
 
 \clearpage
+
 
 \end{document}
