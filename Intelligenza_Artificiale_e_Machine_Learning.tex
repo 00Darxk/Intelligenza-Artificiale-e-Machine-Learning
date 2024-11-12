@@ -1077,7 +1077,8 @@ Gli operatori seguono un ordine di precedenza naturale, come la sintassi moderna
 
 In Python sono presenti tutti gli operatori booleani del C come \verb|==| ed operatori di confronto come \verb|<, <=, >, >=|, in aggiunta sono presenti 
 altri operatori \verb|is| ed \verb|is not|. Inoltre sono presenti due versione degli operatori logici \verb|&&| e \verb|and|, || e \verb|or| e \verb|!=| e \verb|not|. 
-Come in C un qualsiasi valore diverso da zero corrisponde al booleano \verb|true|. 
+Come in C un qualsiasi valore diverso da zero corrisponde al booleano \verb|True|, inoltre associa numericamente questo valore ad 1, mentre \verb|False| a 0. \'{E} possibile convertire 
+un tipo di dato booleano ad un tipo di dato numerico come un intero \verb|int| o un numero reale \verb|float|. 
 
 Si possono inserire dati dall'utente tramite la funzione \verb|input()| e la funzione \verb|raw_input()| per lo stesso comportamento di Python 2, e si può convertire in un tipo 
 specifico con \verb|tipo(var)|. I commenti vengono realizzati tramite il carattere \#. 
@@ -1217,7 +1218,8 @@ Se in una stringa compare una sequenza di format sequences si specifica l'operan
     'il numero è 1' 
 \end{minted}
 La tupla deve corrispondere in numero, ordine e tipo alle format sequences nella stringa. 
-Si utilizza \verb|%d| per numeri interi \verb|%g| per floating point e \verb|%s| per stringhe. 
+Si utilizza \verb|%d| per numeri interi \verb|%g| per floating point e \verb|%s| per stringhe. Utilizzando numeri è possibile specificare il numero di cifre significative da utilizzare per 
+rappresentare il numero, inserendo un numero subito dopo l'operatore format. 
 
 Esiste un nuovo operatore format, scrivendo tra parentesi graffe \verb|:| seguito dal carattere corrispondente al tipo, dopo la stringa si invoca il metodo \verb|format()| 
 specificando nell'argomento il valore da inserire:
@@ -1509,6 +1511,8 @@ possibile attivare la linea di comando per programmare in modalità interattiva.
 che mostra a schermo l'indirizzo a cui collegarsi per accedere, generalmente \verb|127.0.0.1|. Si analizzerà in seguito insieme 
 all'ambiente Google Colab, anch'esso su un'interfaccia browser. 
 
+Sui notebook è possibile inserire del testo, ed accetta macro e comandi in formato Markdown, e funzioni scritte in LaTeX. 
+
 Eclipse è un ambiente di sviluppo storico, multi-linguaggio, installando dal marketplace il plugin pydev per poter programmare in 
 Python. 
 
@@ -1529,6 +1533,228 @@ tipologie di file.
 Si possono utilizzare anche ambienti virtuali come Docker per eseguire il codice su container isolati. 
 Inoltre esistono ambienti dedicati all'ambito scientifico con un'analisi più dettagliata dei dati prodotti come spyder, ``The Scientific 
 Python Development Environment''. 
+
+\subsection{Classi e oggetti}
+
+La fonte di ispirazione della programmazione orientata agli oggetti è dovuta a lavori realizzati dalla comunità 
+sull'intelligenza artificiale, nell'ambito della rappresentazione della conoscenza quando Marvin Minsky propose il 
+formalismo dei frames nel 1975. Con tutte le caratteristiche dei moderni approcci di programmazione orientata agli 
+oggetti. 
+
+Questo paradigma di programmazione consiste nel mantenere i dati e le funzioni operabili su di essi vicine, raggruppate 
+in entità chiamate oggetti. Una classe è una descrizione di un insieme di oggetti che hanno lo stesso comportamento, ed un 
+oggetto è una singola istanza di questa classe, dove è definita anche un insieme di metodi da poter usare su questi oggetti. 
+
+L'insieme di tutti i metodi resi disponibili da una classe, con la descrizione del loro comportamento, si chiama interfaccia 
+pubblica della classe. 
+
+Una classe in Python viene definita tramite la parola chiave \verb|class| seguita dal nome della classe, utilizzando 
+la notazione dove ogni parola del nome ha la prima lettera maiuscola, ``Camel-case'':
+\begin{minted}{python}
+    class NomeClasse:
+        pass 
+\end{minted}
+
+\verb|pass| è un placeholder ed indica dove sarà scritto codice, questa rappresenta una definizione di una classe minimale, 
+definendo solamente il nome e nessun altro comportamento. 
+
+Si può istanziare una nuova classe dato il suo nome: 
+\begin{minted}{python}
+    NomeClasse()
+\end{minted}
+Questo istanzia un oggetto appartenente alla classe specificata, allocata in una nuova zona di memoria, una variabile 
+assegnata a questa nuova istanza mantiene il riferimento a questa zona di memoria, quindi si ha:
+\begin{minted}{python}
+    >>> a = NomeClasse()
+    >>> b = NomeClasse()
+    >>> a == b
+    False
+\end{minted}
+Poiché quest'operazione di confronto effettuata sulle variabili ha azione sugli indirizzi di memoria contenuti. 
+Le proprietà che una classe deve avere può essere definite utilizzando un metodo particolare costruttore chiamato \verb|.__init__()|. 
+Questo inizializza una nuova istanza della classe ed assegna i valori al suo stato. Metodi con un doppio carattere \verb|_| 
+vengono chiamati ``Dunder Methods'', per ``Data Underlined''. Al costruttore vengono passati i parametri che si vuole, ma 
+è sempre necessario passare la variabile chiamata \verb|self| per definire nuovi attributi sull'oggetto. Poiché quando viene 
+creata un'istanza di una classe, viene salvata automaticamente a questo parametro. 
+
+\begin{minted}{python}
+    class NomeClasse:
+        def __init__(self, attributo1, ..., attributoN):
+            self.attributo1 = attributo1
+            # ...
+            self.attributoN = attributo N
+\end{minted}
+
+Ognuna di queste assegnazioni in realtà crea anche un attributo chiamato con il nome utilizzato nella notazione puntata, riferita 
+a \verb|self|, e contenente il valore assegnatoli dal parametro passato come input al costruttore. \verb|self| deve 
+essere sempre il primo parametro. 
+
+Gli attributi creati in questo modo vengono chiamati ``Istance Attributes'', attributi d'istanza, che sono attributi 
+unici per ogni istanza della classe, chiamai al momento di costruzione dell'istanza. Ma possono essere definiti attributi 
+comuni per tutte le classi, chiamati ``Class Attributes'', all'interno del corpo della classe, senza inserirli 
+all'intero del costruttore:
+
+\begin{minted}{python}
+    class NomeClasse:
+        attributo = 'valore' 
+        def __init__(self, attributo1, ..., attributoN):
+            self.attributo1 = attributo1
+            # ...
+            self.attributoN = attributo N
+\end{minted}
+
+Ogni istanza avrà gli stessi class attributes, contenenti gli stessi valori. Per istanziare una classe, avendo 
+un costruttore, bisogna passare i parametri richiesti al momento di creazione:
+\begin{minted}{python}
+    >>> istanza = NomeClasse('valore1', ..., 'valoreN')
+\end{minted}
+
+Si passa un parametro in meno poiché \verb|self| viene gestito internamente, al momento della creazione dell'oggetto. Si 
+può accedere ad un certo attributo sempre con la notazione puntata, e si può modificare. Si può modificare 
+sia un attributo di classe o istanza. 
+
+Gli istance methods sono funzioni definite all'interno di una classe, possono essere invocati da una qualsiasi istanza 
+della classe. 
+
+\'{E} buona norma utilizzare un metodo come \verb|description()| per fornire una stringa contenente informazioni utili per 
+l'istanza della classe. Ma questo non è il modo migliore per ottenere. Si utilizza il metodo \verb|.__str__()| per 
+restituire queste informazioni in formato di stringa:
+\begin{minted}{python}
+    class NomeClasse:
+        attributo = 'valore' 
+        
+        def __init__(self, attributo1, ..., attributoN):
+            self.attributo1 = attributo1
+            # ...
+            self.attributoN = attributo N
+        
+        def __str__():
+            return f'{self.attributo1}, ..., {self.attributoN}'
+\end{minted}
+
+Quando viene invocata una funzione di stampa su un'istanza di questa classe, viene stampata la stringa definita da questo 
+metodo:
+\begin{minted}{python}
+    >>> istanza = NomeClasse('valore1', ..., 'valoreN')
+    >>> print(istanza)
+    valore1, ..., valoreN
+\end{minted}
+
+%% TODO tutti i metodi con prefisso punto
+
+\subsection{Liste Concatenate}
+
+Il tipo di dato astratto lista concatenata è diversa dal tipo di dato predefinito lista già presente su Python. Si parlerà di 
+liste singolarmente concatenate. Questa lista è composta da un nodo, contenente il dato ed un puntatore all'elemento successivo 
+di questa struttura concatenata. L'ultimo nodo della lista contiene un puntatore nullo. Per accedere agli elementi si hanno 
+due puntatori di accesso, \verb|head| e \verb|tail|, per accedere in testa o in coda alla lista. 
+
+\'{E} comodo avere un accesso facilitato a queste due posizioni per effettuare facilmente operazioni di aggiunta, rimozione, 
+modifica in testa o in coda. Un nodo è una classe contenente questi due unici attributi:
+\begin{minted}{python}
+    class Node:
+        data = ''
+        next = None
+
+        def __init__(self, data, next):
+            self.data = data
+            self.next = next
+\end{minted}
+
+L'utilizzo del paradigma orientato agli oggetti non è l'unico modo per definire una lista concatenata, ma è il modo 
+utilizzato durante questo corso. 
+
+Una lista concatenata è una classe contenente i riferimenti alla testa ed alla coda della lista, inizialmente 
+assegnati al valore nullo, per generare una lista vuota:
+\begin{minted}{python}
+    class List:
+        def __init__(self):
+            self.__head = None
+            self.__tail = None
+\end{minted}
+
+In realtà il campo dati è un riferimento ad un altro oggetto contenente i dati, ma per semplificare si considera il campo 
+dati direttamente contenente questi. 
+
+Per scandire la lista elemento per elemento si può utilizzare un puntatore ausiliario, inizialmente assegnato al 
+primo elemento della lista:
+\begin{minted}{python}
+    p = self.__head
+\end{minted}
+Per passare all'elemento successivo bisogna assegnare questo puntatore al valore del puntatore a \verb|next| contenuto 
+nel nodo corrente:
+\begin{minted}{python}
+    p = p.next
+\end{minted}
+
+Per scandire la lista quindi si utilizza un ciclo, fino a quando il valore contenuto in questo puntato \verb|p| non 
+corrisponde al valore \verb|None|:
+\begin{minted}{python}
+    class List:
+        def __init__(self):
+            self.__head = None
+            self.__tail = None
+
+        def operazione():
+            p = self.__head
+            while p != None:
+                # operazioni sul nodo
+                p = p.next
+\end{minted}
+
+Per cominciare a scandire la lista da un punto preciso si può inserire un parametro di classe \verb|Node| a cui 
+assegnare \verb|p|. Si vogliono realizzare i seguenti metodi sulle liste singolarmente concatenate:
+\begin{itemize}
+    \item \verb|append|: Inserimento in coda;
+    \item \verb|insert_head|: Inserimento in testa;
+    \item \verb|insert_position|: Inserimento in una posizione intermedia;
+    \item \verb|delete|: Cancellazione di un elemento. 
+\end{itemize}
+
+\begin{minted}{python}
+    class List:
+        def __init__(self):
+            self.__head = None
+            self.__tail = None
+
+        def append(self, newNode)
+            if self.__tail != None:
+                self.__tail.next = NewNode
+            if self.__head == None:
+                self.__head = NewNode
+            self.__tail = NewNode
+            # newNode.next = None
+
+        def insert_head(self, newNode):
+            if self.__head == None:
+                self.__tail = self._head
+            newNode.next = self.__head
+            self.__head = newNode
+
+        def insert_position(self, newNode, position):
+            p = self.__head
+            i = 0
+            while i < position - 1 and p != None:
+                p = p.next
+                i += 1
+            newNode.next = p.next
+            p.next = newNode
+
+        def delete(self, position):
+            if self.__head == None:
+                return
+            if position == 0:
+                self.__head = self._head.next
+                return 
+            p = self.__head
+            i = 0
+            while i < position - 1 and p.next != None:
+                p = p.next
+                i += 1
+            if i != position - 1:
+                return 
+            p.next = p.next.next
+\end{minted}
 
 \clearpage
 
