@@ -775,7 +775,7 @@ Uno dei difetti è che la scelta del nuovo stato è effettuata interamente dalla
 
 %% TODO A^* in math_mode?
 
-L'algoritmo A* risolve ip roble dell'algoritmo greedy, considerando anche il percorso parziale nella sua funzione di valutazione: $f(n)=g(n)+h(n)$, fornisce 
+L'algoritmo A* risolve i problema dell'algoritmo greedy, considerando anche il percorso parziale nella sua funzione di valutazione: $f(n)=g(n)+h(n)$, fornisce 
 quindi una stima del costo del cammino dallo stato iniziale ad uno stato obiettivo, vincolato a passare per il nodo $n$. 
 
 Con questa semplice aggiunta è possibile migliorare notevolmente l'algoritmo precedente, inoltre sotto certe condizioni è possibile recuperare l'ottimalità e la 
@@ -785,7 +785,7 @@ completezza. Date queste due ipotesi sul grafo di partenza:
     \item Tutti i costi abbiano costi maggiori di una quantità positiva $\delta$. 
 \end{itemize}
 
-Se $h$ è un'euristica ammissibile, ovvero se per ogni nodo $n$ del grafo vale la condizione $h(n)<\leq h^*(n)$, allora l'algoritmo A* è ottimale e completo:
+Se $h$ è un'euristica ammissibile, ovvero se per ogni nodo $n$ del grafo vale la condizione $h(n)\leq h^*(n)$, allora l'algoritmo A* è ottimale e completo:
 \begin{equation}
     \forall n\mbox{ t.c. }h(n)\leq h^*(n)\implies \text{A*: completo ed ottimale}
 \end{equation}
@@ -798,7 +798,7 @@ super ottimistico.
 Date due versioni dell'algoritmo A* con due euristiche diverse $h_1<h_2$, per tutti i nodi non obiettivo, si dice che l'algoritmo A*$_2$ è più informato dell'algoritmo 
 A*$_1$. 
 Vale allora il teorema secondo cui al termine delle loro ricerche su un qualsiasi grafo con un percorso dal nodo iniziale $n_o$ al nodo obiettivo, allora ogni nodo 
-espando da A*$_2$ sarà anche espando da A*$_1$. Quindi il primo algoritmo espande almeno tanti nodi quanto il secondo algoritmo, quindi l'algoritmo più informato A*$_2$ 
+espanso da A*$_2$ sarà anche espanso da A*$_1$. Quindi il primo algoritmo espande almeno tanti nodi quanto il secondo algoritmo, quindi l'algoritmo più informato A*$_2$ 
 è più efficiente di A*$_1$. 
 
 %% TODO dim teorema a-star
@@ -823,7 +823,7 @@ Analogamente:
 \begin{equation*}
     h(n_j)\geq h(n_i)-c(n_i,n_j)
 \end{equation*}
-Ovvero su un qualsiasi percorso, la stima del costo ottimo non pul diminuire più del costo di un arco 
+Ovvero su un qualsiasi percorso, la stima del costo ottimo non può diminuire più del costo di un arco 
 lungo quel percorso. Si può considerare anche come un tipo di diseguaglianza triangolare:
 \begin{equation*}
     h(n_i)\leq c(n_i,n_j)+h_(n_j)
@@ -1055,12 +1055,105 @@ Python è un linguaggio di programmazione vastamente utilizzato nell'area dell'i
 programmazione più diffuso al mondo. Python è un linguaggio general-purpose, ideato da Guido van Rossum nel 1989, a più alto livello del C, poiché gestisce automaticamente le 
 più fondamentali operazioni. Per cui è molto semplice e spesso utilizzato a fine didattico tra i primi linguaggi di programmazione insegnati. 
 
-La versione di Python utilizzata nel corso è la versione 3, nell'ambiente Anaconda. Può essere avviato tramite un interprete. Alla creazione di una variabile non 
+La versione di Python utilizzata nel corso è la versione 3, nell'ambiente Anaconda. Può essere avviato tramite un interprete. 
+
+\subsection{Ambienti di Sviluppo}
+
+I principali ambienti di programmazione di Python sono Anaconda, Eclipse e Google Colab. Tutte e 
+tre permettono di programmare in modo semplificato. 
+Esistono due approcci alla traduzione ed esecuzione dei programmi per i linguaggi di alto 
+livello. Possono essere trasformati in un programma in linguaggio macchina ed eseguiti, 
+compilazione, oppure ciascuna istruzione di alto livello può essere trasformata in almeno un'
+istruzione di linguaggio macchina ed eseguita direttamente, interpretazione. 
+Storicamente la modalità interpretata viene associata alla programmazione su linea di comando, 
+e solamente su rari casi viene utilizzata, anche se con Python ha cominciato ad essere riutilizzata. 
+
+Quindi non è presente una fase intermedia di compilazione o un programma compilato da 
+eseguire, ma il programma viene eseguito direttamente istruzione per istruzione tramite un 
+interprete. 
+I linguaggi compilati sono specifici per ogni piattaforma, ma estremamente ottimizzati 
+per quella esatta piattaforma. Mentre i linguaggi interpretati prevedono la 
+distribuzione diretta del file sorgente, uguale per tutte le piattaforme, ma deve essere 
+disponibile il programma interprete e sono generalmente più lenti poiché l'esecuzione attende 
+ogni nuova istruzione da eseguire. 
+In assenza di vincoli sul tempo dell'esecuzione il ritardo introdotto dall'interpretazione 
+è accettabile. 
+
+Linguaggi come C e C++ sono linguaggi compilati, mentre Python è un linguaggio interpretato. 
+Java ha un approccio ibrido generando il bytecode, una versione di linguaggio macchina eseguibile 
+dalla JVM, elaboratore virtuale simile ad un hardware tradizionale, con una conversione 
+quasi uno ad uno delle istruzioni. 
+
+Python è un linguaggio interpretata ad alto livello simbolico. Un programma Python può 
+essere eseguito in modalità interattiva, dove ogni istruzione viene eseguita singolarmente, 
+ed il suo output viene visualizzato sulla console in sequenza. Questo programma può essere 
+interrotto, si possono rieseguire certe istruzioni, etc. Si può quindi modificare il flusso 
+e le istruzioni sulla base dell'output ottenuto. Questo tipo di codice viene utilizzato 
+per data analytics e exploration. 
+Altrimenti all'interprete può essere passato l'intero programma come un file di estensione \verb|.py|. 
+L'output viene visualizzato solamente se si invoca la funzione di stampa. 
+
+Per utilizzare la modalità interattiva serve un ambiente di interazione, l'interprete 
+più diffuso è Cpython. 
+
+Può essere scaricato su tutte le piattaforme, aprendo una console si può entrare nella modalità interattiva con il comando \verb|python3|. 
+Per uscire da questa modalità è sufficiente invocare la funzione \verb|quit()|. 
+
+Anaconda è una distribuzione di Python che semplifica la gestione ed il deployment delle librerie. Permette di creare ambiente 
+in cui installare versioni specifiche delle librerie compatibili con certi software. Il gestore di queste librerie o package 
+si chiama conda e si usa principalmente da linea di comando e gestisce queste librerie e le mantiene aggiornate. Può essere 
+installato insieme a Cpython. 
+
+I principali comandi in Anaconda sono:
+\begin{minted}{python}
+    # crea un nuovo environment di versione specificata: 
+    conda create -n nomeEnv python=versionePython 
+    # visualizza la lista di environment creati:
+    conda info -envs                 
+    # attiva l'ambiente di sviluppo
+    source activate nomeEnv            
+    # installa il package specificato all'interno dell'ambiente corrente
+    conda install nomePackage=versionePackage
+\end{minted}
+Se non viene specificata la versione, sia per Python che per i pacchetti da installare, 
+conda utilizzerà l'ultima versione come default. 
+
+
+Le principali librerie utilizzate in questo corso sono pandas, matplotlib, NumPy, SciPy, IPython e scikit-learn. 
+Dentro Anaconda c'è un'interfaccia browser per avere un ambiente di programmazione per programmare chiamato Jupiter, dove è 
+possibile attivare la linea di comando per programmare in modalità interattiva. Si può attivare con il comando \verb|jupiter notebook|, 
+che mostra a schermo l'indirizzo a cui collegarsi per accedere, generalmente \verb|127.0.0.1|. Si analizzerà in seguito insieme 
+all'ambiente Google Colab, anch'esso su un'interfaccia browser. 
+
+Sui notebook è possibile inserire del testo, ed accetta macro e comandi in formato Markdown, e funzioni scritte in LaTeX. 
+
+Eclipse è un ambiente di sviluppo storico, multi-linguaggio, installando dal marketplace il plugin pydev per poter programmare in 
+Python. 
+
+Google Colab è un ambiente di sviluppo fornito gratuitamente da Google, utilizzando risorse cloud, su di un singolo 
+notebook, direttamente collegato all'account google. 
+Ha un'interfaccia a blocchi interattiva, da data scientist, e permette di scegliere il runtime e la GPU da utilizzare per 
+eseguire il programma. Il codice viene salvato su un notebook, quindi su un file di estensione \verb|.ipynb|, ed è possibile 
+passare al Python tradizionale e viceversa. Su dispositivi mobile è possibile programmare con un'interfaccia molto simile ad un 
+computer. 
+
+Si divide il programma in celle per dividere il codice e permettere di elaborare singoli blocchi, senza dover ricalcolare 
+tutti i blocchi già eseguiti. Questo inoltre rende il codice più chiaro e comprensibile. 
+
+JupyterLab è un estensione di Jupyter che aggiunge funzionalità per programmare a progetto per visualizzare e gestire diverse 
+tipologie di file. 
+
+
+Si possono utilizzare anche ambienti virtuali come Docker per eseguire il codice su container isolati. 
+Inoltre esistono ambienti dedicati all'ambito scientifico con un'analisi più dettagliata dei dati prodotti come spyder, ``The Scientific 
+Python Development Environment''. 
+
+\subsection{Operatori}
+
+Alla creazione di una variabile non 
 è necessario definirne il tipo, il nome identificativo è arbitrario e può contenere numeri, ma non cominciare con un numero, viene consigliato di utilizzare un carattere 
 minuscolo come primo carattere del nome. Esistono 33 parole chiave, non utilizzabili come nomi di variabili. Si può assegnare un valore ad una variabile tramite l'operatore 
 \verb|=|, senza specificarne il tipo. 
-
-\subsection{Operatori}
 
 Esistono una serie di operatori aritmetici come \verb|+|, \verb|-|, \verb|*|, \verb|\|, \verb|**|, per l'elevamento a potenza, \verb|%| per il modulo. Una differenza 
 tra Python 2 consiste nella gestione della divisione, infatti in Python 2 viene considerata solo la parte intera dell'operazione. Per ottenere lo stesso risultato 
@@ -1229,7 +1322,117 @@ specificando nell'argomento il valore da inserire:
 \end{minted}
 Questa implementa tutte le caratteristiche già trattate per il format \verb|%|. 
 
-\subsection{Liste}
+\subsection{Classi e oggetti}
+
+La fonte di ispirazione della programmazione orientata agli oggetti è dovuta a lavori realizzati dalla comunità 
+sull'intelligenza artificiale, nell'ambito della rappresentazione della conoscenza quando Marvin Minsky propose il 
+formalismo dei frames nel 1975. Con tutte le caratteristiche dei moderni approcci di programmazione orientata agli 
+oggetti. 
+
+Questo paradigma di programmazione consiste nel mantenere i dati e le funzioni operabili su di essi vicine, raggruppate 
+in entità chiamate oggetti. Una classe è una descrizione di un insieme di oggetti che hanno lo stesso comportamento, ed un 
+oggetto è una singola istanza di questa classe, dove è definita anche un insieme di metodi da poter usare su questi oggetti. 
+
+L'insieme di tutti i metodi resi disponibili da una classe, con la descrizione del loro comportamento, si chiama interfaccia 
+pubblica della classe. 
+
+Una classe in Python viene definita tramite la parola chiave \verb|class| seguita dal nome della classe, utilizzando 
+la notazione dove ogni parola del nome ha la prima lettera maiuscola, ``Camel-case'':
+\begin{minted}{python}
+    class NomeClasse:
+        pass 
+\end{minted}
+
+\verb|pass| è un placeholder ed indica dove sarà scritto codice, questa rappresenta una definizione di una classe minimale, 
+definendo solamente il nome e nessun altro comportamento. 
+
+Si può istanziare una nuova classe dato il suo nome: 
+\begin{minted}{python}
+    NomeClasse()
+\end{minted}
+Questo istanzia un oggetto appartenente alla classe specificata, allocata in una nuova zona di memoria, una variabile 
+assegnata a questa nuova istanza mantiene il riferimento a questa zona di memoria, quindi si ha:
+\begin{minted}{python}
+    >>> a = NomeClasse()
+    >>> b = NomeClasse()
+    >>> a == b
+    False
+\end{minted}
+Poiché quest'operazione di confronto effettuata sulle variabili ha azione sugli indirizzi di memoria contenuti. 
+Le proprietà che una classe deve avere può essere definite utilizzando un metodo particolare costruttore chiamato \verb|.__init__()|. 
+Questo inizializza una nuova istanza della classe ed assegna i valori al suo stato. Metodi con un doppio carattere \verb|_| 
+vengono chiamati ``Dunder Methods'', per ``Data Underlined''. Al costruttore vengono passati i parametri che si vuole, ma 
+è sempre necessario passare la variabile chiamata \verb|self| per definire nuovi attributi sull'oggetto. Poiché quando viene 
+creata un'istanza di una classe, viene salvata automaticamente a questo parametro. 
+
+\begin{minted}{python}
+    class NomeClasse:
+        def __init__(self, attributo1, ..., attributoN):
+            self.attributo1 = attributo1
+            # ...
+            self.attributoN = attributo N
+\end{minted}
+
+Ognuna di queste assegnazioni in realtà crea anche un attributo chiamato con il nome utilizzato nella notazione puntata, riferita 
+a \verb|self|, e contenente il valore assegnatoli dal parametro passato come input al costruttore. \verb|self| deve 
+essere sempre il primo parametro. 
+
+Gli attributi creati in questo modo vengono chiamati ``Istance Attributes'', attributi d'istanza, che sono attributi 
+unici per ogni istanza della classe, chiamai al momento di costruzione dell'istanza. Ma possono essere definiti attributi 
+comuni per tutte le classi, chiamati ``Class Attributes'', all'interno del corpo della classe, senza inserirli 
+all'intero del costruttore:
+
+\begin{minted}{python}
+    class NomeClasse:
+        attributo = 'valore' 
+        def __init__(self, attributo1, ..., attributoN):
+            self.attributo1 = attributo1
+            # ...
+            self.attributoN = attributo N
+\end{minted}
+
+Ogni istanza avrà gli stessi class attributes, contenenti gli stessi valori. Per istanziare una classe, avendo 
+un costruttore, bisogna passare i parametri richiesti al momento di creazione:
+\begin{minted}{python}
+    >>> istanza = NomeClasse('valore1', ..., 'valoreN')
+\end{minted}
+
+Si passa un parametro in meno poiché \verb|self| viene gestito internamente, al momento della creazione dell'oggetto. Si 
+può accedere ad un certo attributo sempre con la notazione puntata, e si può modificare. Si può modificare 
+sia un attributo di classe o istanza. 
+
+Gli istance methods sono funzioni definite all'interno di una classe, possono essere invocati da una qualsiasi istanza 
+della classe. 
+
+\'{E} buona norma utilizzare un metodo come \verb|description()| per fornire una stringa contenente informazioni utili per 
+l'istanza della classe. Ma questo non è il modo migliore per ottenere. Si utilizza il metodo \verb|.__str__()| per 
+restituire queste informazioni in formato di stringa:
+\begin{minted}{python}
+    class NomeClasse:
+        attributo = 'valore' 
+        
+        def __init__(self, attributo1, ..., attributoN):
+            self.attributo1 = attributo1
+            # ...
+            self.attributoN = attributo N
+        
+        def __str__():
+            return f'{self.attributo1}, ..., {self.attributoN}'
+\end{minted}
+
+Quando viene invocata una funzione di stampa su un'istanza di questa classe, viene stampata la stringa definita da questo 
+metodo:
+\begin{minted}{python}
+    >>> istanza = NomeClasse('valore1', ..., 'valoreN')
+    >>> print(istanza)
+    valore1, ..., valoreN
+\end{minted}
+
+%% TODO tutti i metodi con prefisso punto
+
+\subsection{Collezioni}
+
+\subsubsection{Liste}
 
 Una lista è una sequenza di item di qualsiasi tipo, per cui a differenza di una stringa il tipo non è omogeneo. All'interno di una lista è possible 
 inserire una lista, creando una lista annidata.  
@@ -1344,7 +1547,7 @@ passate contemporaneamente:
 In questo modo si può iterare su tutte le liste insieme, senza dover specificare per ognuna il loro indice. Questa funziona associa le liste e termina alla lista più 
 corta. 
 
-\subsection{Dizionari e Set}
+\subsubsection{Dizionari e Set}
 
 Un dizionario è simile ad una lista, ma più generale, permette di accedere agli elementi contenuti tramite una chiave definita 
 a priori. Rappresenta un mapping tra due insiemi, uno di chiavi ed uno di valori, ogni chiave individua un valore, ogni item 
@@ -1443,206 +1646,7 @@ al momento della creazione.
 Si possono effettuare le classi operazioni su insiemi, con metodi di unione \verb|union()|, 
 intersezione \verb|intersection()|, differenza \verb|difference()| e differenza simmetrica \verb|symmetric_difference()|. 
 
-\subsection{Ambienti di Sviluppo}
-
-I principali ambienti di programmazione di Python sono Anaconda, Eclipse e Google Colab. Tutte e 
-tre permettono di programmare in modo semplificato. 
-Esistono due approcci alla traduzione ed esecuzione dei programmi per i linguaggi di alto 
-livello. Possono essere trasformati in un programma in linguaggio macchina ed eseguiti, 
-compilazione, oppure ciascuna istruzione di alto livello può essere trasformata in almeno un'
-istruzione di linguaggio macchina ed eseguita direttamente, interpretazione. 
-Storicamente la modalità interpretata viene associata alla programmazione su linea di comando, 
-e solamente su rari casi viene utilizzata, anche se con Python ha cominciato ad essere riutilizzata. 
-
-Quindi non è presente una fase intermedia di compilazione o un programma compilato da 
-eseguire, ma il programma viene eseguito direttamente istruzione per istruzione tramite un 
-interprete. 
-I linguaggi compilati sono specifici per ogni piattaforma, ma estremamente ottimizzati 
-per quella esatta piattaforma. Mentre i linguaggi interpretati prevedono la 
-distribuzione diretta del file sorgente, uguale per tutte le piattaforme, ma deve essere 
-disponibile il programma interprete e sono generalmente più lenti poiché l'esecuzione attende 
-ogni nuova istruzione da eseguire. 
-In assenza di vincoli sul tempo dell'esecuzione il ritardo introdotto dall'interpretazione 
-è accettabile. 
-
-Linguaggi come C e C++ sono linguaggi compilati, mentre Python è un linguaggio interpretato. 
-Java ha un approccio ibrido generando il bytecode, una versione di linguaggio macchina eseguibile 
-dalla JVM, elaboratore virtuale simile ad un hardware tradizionale, con una conversione 
-quasi uno ad uno delle istruzioni. 
-
-Python è un linguaggio interpretata ad alto livello simbolico. Un programma Python può 
-essere eseguito in modalità interattiva, dove ogni istruzione viene eseguita singolarmente, 
-ed il suo output viene visualizzato sulla console in sequenza. Questo programma può essere 
-interrotto, si possono rieseguire certe istruzioni, etc. Si può quindi modificare il flusso 
-e le istruzioni sulla base dell'output ottenuto. Questo tipo di codice viene utilizzato 
-per data analytics e exploration. 
-Altrimenti all'interprete può essere passato l'intero programma come un file di estensione \verb|.py|. 
-L'output viene visualizzato solamente se si invoca la funzione di stampa. 
-
-Per utilizzare la modalità interattiva serve un ambiente di interazione, l'interprete 
-più diffuso è Cpython. 
-
-Può essere scaricato su tutte le piattaforme, aprendo una console si può entrare nella modalità interattiva con il comando \verb|python3|. 
-Per uscire da questa modalità è sufficiente invocare la funzione \verb|quit()|. 
-
-Anaconda è una distribuzione di Python che semplifica la gestione ed il deployment delle librerie. Permette di creare ambiente 
-in cui installare versioni specifiche delle librerie compatibili con certi software. Il gestore di queste librerie o package 
-si chiama conda e si usa principalmente da linea di comando e gestisce queste librerie e le mantiene aggiornate. Può essere 
-installato insieme a Cpython. 
-
-I principali comandi in Anaconda sono:
-\begin{minted}{python}
-    # crea un nuovo environment di versione specificata: 
-    conda create -n nomeEnv python=versionePython 
-    # visualizza la lista di environment creati:
-    conda info -envs                 
-    # attiva l'ambiente di sviluppo
-    source activate nomeEnv            
-    # installa il package specificato all'interno dell'ambiente corrente
-    conda install nomePackage=versionePackage
-\end{minted}
-Se non viene specificata la versione, sia per Python che per i pacchetti da installare, 
-conda utilizzerà l'ultima versione come default. 
-
-
-Le principali librerie utilizzate in questo corso sono pandas, matplotlib, NumPy, SciPy, IPython e scikit-learn. 
-Dentro Anaconda c'è un'interfaccia browser per avere un ambiente di programmazione per programmare chiamato Jupiter, dove è 
-possibile attivare la linea di comando per programmare in modalità interattiva. Si può attivare con il comando \verb|jupiter notebook|, 
-che mostra a schermo l'indirizzo a cui collegarsi per accedere, generalmente \verb|127.0.0.1|. Si analizzerà in seguito insieme 
-all'ambiente Google Colab, anch'esso su un'interfaccia browser. 
-
-Sui notebook è possibile inserire del testo, ed accetta macro e comandi in formato Markdown, e funzioni scritte in LaTeX. 
-
-Eclipse è un ambiente di sviluppo storico, multi-linguaggio, installando dal marketplace il plugin pydev per poter programmare in 
-Python. 
-
-Google Colab è un ambiente di sviluppo fornito gratuitamente da Google, utilizzando risorse cloud, su di un singolo 
-notebook, direttamente collegato all'account google. 
-Ha un'interfaccia a blocchi interattiva, da data scientist, e permette di scegliere il runtime e la GPU da utilizzare per 
-eseguire il programma. Il codice viene salvato su un notebook, quindi su un file di estensione \verb|.ipynb|, ed è possibile 
-passare al Python tradizionale e viceversa. Su dispositivi mobile è possibile programmare con un'interfaccia molto simile ad un 
-computer. 
-
-Si divide il programma in celle per dividere il codice e permettere di elaborare singoli blocchi, senza dover ricalcolare 
-tutti i blocchi già eseguiti. Questo inoltre rende il codice più chiaro e comprensibile. 
-
-JupyterLab è un estensione di Jupyter che aggiunge funzionalità per programmare a progetto per visualizzare e gestire diverse 
-tipologie di file. 
-
-
-Si possono utilizzare anche ambienti virtuali come Docker per eseguire il codice su container isolati. 
-Inoltre esistono ambienti dedicati all'ambito scientifico con un'analisi più dettagliata dei dati prodotti come spyder, ``The Scientific 
-Python Development Environment''. 
-
-\subsection{Classi e oggetti}
-
-La fonte di ispirazione della programmazione orientata agli oggetti è dovuta a lavori realizzati dalla comunità 
-sull'intelligenza artificiale, nell'ambito della rappresentazione della conoscenza quando Marvin Minsky propose il 
-formalismo dei frames nel 1975. Con tutte le caratteristiche dei moderni approcci di programmazione orientata agli 
-oggetti. 
-
-Questo paradigma di programmazione consiste nel mantenere i dati e le funzioni operabili su di essi vicine, raggruppate 
-in entità chiamate oggetti. Una classe è una descrizione di un insieme di oggetti che hanno lo stesso comportamento, ed un 
-oggetto è una singola istanza di questa classe, dove è definita anche un insieme di metodi da poter usare su questi oggetti. 
-
-L'insieme di tutti i metodi resi disponibili da una classe, con la descrizione del loro comportamento, si chiama interfaccia 
-pubblica della classe. 
-
-Una classe in Python viene definita tramite la parola chiave \verb|class| seguita dal nome della classe, utilizzando 
-la notazione dove ogni parola del nome ha la prima lettera maiuscola, ``Camel-case'':
-\begin{minted}{python}
-    class NomeClasse:
-        pass 
-\end{minted}
-
-\verb|pass| è un placeholder ed indica dove sarà scritto codice, questa rappresenta una definizione di una classe minimale, 
-definendo solamente il nome e nessun altro comportamento. 
-
-Si può istanziare una nuova classe dato il suo nome: 
-\begin{minted}{python}
-    NomeClasse()
-\end{minted}
-Questo istanzia un oggetto appartenente alla classe specificata, allocata in una nuova zona di memoria, una variabile 
-assegnata a questa nuova istanza mantiene il riferimento a questa zona di memoria, quindi si ha:
-\begin{minted}{python}
-    >>> a = NomeClasse()
-    >>> b = NomeClasse()
-    >>> a == b
-    False
-\end{minted}
-Poiché quest'operazione di confronto effettuata sulle variabili ha azione sugli indirizzi di memoria contenuti. 
-Le proprietà che una classe deve avere può essere definite utilizzando un metodo particolare costruttore chiamato \verb|.__init__()|. 
-Questo inizializza una nuova istanza della classe ed assegna i valori al suo stato. Metodi con un doppio carattere \verb|_| 
-vengono chiamati ``Dunder Methods'', per ``Data Underlined''. Al costruttore vengono passati i parametri che si vuole, ma 
-è sempre necessario passare la variabile chiamata \verb|self| per definire nuovi attributi sull'oggetto. Poiché quando viene 
-creata un'istanza di una classe, viene salvata automaticamente a questo parametro. 
-
-\begin{minted}{python}
-    class NomeClasse:
-        def __init__(self, attributo1, ..., attributoN):
-            self.attributo1 = attributo1
-            # ...
-            self.attributoN = attributo N
-\end{minted}
-
-Ognuna di queste assegnazioni in realtà crea anche un attributo chiamato con il nome utilizzato nella notazione puntata, riferita 
-a \verb|self|, e contenente il valore assegnatoli dal parametro passato come input al costruttore. \verb|self| deve 
-essere sempre il primo parametro. 
-
-Gli attributi creati in questo modo vengono chiamati ``Istance Attributes'', attributi d'istanza, che sono attributi 
-unici per ogni istanza della classe, chiamai al momento di costruzione dell'istanza. Ma possono essere definiti attributi 
-comuni per tutte le classi, chiamati ``Class Attributes'', all'interno del corpo della classe, senza inserirli 
-all'intero del costruttore:
-
-\begin{minted}{python}
-    class NomeClasse:
-        attributo = 'valore' 
-        def __init__(self, attributo1, ..., attributoN):
-            self.attributo1 = attributo1
-            # ...
-            self.attributoN = attributo N
-\end{minted}
-
-Ogni istanza avrà gli stessi class attributes, contenenti gli stessi valori. Per istanziare una classe, avendo 
-un costruttore, bisogna passare i parametri richiesti al momento di creazione:
-\begin{minted}{python}
-    >>> istanza = NomeClasse('valore1', ..., 'valoreN')
-\end{minted}
-
-Si passa un parametro in meno poiché \verb|self| viene gestito internamente, al momento della creazione dell'oggetto. Si 
-può accedere ad un certo attributo sempre con la notazione puntata, e si può modificare. Si può modificare 
-sia un attributo di classe o istanza. 
-
-Gli istance methods sono funzioni definite all'interno di una classe, possono essere invocati da una qualsiasi istanza 
-della classe. 
-
-\'{E} buona norma utilizzare un metodo come \verb|description()| per fornire una stringa contenente informazioni utili per 
-l'istanza della classe. Ma questo non è il modo migliore per ottenere. Si utilizza il metodo \verb|.__str__()| per 
-restituire queste informazioni in formato di stringa:
-\begin{minted}{python}
-    class NomeClasse:
-        attributo = 'valore' 
-        
-        def __init__(self, attributo1, ..., attributoN):
-            self.attributo1 = attributo1
-            # ...
-            self.attributoN = attributo N
-        
-        def __str__():
-            return f'{self.attributo1}, ..., {self.attributoN}'
-\end{minted}
-
-Quando viene invocata una funzione di stampa su un'istanza di questa classe, viene stampata la stringa definita da questo 
-metodo:
-\begin{minted}{python}
-    >>> istanza = NomeClasse('valore1', ..., 'valoreN')
-    >>> print(istanza)
-    valore1, ..., valoreN
-\end{minted}
-
-%% TODO tutti i metodi con prefisso punto
-
-\subsection{Liste Concatenate}
+\subsubsection{Liste Concatenate}
 
 Il tipo di dato astratto lista concatenata è diversa dal tipo di dato predefinito lista già presente su Python. Si parlerà di 
 liste singolarmente concatenate. Questa lista è composta da un nodo, contenente il dato ed un puntatore all'elemento successivo 
@@ -1667,7 +1671,7 @@ utilizzato durante questo corso.
 Una lista concatenata è una classe contenente i riferimenti alla testa ed alla coda della lista, inizialmente 
 assegnati al valore nullo, per generare una lista vuota:
 \begin{minted}{python}
-    class List:
+    class SinglyLinkedList:
         def __init__(self):
             self.__head = None
             self.__tail = None
@@ -1690,7 +1694,7 @@ nel nodo corrente:
 Per scandire la lista quindi si utilizza un ciclo, fino a quando il valore contenuto in questo puntato \verb|p| non 
 corrisponde al valore \verb|None|:
 \begin{minted}{python}
-    class List:
+    class SinglyLinkedList:
         def __init__(self):
             self.__head = None
             self.__tail = None
@@ -1712,7 +1716,7 @@ assegnare \verb|p|. Si vogliono realizzare i seguenti metodi sulle liste singola
 \end{itemize}
 
 \begin{minted}{python}
-    class List:
+    class SinglyLinkedList:
         def __init__(self):
             self.__head = None
             self.__tail = None
@@ -1742,21 +1746,116 @@ assegnare \verb|p|. Si vogliono realizzare i seguenti metodi sulle liste singola
 
         def delete(self, position):
             if self.__head == None:
-                return
+                return None
             if position == 0:
                 self.__head = self._head.next
-                return 
+                return None
             p = self.__head
             i = 0
             while i < position - 1 and p.next != None:
                 p = p.next
                 i += 1
             if i != position - 1:
-                return 
+                return None
             p.next = p.next.next
 \end{minted}
 
-\clearpage
+\subsubsection{Liste Ordinate, Pile e Code}
 
+Una lista ordinata è una lista ai cui elementi sono ordinati rispetto ad una certa chiave. 
+Ogni inserimento deve quindi rispettare l'ordine della lista. 
+
+Questa lista si può implementare tramite la liste concatenate:
+\begin{minted}{python}    
+    class SortedLinkedList:
+        def __init__(self):
+            self.__head = None
+            self.__tail = None
+\end{minted}
+
+Si suppone di poter effettuare un inserimento in posizione intermedia. Bisogna scandire la 
+lista fino a quando il dato da inserire non è maggiore del dato contenuto nel nuovo nodo 
+da inserire. Si considera la chiave e la lista ordinata in modo crescente:
+\begin{minted}{python}
+        def add(self, newNode)
+            if self.__head == None or self.__head.data > newNode.data:
+                self.insert_head(newNode)
+                return None
+            elif self.__tail.data < newNode.data:
+                self.append(newNode)
+                return None
+            
+            p = self.__head
+            while p.next != None and p.data < newNode.data:
+                p = p.next
+            newNode.next = p.next
+            p.next = newNode
+\end{minted}
+
+Una pila è un tipo di dato astratto basato sul modello delle liste che gestisce 
+gli elementi, implementando la disciplina LIFO, ``Last-In, First-Out''. 
+Le operazioni vengono effettuate su un estremo della lista chiamato testa \verb|top|. 
+
+La classe \verb|Node| è sempre la stessa, viene definita con un attributo None 
+inizializzato a \verb|None| e può essere comodo avere a disposizione una variabile che indica 
+il numero di elementi nella pila:
+\begin{minted}{python}
+    class Stack:
+        __top = None
+        __size = 0
+\end{minted}
+
+Ogni inserimento in una pila è un inserimento in testa, si chiama ``push'':
+\begin{minted}{python}
+        def push(self, newNode):
+            newNode.next = self.__top
+            self.__top = newNode
+            self.__size += 1
+\end{minted}
+
+Per effettuare un'estrazione si estrae un elemento dalla testa, e generalmente il dato 
+estratto è di interesse:
+\begin{minted}{python}
+        def pop(self):
+            p = self.__top
+            if p != None
+                self.__top = p.next
+                p.next = None
+            self.__size -= 1
+            return p
+\end{minted}
+
+Le code sono un altro tipo di dato astratto che utilizzano il modello delle liste, ma 
+applicano la disciplina FIFO, ``First-In, First-Out'':
+\begin{minted}{python}
+    class Queue:
+        __head = None
+        __tail = None
+        __size = 0
+\end{minted}
+
+L'inserimento di un elemento avviene sempre in coda, e si chiama ``enqueue'':
+\begin{minted}{python}
+        def enqueue(self, newNode):
+            if self.__head == None: 
+                self.__head = mewNode
+            else:            
+                self.__tail.next = newNode
+            self.__tail = newNode
+            self.__size += 1 
+\end{minted}
+
+Per rimuovere il primo elemento, si utilizza la funzione ``dequeue'':
+\begin{minted}{python}
+        def dequeue(self):
+            p = self.__head
+            if p != None
+                self.__head = p.next
+                p.next = None
+            self.__size -= 1
+            return p
+\end{minted}
+
+\clearpage
 
 \end{document}
