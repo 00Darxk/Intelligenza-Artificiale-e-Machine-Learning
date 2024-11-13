@@ -759,7 +759,7 @@ Le funzioni senza asterisco all'apice si riferiscono a funzioni di stima, altrim
 
 \subsubsection{Algoritmo di Ricerca Greedy}
 
-Questo algoritmo ``goloso'' utilizza la funzione $h$ come funzione di valutazione, si espande quindi il primo nodo che si ritiene sia vicino all'obiettivo. Se $n$ 
+Questo algoritmo ``goloso'' utilizza la funzione $h$ come funzione di valutazione, si espande il primo nodo che si ritiene sia vicino all'obiettivo. Se $n$ 
 corrisponde allo stato obiettivo, deve essere $h(n)=0$. Minimizza il costo stimato per raggiungere l'obiettivo. 
 
 Una possibile funzione euristica è la distanza a linea d'aria `` Straight Line Distance" SLD: $h_{\mathrm{SLD}}(n)$, per problemi di viaggio. Questo algoritmo non 
@@ -873,7 +873,7 @@ solamente traccia dello stato attuale e dei suoi vicini o successori, gli stati 
 Bisogna formulare il problema in modo che l'algoritmo non rimanga bloccato tra due massimi locali. 
 
 Questo algoritmo segue sempre le colline più ripide, si muove sempre verso l'alto nella direzione dei valori crescenti, e termina quando raggiunge uno stato per il quale 
-si ha un picco che non ha vicino stati di valore maggiore. Tuttavia questo algoritmo può rimanere intrappolato su massimi globali. 
+si ha un picco che non ha vicino stati di valore maggiore. Tuttavia questo algoritmo può rimanere intrappolato su massimi locali. 
 
 Non viene memorizzato lo stato corrente, solamente il valore attraverso nodi che contengono lo stato ed il suo valore. 
 
@@ -1855,6 +1855,10 @@ Per rimuovere il primo elemento, si utilizza la funzione ``dequeue'':
             self.__size -= 1
             return p
 \end{minted}
+
+%% TODO lezione 4, 6, 8 nov
+
+
 
 \clearpage
 

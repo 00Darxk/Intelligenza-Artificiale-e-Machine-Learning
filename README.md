@@ -2,7 +2,9 @@
 Appunti tratti dal corso di Intelligenza Artificiale e Machine Learning, Anno Accademico 2024/25, Dipartimento di Ingegneria Civile, Informatica e delle Tecnologie Aeronautiche, Università degli Studi "Roma Tre". 
 
 ## Contenuti:
-- [Appunti](Intelligenza_Artificiale_e_Machine_Learning.pdf) delle lezioni, tenute l'anno accademico 2024/25 dai Professori Alessandro Micarelli e Giuseppe Sansonetti. 
+- [Appunti](Intelligenza_Artificiale_e_Machine_Learning.pdf) delle lezioni, tenute l'anno accademico 2024/25 dai Professori Alessandro Micarelli e Giuseppe Sansonetti;
+- [Esercizi](Esercizi/) ed esercitazioni svolte durante il corso;
+- [Immagini](Immagini/) necessarie per compilare il codice Tex degli appunti. 
 
 ## Contenuti del Corso
 

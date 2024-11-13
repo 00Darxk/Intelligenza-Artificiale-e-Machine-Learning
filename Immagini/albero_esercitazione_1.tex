@@ -1,0 +1,79 @@
+% !TEX TS-program = lualatex
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{pgfcore}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usetikzlibrary{graphs,graphdrawing,calc}
+\pgfplotsset{compat=1.18}
+\begin{document}
+\usegdlibrary{trees}
+    
+    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
+    \node[blue] {$s_0$};
+
+    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
+    \node {$s_0$}
+        child { node[red] {$s_1$} }
+        child { node[blue] {$s_2$} } 
+    ;
+
+    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
+    \node {$s_0$}
+        child { node[blue] {$s_1$} }
+        child { node {$s_2$} 
+            child { node[red] {$s_4$} } 
+            child { node[red] {$s_0$}} 
+        }
+    ;
+    
+    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
+    \node {$s_0$}
+        child { node {$s_1$} 
+            child { node[blue] {$s_3$} }
+            child [missing]
+        }
+        child { node {$s_2$} 
+            child { node[red] {$s_4$} } 
+            child { node[red] {$s_0$}} 
+        }
+    ;
+
+    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
+    \node {$s_0$}
+        child { node {$s_1$} 
+            child { node {$s_3$} 
+                child { node[red] {$s_2$}}
+                child { node[red] {$s_4$}}
+                child { node[red] {$s_5$}}
+            }
+            child [missing]
+        }
+        child { node {$s_2$} 
+            child { node[blue] {$s_4$} } 
+            child { node[red] {$s_0$}} 
+        }
+    ;
+
+    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
+    \node[green] {$s_0$}
+    child { node {$s_1$} 
+        child { node {$s_3$}
+            child { node {$s_2$}}
+            child { node {$s_4$}}
+            child { node {$s_5$}}
+        }
+        child [missing] 
+    }
+    child { node[green] {$s_2$} 
+        child { node[green] {$s_4$}
+            child { node {$s_2$} }
+            child { node {$s_3$} }
+            child { node[green] {$s_5$}}
+        } 
+        child { node {$s_0$}}
+    }
+    ;
+\end{document}
