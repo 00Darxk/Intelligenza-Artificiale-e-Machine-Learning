@@ -11,69 +11,89 @@
 \begin{document}
 \usegdlibrary{trees}
     
-    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
-    \node[blue] {$s_0$};
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[blue, draw, text=black] {$s_0$};
 
-    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
-    \node {$s_0$}
-        child { node[red] {$s_1$} }
-        child { node[blue] {$s_2$} } 
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[draw] {$s_0$}
+        child { node[draw, red, text=black] {$s_1$} edge from parent node[fill=white]{$5$}}
+        child { node[draw, blue, text=black] {$s_2$} edge from parent node[fill=white]{$3$}} 
     ;
 
-    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
-    \node {$s_0$}
-        child { node[blue] {$s_1$} }
-        child { node {$s_2$} 
-            child { node[red] {$s_4$} } 
-            child { node[red] {$s_0$}} 
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[draw] {$s_0$}
+        child { node[blue, draw, text=black] {$s_1$} edge from parent node[fill=white]{$5$}}
+        child { node[draw] {$s_2$} edge from parent node[fill=white]{$3$}
+            child { node[red, draw, text=black] {$s_4$} edge from parent node[fill=white]{$5$}} 
+            child { node[red, draw, text=black] {$s_0$} edge from parent node[fill=white]{$5$}} 
         }
     ;
     
-    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
-    \node {$s_0$}
-        child { node {$s_1$} 
-            child { node[blue] {$s_3$} }
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[draw] {$s_0$}
+        child { node[draw] {$s_1$} edge from parent node[fill=white]{$5$}
+            child { node[blue, draw, text=black] {$s_3$} edge from parent node[fill=white]{$3$}}
             child [missing]
         }
-        child { node {$s_2$} 
-            child { node[red] {$s_4$} } 
-            child { node[red] {$s_0$}} 
+        child { node[draw] {$s_2$} edge from parent node[fill=white]{$3$}
+            child { node[red, draw, text=black] {$s_4$} edge from parent node[fill=white]{$5$}} 
+            child { node[red, draw, text=black] {$s_0$} edge from parent node[fill=white]{$5$}} 
         }
     ;
 
-    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
-    \node {$s_0$}
-        child { node {$s_1$} 
-            child { node {$s_3$} 
-                child { node[red] {$s_2$}}
-                child { node[red] {$s_4$}}
-                child { node[red] {$s_5$}}
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[draw] {$s_0$}
+        child { node[draw] {$s_1$} edge from parent node[fill=white]{$5$}
+            child { node[draw] {$s_3$} edge from parent node[fill=white]{$3$}
+                child { node[red, draw, text=black] {$s_2$} edge from parent node[fill=white]{$4$}}
+                child { node[red, draw, text=black] {$s_4$} edge from parent node[fill=white]{$4$}}
+                child { node[red, draw, text=black] {$s_5$} edge from parent node[fill=white]{$6$}}
             }
             child [missing]
         }
-        child { node {$s_2$} 
-            child { node[blue] {$s_4$} } 
-            child { node[red] {$s_0$}} 
+        child { node[draw] {$s_2$} edge from parent node[fill=white]{$3$}
+            child { node[blue, draw, text=black] {$s_4$} edge from parent node[fill=white]{$5$}} 
+            child { node[red, draw, text=black] {$s_0$} edge from parent node[fill=white]{$5$}} 
         }
     ;
 
-    \tikz[tree layout, nodes={draw, circle}, inner sep=0.5pt]
-    \node[green] {$s_0$}
-    child { node {$s_1$} 
-        child { node {$s_3$}
-            child { node {$s_2$}}
-            child { node {$s_4$}}
-            child { node {$s_5$}}
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[draw] {$s_0$}
+    child { node[draw] {$s_1$} edge from parent node[fill=white]{$5$}
+        child { node[draw] {$s_3$} edge from parent node[fill=white]{$3$}
+            child { node[red, draw, text=black] {$s_2$} edge from parent node[fill=white]{$4$}}
+            child { node[red, draw, text=black] {$s_4$} edge from parent node[fill=white]{$4$}}
+            child { node[red, draw, text=black] {$s_5$} edge from parent node[fill=white]{$6$}}
         }
-        child [missing] 
+        child [missing]
     }
-    child { node[green] {$s_2$} 
-        child { node[green] {$s_4$}
-            child { node {$s_2$} }
-            child { node {$s_3$} }
-            child { node[green] {$s_5$}}
+    child { node[draw] {$s_2$} edge from parent node[fill=white]{$3$}
+        child { node[draw] {$s_4$} edge from parent node[fill=white]{$5$}
+            child { node[red, draw, text=black] {$s_2$} edge from parent node[fill=white]{$5$}}
+            child { node[red, draw, text=black] {$s_3$} edge from parent node[fill=white]{$4$}}
+            child { node[blue, draw, text=black] {$s_5$} edge from parent node[fill=white]{$3$}}
         } 
-        child { node {$s_0$}}
+        child { node[red, draw, text=black] {$s_0$} edge from parent node[fill=white]{$5$}}
+    }
+    ;
+
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[green, draw, text=black] {$s_0$}
+    child { node[draw] {$s_1$} edge from parent node[fill=white]{$5$}
+        child { node[draw] {$s_3$} edge from parent node[fill=white]{$3$}
+        child { node[red, draw, text=black] {$s_2$} edge from parent node[fill=white]{$4$}}
+        child { node[red, draw, text=black] {$s_4$} edge from parent node[fill=white]{$4$}}
+        child { node[red, draw, text=black] {$s_5$} edge from parent node[fill=white]{$6$}}
+    }
+    child [missing]
+    }
+    child { node[green, draw, text=black] {$s_2$} edge from parent node[fill=white]{$3$}
+        child { node[green, draw, text=black] {$s_4$} edge from parent node[fill=white]{$5$}
+            child { node[draw] {$s_2$} edge from parent node[fill=white]{$5$}}
+            child { node[draw] {$s_3$} edge from parent node[fill=white]{$4$}}
+            child { node[green, draw, text=black] {$s_5$} edge from parent node[fill=white]{$3$}}
+        } 
+        child { node[draw] {$s_0$} edge from parent node[fill=white]{$5$}}
     }
     ;
 \end{document}

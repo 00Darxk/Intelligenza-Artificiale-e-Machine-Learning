@@ -84,9 +84,11 @@ Questi stati sono collegati da certi operatori di costo:
 \end{itemize}
 Nel modo seguente: 
 
-E la seguente funzione euristica: $h(s_0)=10,h(s_1)=6,h(s_2)=7,h(s_3)=4,h(s_4)=5,h(s_5)=0$
-
-%% TODO img grafo 
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{grafo_esercitazione_1.pdf}%
+\end{figure}
+E la seguente funzione euristica: $h(s_0)=10$, $h(s_1)=6$, $h(s_2)=7$, $h(s_3)=4$, $h(s_4)=5$, $h(s_5)=0$. 
 
 \begin{enumerate}
     \item Eseguire l'algoritmo A* con modalità tree-search, fino alla terminazione disegnando l'albero di ricerca, riportando per ogni passo il 
@@ -95,27 +97,32 @@ contenuto della frontiera, il nodo scelto per l'espansione ed i nodi generati;
 $h$ rispetta la condizione di ammissibilità (motivare la risposta). 
 \end{enumerate}
 
+\subsubsection*{Domanda 1}
+
 Bisogna specificare i vari passi ottenuti dall'algoritmo A*, specificando la frontiera i nodi contenuti ed espansi ed il nodo successivo 
 da espandere.
 
-%% TODO se ha soddisfa la condizione di consistenza, allora soddisfa anche la condizione di ammissibilità 
+%% TODO se soddisfa la condizione di consistenza, allora soddisfa anche la condizione di ammissibilità 
+
 
 \begin{enumerate}
     \item Nella frontiera è presente solamente lo stato iniziale $[s_0]$;
-    \item Si espande lo stato iniziale $s_0$, nella frontiera si ha $[s_2,s_1]$, dove $f(s_1)=6+5$, $f(s_2)=7+3$;
-    \item Si espande il nodo $s_2$, con $f(s_2)=10$, per cui nella frontiera entra solamente $s_4$, poiché $s_0$ è già stato visitato: $[s_1,s_4]$, con $f(s_1)=6+5$ e $f(s_4)=8+5$;
+    \item Si espande lo stato iniziale $s_0$, nella frontiera si ha $[s_2,s_1]$, dove $f(s_2)=3+7$ e $f(s_1)=5+6$;
+    \item Si espande il nodo $s_2$, con $f(s_2)=10$, per cui nella frontiera entra il nodo $s_4$: $[s_1,s_4]$, con $f(s_1)=5+6$ e $f(s_4)=8+5$;
     \item Si espande il nodo $s_1$, con $f(s_1)=12$, per cui nella frontiera entra il nodo $s_3$: $[s_3, s_4]$, con $f(s_3)=8+4$ e $f(s_4)=8+5$;
     \item Si espande il nodo $s_3$, con $f(s_3)=12$, per cui nella frontiera entra il nodo $s_5$: $[s_4, s_5]$, con $f(s_4)=8+5$ e $f(s_5)=14+0$;
     \item Si espande il nodo $s_4$, con $f(s_4)=13$, per cui nella frontiera entra il nodo $s_5$: $[s_5]$, con $f(s_5)=11+0$;
-    \item Si espande il nodo $s_5$, con $f(s_5)=11+0$. Questo nodo è il nodo obiettivo, quindi l'algoritmo termina. 
+    \item Si espande il nodo $s_5$, con $f(s_5)=11$. Questo nodo è il nodo obiettivo, quindi l'algoritmo termina. 
 \end{enumerate}
 
-I nodi blu sono i nodi espansi, quelli rossi sono quelli nella frontiera, e quelli verdi sono i nodi della del percorso individuato come soluzione:
+I nodi rossi sono quelli nella frontiera, i nodi blu sono i nodi nella frontiera da espandere, ed i nodi verdi sono i nodi del percorso individuato come soluzione:
 
 \begin{figure}[H]%
     \centering%
-    \includegraphics[trim={4cm 0 0 0},scale=0.9]{albero_esercitazione_1.pdf}%
+    \includegraphics[trim={4cm 0 0 0},scale=0.7]{albero_esercitazione_1.pdf}%
 \end{figure}
+
+\subsubsection*{Domanda 2}
 
 La funzione euristica $h$ utilizzata è maggiore del costo effettivo per il nodo $s_4$, quindi non è una funzione ammissibile. La soluzione trovata 
 non è garantito sia la soluzione ottima. 
@@ -137,16 +144,16 @@ Scrivere il codice Python per la gestione di una lista concatenata ordinata, avv
         def add(self, newNode):            
             if self.__head == None or self.__head.data > newNode.data:
                 if self.__head == None:
-                    self.__tail = self._head
+                    self.__tail = newNode
                 newNode.next = self.__head
                 self.__head = newNode
                 return None
             elif self.__tail.data < newNode.data:
                 if self.__tail != None:
-                    self.__tail.next = NewNode
+                    self.__tail.next = newNode
                 if self.__head == None:
                     self.__head = NewNode
-                self.__tail = NewNode
+                self.__tail = newNode
                 return None
             
             p = self.__head

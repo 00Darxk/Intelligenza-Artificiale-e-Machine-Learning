@@ -1049,7 +1049,7 @@ volte, ripartendo dal primo passo.
 
 \clearpage
 
-\section{Introduzione a Python}
+\section{Linguaggio Python}
 
 Python è un linguaggio di programmazione vastamente utilizzato nell'area dell'intelligenza artificiale e nel machine learning. Recentemente è diventato il linguaggio di 
 programmazione più diffuso al mondo. Python è un linguaggio general-purpose, ideato da Guido van Rossum nel 1989, a più alto livello del C, poiché gestisce automaticamente le 
@@ -1856,8 +1856,143 @@ Per rimuovere il primo elemento, si utilizza la funzione ``dequeue'':
             return p
 \end{minted}
 
-%% TODO lezione 4, 6, 8 nov
+\subsection{Implementazioni ed Efficienza}
 
+
+La tecnica della ``memoization'' permette di implementare in modo efficiente funzioni che 
+necessitano di salvare o memorizzare gli stadi intermedi di un'operazione, come può essere 
+una funzione che calcola il fattoriale o numeri di fibonacci. 
+
+Utilizzando una lista si possono salvare i valori intermedi calcolati, senza doverli 
+ricalcolare in iterazioni successive dell'algoritmo. 
+
+Un'esempio di quest'implementazione è la seguente:
+\begin{minted}{python}
+    def fattoriale_ric(n):
+        if n == 1:
+            return [1]
+        sequenza = fattoriale_ric(n-1)
+        sequenza.append(sequenza[-1] * n)
+        return sequenza    
+\end{minted}
+In questo modo si evitano alcune inefficienze come dover chiamare la funzione \verb|len()| ad 
+ogni iterazione, essendo una funzione lineare, il costo totale sarebbe quadratico. Analogamente 
+per il calcolo della sequenza di Fibonacci fino ad un certo indice:
+\begin{minted}{python}
+    def fibonacci_ric(n):
+        if n == 0:
+            return [0]
+        elif n == 1:
+            return [0, 1]
+        sequenza = fibonacci_ric(n-1)
+        sequenza.append(sequenza[-1] + sequenza[-2])
+        return sequenza
+\end{minted}
+Per implementare in modo efficiente queste operazioni non bisogna ricominciare ad ogni 
+iterazione l'operazione che si vuole ottenere. 
+
+Queste operazioni possono essere implementate utilizzando la stessa tecnica anche con un 
+approccio iterativo. 
+
+
+Un modo efficiente per scambiare due porzioni di una lista, noto l'indice $i$ in cui termina la 
+prima sotto-lista, consiste nell'utilizzo dell'operatore 
+slice e della concatenazione delle due sottoliste:
+\begin{minted}{python}
+    lista = lista[i:] + lista[:i]
+\end{minted}
+
+
+In Python si possono assegnare ad una lista i nomi di alcune 
+funzioni considerate, e si può accedere a queste tramite l'indice della lista, inserendo 
+i parametri tra parentesi tonde come se fosse la funzione stessa:
+\begin{minted}{python}
+    lista_funzioni = [funzione1, ..., funzioneN]
+    lista_funzioni[i](parametri)
+\end{minted}
+
+Ma questo richiede comunque di definire precedentemente delle funzioni. ALtrimenti è possibile 
+inserire direttamente nell'assegnazione alla lista la loro definizione utilizzando la 
+notazione lambda. Questo è un aspetto della programmazione funzionale, utilizzabile su Python 
+tramite la parole chiave \verb|lambda|, specificando gli argomenti della funzione, e dopo \verb|:| 
+si inserisce l'operazione che produce il risultato di questa funzione:
+\begin{minted}{python}
+    lambda parametri : # operazioni sui parametri per produrre un output
+\end{minted}
+
+Quindi una lista contenente funzioni anonime è del tipo:
+\begin{minted}{python}
+    lista_funzioni = [lambda parametri1 : operazioni1, ..., lambda parametriN: operazioniN]
+\end{minted}
+
+
+Per determinare l'efficienza di un algoritmo, si può utilizzare il comando \verb|%time| per 
+ottenere informazioni sul tempo di utilizzo del processore da parte della funzione:
+\begin{minted}{python}
+    >>> %time funzione(parametri)
+\end{minted}
+
+\subsubsection{Dynamic Programming}
+
+Il ``memoization'' è un approccio al ``dynamic programming'' che risolve questo problema in modo 
+top down, scomponendo il problema in sotto-problemi, e salvando i risultati parziali in una 
+tabella. Quando deve eseguire un nuovo sotto-problema, cerca prima se sono già presenti in questa 
+tabella, prima di calcolare direttamente il risultato. 
+Si può implementare il calcolo della sequenza di Fibonacci utilizzando questo approccio. Per 
+determinare se è necessario calcolare direttamente il risultato parziale, si usa il costrutto 
+try-except. In questo costrutto si prova ad accedere all'elemento, se questo accesso solleva 
+un errore ovvero un fallimento, il programma calcolare direttamente questo valore parziale:
+
+\begin{minted}{python}
+    def fibonacci_memoization(n, m = None):
+        if m == None:
+            m = {}
+        if n <= 1:
+            return n
+        try: 
+            return m[n]
+        except:
+            risultato = fibonacci_memoization(n - 1, m) + fibonacci_memoization(n - 2, m)
+            m[n] = risultato
+            return risultato
+\end{minted}
+
+Si utilizza in questo caso si utilizza un risultato, popolando la tabella ad ogni iterazione $i$, 
+inserendo il risultato parziale utilizzando come chiave questo stadio parziale $i$. 
+
+Questo approccio è decisamente più veloce dell'implementazione precedente \verb|fibonacci_ric|, 
+avendo una complessità temporale lineare $O(n)$. 
+
+Invece di utilizzare il costrutto try-except si può utilizzare un'istruzione condizionale 
+per verificare che il valore di chiave $i$ considerato è presente nel dizionario con 
+l'operatore \verb|in|:
+\begin{minted}{python}
+    m = {}
+    def fibonacci_memoization(n):
+        if n <= 2:
+            return 1
+        if n not in m:
+            m[n] = fibonacci_memoization(n-1) + fibonacci_memoization(n-2)
+        return m[n]
+\end{minted}
+
+Oltre all'approccio di memoization si può utilizzare un metodo duale chiamato ``tabular'', 
+con una disciplina bottom up, partendo dai sotto-problemi più piccoli e memorizzando i loro 
+risultati parziali su una tabella, combinando queste soluzioni per risolvere i successivi 
+problemi, memorizzando i loro risultati sulla stessa tabella. 
+
+Si considera un'implementazione utilizzando questo approccio della sequenza di Fibonacci:
+\begin{minted}{python}
+    def fibonacci_tabular(n):
+        tab = [0,1]
+        for i in range(2, n+1):
+            tab.append(tab[i-1] + tab[i-1])
+        return tab[n]
+\end{minted}
+
+Anche questo approccio ha un'implementazione in tempo lineare $O(n)$. 
+
+%% TODO 6, 8 nov
 
 
 \clearpage
