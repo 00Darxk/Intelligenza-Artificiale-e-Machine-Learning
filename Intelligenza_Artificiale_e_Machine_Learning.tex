@@ -1647,6 +1647,7 @@ Si possono effettuare le classi operazioni su insiemi, con metodi di unione \ver
 intersezione \verb|intersection()|, differenza \verb|difference()| e differenza simmetrica \verb|symmetric_difference()|. 
 
 \subsubsection{Liste Concatenate}
+\label{sec:liste_concatenate}
 
 Il tipo di dato astratto lista concatenata è diversa dal tipo di dato predefinito lista già presente su Python. Si parlerà di 
 liste singolarmente concatenate. Questa lista è composta da un nodo, contenente il dato ed un puntatore all'elemento successivo 
@@ -1712,7 +1713,8 @@ assegnare \verb|p|. Si vogliono realizzare i seguenti metodi sulle liste singola
     \item \verb|append|: Inserimento in coda;
     \item \verb|insert_head|: Inserimento in testa;
     \item \verb|insert_position|: Inserimento in una posizione intermedia;
-    \item \verb|delete|: Cancellazione di un elemento. 
+    \item \verb|delete|: Cancellazione di un elemento;
+    \item \verb|is_empty|: Verifica se la lista è vuota. 
 \end{itemize}
 
 \begin{minted}{python}
@@ -1758,9 +1760,13 @@ assegnare \verb|p|. Si vogliono realizzare i seguenti metodi sulle liste singola
             if i != position - 1:
                 return None
             p.next = p.next.next
+            
+        def is_empty(self):
+            return self.__head == None
 \end{minted}
 
 \subsubsection{Liste Ordinate, Pile e Code}
+\label{sec:lista_ordinata}
 
 Una lista ordinata è una lista ai cui elementi sono ordinati rispetto ad una certa chiave. 
 Ogni inserimento deve quindi rispettare l'ordine della lista. 
@@ -1780,16 +1786,14 @@ da inserire. Si considera la chiave e la lista ordinata in modo crescente:
         def add(self, newNode)
             if self.__head == None or self.__head.data > newNode.data:
                 self.insert_head(newNode)
-                return None
             elif self.__tail.data < newNode.data:
                 self.append(newNode)
-                return None
-            
-            p = self.__head
-            while p.next != None and p.data < newNode.data:
-                p = p.next
-            newNode.next = p.next
-            p.next = newNode
+            else: 
+                p = self.__head
+                while p.next != None and p.data < newNode.data:
+                    p = p.next
+                newNode.next = p.next
+                p.next = newNode
 \end{minted}
 
 Una pila è un tipo di dato astratto basato sul modello delle liste che gestisce 
@@ -1856,8 +1860,7 @@ Per rimuovere il primo elemento, si utilizza la funzione ``dequeue'':
             return p
 \end{minted}
 
-\subsection{Implementazioni ed Efficienza}
-
+\subsection{Implementazioni}
 
 La tecnica della ``memoization'' permette di implementare in modo efficiente funzioni che 
 necessitano di salvare o memorizzare gli stadi intermedi di un'operazione, come può essere 
@@ -1902,6 +1905,7 @@ slice e della concatenazione delle due sottoliste:
     lista = lista[i:] + lista[:i]
 \end{minted}
 
+\subsubsection{Funzioni Anonime}
 
 In Python si possono assegnare ad una lista i nomi di alcune 
 funzioni considerate, e si può accedere a queste tramite l'indice della lista, inserendo 
@@ -1925,6 +1929,7 @@ Quindi una lista contenente funzioni anonime è del tipo:
     lista_funzioni = [lambda parametri1 : operazioni1, ..., lambda parametriN: operazioniN]
 \end{minted}
 
+\subsubsection{Dynamic Programming}
 
 Per determinare l'efficienza di un algoritmo, si può utilizzare il comando \verb|%time| per 
 ottenere informazioni sul tempo di utilizzo del processore da parte della funzione:
@@ -1932,7 +1937,6 @@ ottenere informazioni sul tempo di utilizzo del processore da parte della funzio
     >>> %time funzione(parametri)
 \end{minted}
 
-\subsubsection{Dynamic Programming}
 
 Il ``memoization'' è un approccio al ``dynamic programming'' che risolve questo problema in modo 
 top down, scomponendo il problema in sotto-problemi, e salvando i risultati parziali in una 
@@ -1992,7 +1996,204 @@ Si considera un'implementazione utilizzando questo approccio della sequenza di F
 
 Anche questo approccio ha un'implementazione in tempo lineare $O(n)$. 
 
-%% TODO 6, 8 nov
+\subsubsection{Algoritmo Greedy}
+
+L'algoritmo ``Greedy'' è un algoritmo best-first, che utilizza conoscenza euristica per 
+determinare il miglior nodo dalla frontiera da espandere. La conoscenza si rappresenta tramite 
+una funzione di valutazione $f$, per ogni funzione di valutazione si possono definire diversi 
+algoritmi di ricerca informata. Generalmente la frontiera viene realizzata come una sequenza 
+ordinata di nodi, sulla abase di questa funzione $f$. 
+
+Nell'algoritmo Greedy, la funzione di valutazione è la funzione euristica $h$, definita in 
+base alla conoscenza sul dato problema per stimare la ``distanza'' dello stato corrente dalla soluzione. 
+
+Per problemi di viaggio e della ricerca di itinerari, la distanza rappresenta la distanza fisica 
+dallo stato corrente alla destinazione. Una delle funzioni utilizzate in questi problemi come 
+euristica è la distanza in linea d'aria. 
+
+Per implementare questo tipo di algoritmi di viaggio è necessario rappresentare lo spazio degli 
+stati, generalmente ottenuto da una mappa, quindi come un grafo connesso. Si può realizzare 
+come un dizionario, dove uno stato viene utilizzato come chiave e corrisponde ad un insieme 
+dei suoi stati successori:
+\begin{minted}{python}
+    connections[stato] = {successore1, ... , successoreN}
+\end{minted}
+
+Non è l'unica possibilità per rappresentare un grafo, esistono infatti molte librerie 
+realizzate unicamente per gestire grafi come questi, ma è utile ai fini didattici realizzare 
+il problema per intero prima di avvalersi di librerie esterne. 
+In questa rappresentazione del grafo non è presente la distanza tra le città, può essere inserita 
+come un insieme di tuple contenenti lo stato successore e la distanza a quello stato. 
+Ma per implementare l'algoritmo Greedy non è necessario sapere la distanza, poiché si utilizza 
+solamente la funzione euristica, e non il percorso parziale, come nell'algoritmo A*. 
+Per mettere in evidenza questo concetto viene intenzionalmente omessa in questa rappresentazione 
+del grafo. 
+
+Anche la funzione euristica $h$ viene implementata tramite un dizionario, contenente per ogni 
+stato, utilizzato come chiave, il suo valore:
+\begin{minted}{python}
+    h[stato] = valore
+\end{minted}
+
+Per realizzare i nodi dell'albero di ricerca si crea una nuova classe, chiamata \verb|Node|, 
+contenente lo stato, un riferimento 
+al suo nodo genitore ed il valore della funzione euristica per lo stato contenuto:
+\begin{minted}{python}
+    class Node:
+        def __init__(self, state, parent, h):
+            self.state = state
+            self.parent = parent
+            self.h = h
+\end{minted}
+
+Ulteriormente si possono inserire la sua profondità nell'albero ed una lista dei suoi nodi figli, 
+per rappresentare graficamente l'albero:
+\begin{minted}{python}
+    class Node:
+        def __init__(self, state, parent, h):
+            self.state = state
+            self.parent = parent
+            self.h = h
+            self.child = []
+            self.depth = 0
+\end{minted}
+
+Per rappresentare graficamente l'albero bisogna inserire inoltre un metodo per aggiungere 
+dei figli al nodo:
+\begin{minted}{python}
+        def addChild(self, childNode):
+            self.children.append(childNode)
+            childNode.parent = self
+            childNode.depth = self.depth + 1
+\end{minted}
+
+Inoltre per visualizzare il percorso quando viene individuata la soluzione, si definisce 
+un altro metodo:
+\begin{minted}{python}
+        def printPath(self):
+            if self.parent != None:
+                self.parent.printPath()
+            print("-> ", self.state.name)
+\end{minted}
+
+Questo metodo invocato su un nodo risale i nodi dell'albero fino ad arrivare alla radice, 
+definite con un campo parent contenente \verb|None|, quindi comincia a stampare gli 
+stati a partire dalla radice. 
+
+Si definisce ulteriormente la classe \verb|State| per rappresentare gli stati del problema, con 
+un campo nome per identificare gli stati. Questa classe ha i metodi per restituire lo 
+stato iniziale, per restituire i successori di questo nodo, accedendo al dizionario delle 
+connessione degli stati, e per controllare se è lo stato obiettivo:
+\begin{minted}{python}
+    class State:
+        def __init__(self, name = None):
+            if name == None:
+                self.name = self.getInitialState()
+            else:
+                self.name = name
+
+        def getInitialState(self):
+            initialState = statoIniziale
+            return initialState
+
+        def successorFunction(self):
+            return connections[self.name]
+
+        def checkGoalState(self)
+            return self.name == statoObiettivo
+\end{minted}
+
+Per implementare la frontiera si utilizza una lista ordinata con classi ed oggetti, ma esistono 
+strutture dati più efficienti per implementare una ``priority queue'', come l'heap. Python 
+contiene un'implementazione di una lista con priorità, ma analogamente allo spazio degli stati 
+si utilizza per fini didattici un'implementazione dedicata:
+\begin{minted}{python}
+    class Item:
+        value = None
+        node = None
+        next = None
+
+        def __init__(self, value, node):
+            self.value = value
+            self.node = node
+            self.next = None
+\end{minted}
+
+La classe della lista ordinata è la stessa definita precedentemente nella sezione 
+dedicata \ref{sec:lista_ordinata}. 
+Sono necessari i metodi di inserimento, mantenendo l'ordinamento, il metodo di 
+estrazione del primo elemento \verb|remove_front|, analogo ad una \verb|pop| per le pile, 
+ed un metodo per controllare se la frontiera è vuota \verb|is_empty()|. Questi metodi sono già stati descritti nella sezione specificata 
+\ref{sec:liste_concatenate}. 
+
+
+Si definisce quindi l'algoritmo Greedy, inizializzando la frontiera, lo stato iniziale e 
+l'euristica. Inserendo la radice nella frontiera:
+\begin{minted}{python}
+    def Greedy_Best_First():
+        fringe = SortedLinkedList() 
+
+        initialState = State()
+        
+        root = Node(initialState, None, h[initialState.name])
+
+        fringe.add(Item(root.h, root))
+\end{minted}
+
+In seguito bisogna inserire il ciclo che verrà eseguito fino all'esaurimento della frontiera, 
+controllando ad ogni iterazione che non sia vuota tramite il metodo \verb|is_empty()|. 
+Ad ogni iterazione viene estratto il primo nodo dalla frontiera e si controlla se questo è 
+un nodo obiettivo. Se è un nodo obiettivo si interrompe l'esecuzione e viene stampato il 
+percorso ottenuto. 
+Altrimenti bisogna continuare l'esecuzione espandendo questo nodo, ed inserendo i suoi 
+successori all'interno della frontiera:
+
+\begin{minted}{python}
+        while not fringe.is_empty():
+            itemRemoved = fringe.remove_front()
+            currentNode = itemRemoved.node
+
+            if currentNode.state.checkGoalState():
+                currentNode.state.printPath()
+                break
+            else: 
+                childStates = currentNode.state.successorFunction()
+                for childState in childStates:
+                    childNode = Node(State(childState), currentNode, 
+                                        h[State(childState).name])
+                    # per rappresentare graficamente l'albero:
+                    # currentNode.add(childNode) 
+                    fringe.add(Item(childNode.h, childNode))
+\end{minted}
+
+Iterando su tutti gli stati successori del nodo corrente bisogna creare il nodo corrispondente 
+ed aggiungere l'elemento relativo a questo nodo nella frontiera. 
+Quest'implementazione utilizza un approccio tree-search. 
+
+Se invece si utilizza la coda di priorità da una libreria esterna, bisogna importa, 
+ed utilizzare i suoi metodi allo stesso modo della lista ordinata utilizzata 
+precedentemente:
+\begin{minted}{python}
+    import queue as queue
+
+    # per la creazione:
+    fringe = Queue.PriorityQueue()
+
+    # per l'inserimento si utilizza una tupla, (euristica, nodo):
+    fringe.put((node.h, node))
+
+    # per la verifica della frontiera vuota:
+    fringe.empty()
+
+    # per la rimozione del primo elemento:
+    fringe.get()
+\end{minted}
+
+\subsubsection{Algoritmo A*}
+
+%% TODO add se l'euristica è consistente è anche ammissibile
+
+%% TODO add 6(58:xx), 8 nov
 
 
 \clearpage

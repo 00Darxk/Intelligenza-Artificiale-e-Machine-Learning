@@ -76,24 +76,4 @@
         child { node[red, draw, text=black] {$s_0$} edge from parent node[fill=white]{$5$}}
     }
     ;
-
-    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
-    \node[green, draw, text=black] {$s_0$}
-    child { node[draw] {$s_1$} edge from parent node[fill=white]{$5$}
-        child { node[draw] {$s_3$} edge from parent node[fill=white]{$3$}
-        child { node[red, draw, text=black] {$s_2$} edge from parent node[fill=white]{$4$}}
-        child { node[red, draw, text=black] {$s_4$} edge from parent node[fill=white]{$4$}}
-        child { node[red, draw, text=black] {$s_5$} edge from parent node[fill=white]{$6$}}
-    }
-    child [missing]
-    }
-    child { node[green, draw, text=black] {$s_2$} edge from parent node[fill=white]{$3$}
-        child { node[green, draw, text=black] {$s_4$} edge from parent node[fill=white]{$5$}
-            child { node[draw] {$s_2$} edge from parent node[fill=white]{$5$}}
-            child { node[draw] {$s_3$} edge from parent node[fill=white]{$4$}}
-            child { node[green, draw, text=black] {$s_5$} edge from parent node[fill=white]{$3$}}
-        } 
-        child { node[draw] {$s_0$} edge from parent node[fill=white]{$5$}}
-    }
-    ;
 \end{document}

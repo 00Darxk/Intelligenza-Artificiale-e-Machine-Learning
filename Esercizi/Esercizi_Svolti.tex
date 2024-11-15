@@ -32,10 +32,9 @@
 
 \newsavebox{\tempbox} %{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}}
 
-
 \makeatother
 
-\numberwithin{equation}{subsection}
+\numberwithin{equation}{section}
 \newcommand{\tageq}{\tag{\stepcounter{equation}\theequation}}
 \newcommand{\vv}[1]{\verb{\text{#1}}}
 \AtBeginDocument{%
@@ -102,9 +101,6 @@ $h$ rispetta la condizione di ammissibilità (motivare la risposta).
 Bisogna specificare i vari passi ottenuti dall'algoritmo A*, specificando la frontiera i nodi contenuti ed espansi ed il nodo successivo 
 da espandere.
 
-%% TODO se soddisfa la condizione di consistenza, allora soddisfa anche la condizione di ammissibilità 
-
-
 \begin{enumerate}
     \item Nella frontiera è presente solamente lo stato iniziale $[s_0]$;
     \item Si espande lo stato iniziale $s_0$, nella frontiera si ha $[s_2,s_1]$, dove $f(s_2)=3+7$ e $f(s_1)=5+6$;
@@ -115,16 +111,27 @@ da espandere.
     \item Si espande il nodo $s_5$, con $f(s_5)=11$. Questo nodo è il nodo obiettivo, quindi l'algoritmo termina. 
 \end{enumerate}
 
-I nodi rossi sono quelli nella frontiera, i nodi blu sono i nodi nella frontiera da espandere, ed i nodi verdi sono i nodi del percorso individuato come soluzione:
+I nodi rossi sono quelli nella frontiera, i nodi blu sono i nodi nella frontiera da espandere:
 
 \begin{figure}[H]%
     \centering%
-    \includegraphics[trim={4cm 0 0 0},scale=0.7]{albero_esercitazione_1.pdf}%
+    \includegraphics[trim={3.9cm 0 0 0}, scale=0.95]{albero_esercitazione_1.pdf}%
 \end{figure}
 
 \subsubsection*{Domanda 2}
 
-La funzione euristica $h$ utilizzata è maggiore del costo effettivo per il nodo $s_4$, quindi non è una funzione ammissibile. La soluzione trovata 
+La soluzione dell'algoritmo è $s_0,s_2,s_4,s_5$, di costo 11:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[trim={4cm 0 0 0}]{soluzione_esercitazione_1.pdf}%
+\end{figure}
+
+La funzione euristica $h$ utilizzata è maggiore del costo effettivo per il nodo $s_4$: 
+\begin{equation}
+    h(s_4)=5>3=h^*(s_4,s_5)
+\end{equation}
+
+Quindi non è una funzione ammissibile. La soluzione trovata 
 non è garantito sia la soluzione ottima. 
 
 \subsection*{Esercizio 2}
@@ -147,42 +154,25 @@ Scrivere il codice Python per la gestione di una lista concatenata ordinata, avv
                     self.__tail = newNode
                 newNode.next = self.__head
                 self.__head = newNode
-                return None
+
             elif self.__tail.data < newNode.data:
                 if self.__tail != None:
                     self.__tail.next = newNode
                 if self.__head == None:
                     self.__head = NewNode
                 self.__tail = newNode
-                return None
-            
-            p = self.__head
-            while p.next != None and p.data < newNode.data:
-                p = p.next
-            newNode.next = p.next
-            p.next = newNode
+
+            else:            
+                p = self.__head
+                while p.next != None and p.data < newNode.data:
+                    p = p.next
+                newNode.next = p.next
+                p.next = newNode
 \end{minted}
 
 \subsection*{Esercizio 3}
 
 Illustrare nel dettaglio l'algoritmo ``Greedy'', presentando il codice Python, opportunamente commentato per il problema della ricerca di un 
-itinerario. \\
-Questo algoritmo di ricerca attraverso uno spazio degli stati, rappresentato da un grafo dove ogni nodo è associato ad uno stato del problema considerato. 
-Questo algoritmo inserisce i nodi da espandere all'interno di una frontiera, da cui viene estratto il primo per essere espando. I nodi all'interno di questa 
-frontiera vengono ordinati in base ad una funzione di valutazione. L'algoritmo suppone che il nodo più vicino allo stato obiettivo corrisponda alla soluzione ottima, 
-per cui utilizza come funzione di valutazione un'euristica che non considera il percorso precedente attraversato. Per la ricerca di un itinerario questa funzione 
-euristica può essere la distanza a linea d'aria dallo stato obiettivo. 
-
-
-%% TODO codice python algoritmo greedy 
-
-% \begin{minted}{python}
-%     class Problem:
-
-%     def greedy_search(problem):
-
-
-
-% \end{minted}
+itinerario. 
 
 \end{document}
