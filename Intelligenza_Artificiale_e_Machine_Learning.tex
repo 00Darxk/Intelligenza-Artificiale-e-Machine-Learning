@@ -2239,6 +2239,92 @@ precedentemente:
 
 \subsubsection{Algoritmo A*}
 
+L'algoritmo A* è un algoritmo Best-First, ma è molto migliore rispetto all'algoritmo Greedy 
+poiché la sua funzione di valutazione considera anche il percorso parziale dalla 
+radice al nodo corrente. Si può implementare nelle due versioni dell'algoritmo Best First, 
+in modalità Tree-Search e Graph-Search rispettivamente. 
+Nella modalità Tree-Search ogni volta che viene espanso uno stato, i nodi corrispondenti 
+ai suoi stati successori vengono inseriti nella frontiera, mentre nella Graph-Search gli 
+stati già visitati vengono inseriti in un insieme, per non ripetere nuovamente lo stesso 
+stato. Questo viene effettuato senza inserire gli stati già presenti in questo insieme 
+in frontiera. 
+
+In questa implementazione è necessario conoscere la distanza parziale, quindi lo spazio 
+degli stati viene realizzato tramite un dizionario, dove i valori sono costituiti da coppie 
+stato successore e distanza:
+\begin{minted}{python}
+    connections[stato] = {[successore1, distanza1], ..., [successoreN, distanzaN]}
+\end{minted}
+
+La funzione euristica viene definita allo stesso modo dell'algoritmo precedente, 
+tramite un dizionario:
+\begin{minted}{python}
+    h[stato] = valore
+\end{minted}
+
+Si definisce la classe di un nodo, che ora deve contenere anche la distanza parziale:
+\begin{minted}{python}
+    class Node:
+        def __init__(self, state, parent, f, partial_path):
+            self.state = state
+            self.parent = parent
+            self.f = f
+            self.partial_path = partial_path
+            # self.child = []
+            # self.depth = 0
+\end{minted}
+
+I metodi per stampare il percorso sono gli stessi dell'algoritmo Greedy, così come la 
+classe che definisce uno stato del problema e la lista ordinata per la frontiera.
+
+Si implementa direttamente la versione Graph-Search dell'algoritmo. Si inizializza allo 
+stesso modo dell'implementazione precedente, ma bisogna inizializzare un'altra collezione 
+per rappresentare l'insieme dei nodi già visitati:
+\begin{minted}{python}
+    def A_Star():
+        fringe = SortedLinkedList() 
+        close = []
+
+        initialState = State()
+        root = Node(initialState, None, h[initialState.name], 0)
+
+        fringe.add(Item(root.f, root))
+\end{minted}
+
+Analogamente la prima parte dell'algoritmo dentro al ciclo è uguale, bisogna estrarre un nodo 
+dalla frontiera, controllare se corrisponde allo stato obiettivo ed in caso stampare 
+la soluzione ottenuto e terminare l'esecuzione dell'algoritmo:
+\begin{minted}{python}
+    while not fringe.is_empty():
+            itemRemoved = fringe.remove_front()
+            currentNode = itemRemoved.node
+
+            if currentNode.state.checkGoalState():
+                currentNode.state.printPath()
+                break
+\end{minted}
+Altrimenti bisogna verificare se non è già stato espanso, in caso si aggiunge alla lista dei 
+nodi già visitati e si espande, iterando sui suoi stati figli per creare i corrispondenti 
+nodi ed aggiungerli alla frontiera, se non sono già stati visitati:
+\begin{minted}{python}
+            if currentNode.state.name not in close:
+                close.append(currentNode.state.name)
+
+                childStates = currentNode.state.successorFunction()
+                for (childState, distance) in childStates:
+                    g = childState.partial_path + distance
+                    f = g + h[childState]
+                    childNode = (childState, currentChild, f, g)
+
+                    if childState.name not in close:
+                        fringe.add(Item(childNode.f, childNode))
+\end{minted}
+Questo controllo non è necessario, poiché se viene estratto un nodo corrispondente ad un elemento 
+già espanso, non viene comunque espanso. 
+
+
+
+
 %% TODO add se l'euristica è consistente è anche ammissibile
 
 %% TODO add 6(58:xx), 8, 9 nov

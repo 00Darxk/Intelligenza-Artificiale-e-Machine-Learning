@@ -111,6 +111,8 @@ da espandere.
     \item Si espande il nodo $s_5$, con $f(s_5)=11$. Questo nodo è il nodo obiettivo, quindi l'algoritmo termina. 
 \end{enumerate}
 
+%% TODO fix frontiera con tutti i nodi in frontiera
+
 I nodi rossi sono quelli nella frontiera, i nodi blu sono i nodi nella frontiera da espandere:
 
 \begin{figure}[H]%
@@ -173,6 +175,29 @@ Scrivere il codice Python per la gestione di una lista concatenata ordinata, avv
 \subsection*{Esercizio 3}
 
 Illustrare nel dettaglio l'algoritmo ``Greedy'', presentando il codice Python, opportunamente commentato per il problema della ricerca di un 
-itinerario. 
+itinerario. \\
+\begin{minted}{python}
+    def Greedy_Best_First():
+        fringe = SortedLinkedList() 
+
+        initialState = State()
+        
+        root = Node(initialState, None, h[initialState.name])
+        fringe.add(Item(root.h, root))
+    
+        while not fringe.is_empty():
+            itemRemoved = fringe.remove_front()
+            currentNode = itemRemoved.node
+
+            if currentNode.state.checkGoalState():
+                currentNode.state.printPath()
+                break
+            else: 
+                childStates = currentNode.state.successorFunction()
+                for childState in childStates:
+                    childNode = Node(State(childState), currentNode, 
+                                        h[State(childState).name])
+                    fringe.add(Item(childNode.h, childNode))
+\end{minted}
 
 \end{document}

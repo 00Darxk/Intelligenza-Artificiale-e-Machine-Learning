@@ -16,5 +16,5 @@ Appunti tratti dal corso di Intelligenza Artificiale e Machine Learning, Anno Ac
 
 
 
-## Materiale Aggiuntivo
+#
 Per segnalare eventuali refusi, correzioni o integrazioni aprite una [nuova issue](https://github.com/00Darxk/Intelligenza-Artificiale-e-Machine-Learning/issues/new/choose) o [pull request](https://github.com/00Darxk/Intelligenza-Artificiale-e-Machine-Learning/pulls), con le relative modifiche, nella repository.
