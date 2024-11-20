@@ -69,7 +69,7 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
-\section{Esercitazione 13/11/24}
+\section{Esercitazione del 13/11/24}
 
 \subsection*{Esercizio 1}
 
@@ -104,10 +104,10 @@ da espandere.
 \begin{enumerate}
     \item Nella frontiera è presente solamente lo stato iniziale $[s_0]$;
     \item Si espande lo stato iniziale $s_0$, nella frontiera si ha $[s_2,s_1]$, dove $f(s_2)=3+7$ e $f(s_1)=5+6$;
-    \item Si espande il nodo $s_2$, con $f(s_2)=10$, per cui nella frontiera entra il nodo $s_4$: $[s_1,s_4]$, con $f(s_1)=5+6$ e $f(s_4)=8+5$;
-    \item Si espande il nodo $s_1$, con $f(s_1)=12$, per cui nella frontiera entra il nodo $s_3$: $[s_3, s_4]$, con $f(s_3)=8+4$ e $f(s_4)=8+5$;
-    \item Si espande il nodo $s_3$, con $f(s_3)=12$, per cui nella frontiera entra il nodo $s_5$: $[s_4, s_5]$, con $f(s_4)=8+5$ e $f(s_5)=14+0$;
-    \item Si espande il nodo $s_4$, con $f(s_4)=13$, per cui nella frontiera entra il nodo $s_5$: $[s_5]$, con $f(s_5)=11+0$;
+    \item Si espande il nodo $s_2$, con $f(s_2)=10$, per cui nella frontiera entra il nodo $s_4$ e $s_0$: $[s_1,s_4, s_0]$, con $f(s_1)=5+6$, $f(s_4)=8+5$ e $f(s_0)=8+10$;
+    \item Si espande il nodo $s_1$, con $f(s_1)=12$, per cui nella frontiera entra il nodo $s_3$: $[s_3, s_4, s_0]$, con $f(s_3)=8+4$, $f(s_4)=8+5$ e $f(s_0)=8+10$;
+    \item Si espande il nodo $s_3$, con $f(s_3)=12$, per cui nella frontiera entra il nodo $s_2$, $s_4$ ed $s_5$: $[s_4, s_5, s_4, s_0, s_2]$, con $f(s_4)=8+5$, $f(s_5)=14+0$, $f(s_4)=12+5$, $f(s_0)=8+10$ ed $f(s_2)=12+7$;
+    \item Si espande il nodo $s_4$, con $f(s_4)=13$, per cui nella frontiera entra il nodo $s_2$, $s_3$ ed $s_5$: $[s_5, s_5, s_3, s_4, s_0, s_2, s_2]$, con $f(s_5)=11+0$, $f(s_5)=14+0$, $f(s_3)=12+4$, $f(s_4)=12+5$, $f(s_0)=8+10$, $f(s_2)=12+7$, $f(s_2)=13+7$;
     \item Si espande il nodo $s_5$, con $f(s_5)=11$. Questo nodo è il nodo obiettivo, quindi l'algoritmo termina. 
 \end{enumerate}
 
@@ -130,7 +130,7 @@ La soluzione dell'algoritmo è $s_0,s_2,s_4,s_5$, di costo 11:
 
 La funzione euristica $h$ utilizzata è maggiore del costo effettivo per il nodo $s_4$: 
 \begin{equation}
-    h(s_4)=5>3=h^*(s_4,s_5)
+    h(s_4)=5>3=h^*(s_4)
 \end{equation}
 
 Quindi non è una funzione ammissibile. La soluzione trovata 
@@ -176,28 +176,101 @@ Scrivere il codice Python per la gestione di una lista concatenata ordinata, avv
 
 Illustrare nel dettaglio l'algoritmo ``Greedy'', presentando il codice Python, opportunamente commentato per il problema della ricerca di un 
 itinerario. \\
+Per realizzare l'algoritmo sono necessarie le classi per gli stati, individuati solamente dal loro nome nello spazio degli stati, 
+ed i nodi dell'albero di ricerca:
 \begin{minted}{python}
-    def Greedy_Best_First():
-        fringe = SortedLinkedList() 
-
-        initialState = State()
+    # nodo dell'albero di ricerca: contenente lo stato, il nodo genitore
+    # ed il valore della funzione euristica per lo stato
+    class Node:
+        def __init__(self, state, parent, h):
+            self.state = state
+            self.parent = parent
+            self.h = h
         
-        root = Node(initialState, None, h[initialState.name])
-        fringe.add(Item(root.h, root))
+        # funzione per stampare la soluzione
+        def printPath(self):
+            if self.parent != None:
+                self.parent.printPath()
+            print("->", self.state.name)
     
-        while not fringe.is_empty():
-            itemRemoved = fringe.remove_front()
-            currentNode = itemRemoved.node
+    # stato del problema
+    class State:
+        # crea uno stato, definito solamente dal nome
+        # se non viene specificato crea lo stato iniziale
+        def __init__(self, name = None):
+            if name == None:
+                self.name = self.getInitialState()
+            else:
+                self.name = name
 
+        # restituisce lo stato iniziale definito a priori
+        def getInitialState(self):
+            initialState = statoIniziale
+            return initialState
+
+        # ottiene i successori dal dizionario 'connections'
+        def successorFunction(self):
+            return connections[self.name]
+
+        # verifica se è uno stato obiettivo definito a priori
+        def checkGoalState(self):
+            return self.name == statoObiettivo
+\end{minted}
+La funzione euristica ed i nodi successori per un determinato stato si possono implementare 
+allo stesso modo tramite un dizionario, dove la chiave è il nome dello stato, ed il valore 
+è o il valore dell'euristica o la lista degli stati successori:
+\begin{minted}{python}
+    # dizionario dei successori: 
+    connections['A'] = ['B', 'C']
+    connections['B'] = ['C']
+    connections['C'] = ['B', 'D']
+    connections['D'] = ['B', 'C', 'E']
+    connections['E'] = ['A', 'C']
+    # dizionario delle euristiche
+    h['A'] = 10
+    h['B'] = 9
+    h['C'] = 6
+    h['D'] = 3
+    h['E'] = 0
+\end{minted}
+
+L'algoritmo inizializza la frontiera con coda di priorità, contenente solamente l'elemento 
+corrispondente alla radice. In seguito continua ad iterare fino a quando non svuota la 
+frontiera, rimuovendo il primo elemento in frontiera, rappresentati come tuple euristica e 
+nodo. In questo modo si possono ordinare in base al loro valore di euristica. Se il nodo 
+estratto è un obiettivo, termina l'algoritmo e stampa la soluzione, altrimenti viene espanso ed i suoi 
+figli vengono inseriti all'interno della frontiera. 
+\begin{minted}{python}
+    import queue 
+
+    def Greedy_Best_First():
+        # crea la frontiera con una priority queue
+        fringe = queue.PriorityQueue() 
+
+        # crea lo stato iniziale
+        initialState = State()
+
+        # crea la radice dell'albero di ricerca e la aggiunge alla frontiera
+        root = Node(initialState, None, h[initialState.name])
+        fringe.put((root.h, root))
+
+        while not fringe.empty():
+            # si itera prendendo il primo elemento della frontiera
+            # fino all'esaurimento dei suoi elementi
+            (currentH, currentNode) = fringe.get()
+
+            # si controlla se corrisponde ad uno stato obiettivo
             if currentNode.state.checkGoalState():
                 currentNode.state.printPath()
                 break
+            # altrimenti si espande e si aggiungono i suoi figli alla frontiera
             else: 
                 childStates = currentNode.state.successorFunction()
+                # crea gli elementi corrispondenti per l'aggiunta in frontiera
                 for childState in childStates:
                     childNode = Node(State(childState), currentNode, 
                                         h[State(childState).name])
-                    fringe.add(Item(childNode.h, childNode))
+                    fringe.put((childNode.h, childNode))
 \end{minted}
 
 \end{document}

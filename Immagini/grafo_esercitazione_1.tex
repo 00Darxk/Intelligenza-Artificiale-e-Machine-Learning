@@ -1,5 +1,6 @@
 \documentclass{standalone}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta}
 \begin{document}
 \begin{tikzpicture}
     \begin{scope}[every node/.style={circle,thick,draw, inner sep=0.6pt}]
@@ -12,7 +13,7 @@
     \end{scope}
     \begin{scope}[
         every node/.style={fill=white,circle, inner sep=0.5pt},
-        every edge/.style={draw=black,very thick}]
+        every edge/.style={-{Stealth[]},draw=black,very thick}]
         \path[->] (s0) edge[bend right=30] node {$3$} (s2);
         \path[->] (s1) edge node {$3$} (s3);
         \path[->] (s4) edge[bend right=30] node {$3$} (s5);

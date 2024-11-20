@@ -845,7 +845,7 @@ super ottimistico.
 
 Date due versioni dell'algoritmo A* con due euristiche diverse $h_1<h_2$, per tutti i nodi non obiettivo, si dice che l'algoritmo A*$_2$ è più informato dell'algoritmo 
 A*$_1$. 
-Vale allora il teorema secondo cui al termine delle loro ricerche su un qualsiasi grafo con un percorso dal nodo iniziale $n_o$ al nodo obiettivo, allora ogni nodo 
+Vale allora il teorema secondo cui al termine delle loro ricerche su un qualsiasi grafo con un percorso dal nodo iniziale $n_0$ al nodo obiettivo, allora ogni nodo 
 espanso da A*$_2$ sarà anche espanso da A*$_1$. Quindi il primo algoritmo espande almeno tanti nodi quanto il secondo algoritmo, quindi l'algoritmo più informato A*$_2$ 
 è più efficiente di A*$_1$. 
 
@@ -856,10 +856,10 @@ determinare la funzione di costo effettivo per un problema simile all'originale 
 in questi ``Relaxed Problems'' è una buona euristica per il problema originale. Ma il calcolo della funzione euristica potrebbe avere un calcolo computazionale 
 elevato, quindi bisogna scegliere l'euristica considerando anche la loro complessità.  
 
-L'algoritmo A* può essere eseguito sia in modalità Tree Search che Graph Search, ma in queste due modalità potrebbe trovare due soluzioni differenti allo stesso 
+L'algoritmo A* può essere eseguito sia in modalità Tree-Search che Graph-Search, ma in queste due modalità potrebbe trovare due soluzioni differenti allo stesso 
 problema. 
-
-Si introduce quindi la condizione di consistenza, e si dice che una certa funzione euristica $h$ 
+Nella modalità Graph-Search infatti l'algoritmo potrebbe scartare nodi già visitati, ma che appartengono ad una soluzione migliore. Questa soluzione migliore può essere individuata in modalità Tree-Search poiché non 
+vengono scartati nodi. Per risolvere questo problema si introduce quindi la condizione di consistenza, e si dice che una certa funzione euristica $h$ 
 obbedisce a questa condizione se per tutte le coppie di nodi $n_j$, successore di $n_i$ nel grafo di 
 ricerca si ha:
 \begin{equation}
@@ -892,12 +892,15 @@ Dalla condizione di consistenza si aggiunge ad entrambi i membri $g(n_j)=g(n_i)+
     f(n_j)\geq f(n_i)\tageq
 \end{gather*}
 
-Per cui spesso la condizione di consistenza sulla funzione euristica $h$ viene spesso chiamata 
+Per cui spesso la condizione di consistenza sulla funzione euristica $h$ viene chiamata 
 condizione monotona su $f$. 
+
+\'{E} dimostrabile che se una funzione euristica $h$ è consistente allora è anche ammissibile. 
 
 Se la condizione di consistenza è soddisfatta su $h$, allora quando l'algoritmo A* espande un nodo 
 $n$ ha già trovato il percorso ottimo per $n$. In questo modo la ricerca su grafo non è 
 differente dalla ricerca su un albero per quanto riguarda l'ottimalità della soluzione. 
+
 
 \subsection{Algoritmo di Ricerca Locale: Hill-Climbing}
 
@@ -1292,6 +1295,12 @@ si può realizzare un ciclo ``for-each'':
 \begin{minted}{python}
     for elemento in collezione: 
         # corpo del ciclo
+\end{minted}
+
+Se il valore dell'elemento non viene utilizzato all'interno del ciclo, ma solo per effettuare un numero definito di cicli, è convenzione utilizzare il carattere \verb|_| per distinguerlo:
+\begin{minted}{python}
+    for _ in collezione:
+        # corpo del ciclo 
 \end{minted}
 
 \subsection{Stringhe}
@@ -2044,7 +2053,7 @@ Si considera un'implementazione utilizzando questo approccio della sequenza di F
 
 Anche questo approccio ha un'implementazione in tempo lineare $O(n)$. 
 
-\subsubsection{Algoritmo Greedy}
+\subsubsection{Algoritmo Greedy: Problema di Ricerca di un Itinerario}
 
 L'algoritmo ``Greedy'' è un algoritmo best-first, che utilizza conoscenza euristica per 
 determinare il miglior nodo dalla frontiera da espandere. La conoscenza si rappresenta tramite 
@@ -2237,7 +2246,7 @@ precedentemente:
     fringe.get()
 \end{minted}
 
-\subsubsection{Algoritmo A*}
+\subsubsection{Algoritmo A*: Problema di Ricerca di un Itinerario}
 
 L'algoritmo A* è un algoritmo Best-First, ma è molto migliore rispetto all'algoritmo Greedy 
 poiché la sua funzione di valutazione considera anche il percorso parziale dalla 
@@ -2265,11 +2274,11 @@ tramite un dizionario:
 Si definisce la classe di un nodo, che ora deve contenere anche la distanza parziale:
 \begin{minted}{python}
     class Node:
-        def __init__(self, state, parent, f, partial_path):
+        def __init__(self, state, parent, f, partialPath):
             self.state = state
             self.parent = parent
             self.f = f
-            self.partial_path = partial_path
+            self.partialPath = partialPath
             # self.child = []
             # self.depth = 0
 \end{minted}
@@ -2312,7 +2321,7 @@ nodi ed aggiungerli alla frontiera, se non sono già stati visitati:
 
                 childStates = currentNode.state.successorFunction()
                 for (childState, distance) in childStates:
-                    g = childState.partial_path + distance
+                    g = childState.partialPath + distance
                     f = g + h[childState]
                     childNode = (childState, currentChild, f, g)
 
@@ -2322,13 +2331,187 @@ nodi ed aggiungerli alla frontiera, se non sono già stati visitati:
 Questo controllo non è necessario, poiché se viene estratto un nodo corrispondente ad un elemento 
 già espanso, non viene comunque espanso. 
 
+\subsubsection{Algoritmo Hill-Climbing: Problema di Ricerca di una Stringa}
+
+Si considera la versione First-Choice dell'algoritmo Hill-Climbing. L'algoritmo dato uno stato corrente sceglie un valore migliore, in base alla versione dell'algoritmo, fino a quando 
+non trova un massimo locale. Questo algoritmo quindi passa tra stati di valore sempre crescente e termina quando raggiunge il picco. 
+In questa versione First-Choice, l'algoritmo sceglie casualmente uno stato adiacente e verifica se questo stato è il migliore, ed in caso lo considera il nuovo stato corrente. 
+Si vuole applicare questo problema dove da una stringa iniziale di $n$ caratteri si vuole raggiungere una stringa obiettivo di $n$ caratteri. 
+Bisogna individuare gli stati e gli operatori da poter applicare ad una stringa. Uno stato è un'istanza di una stringa da $n$ caratteri, ed un operatore può modificare un singolo di questi 
+$n$ caratteri sostituendolo con uno dei caratteri disponibili. In questo modo vengono creati gli stati adiacenti del problema. 
+Per considerare tutti i successori bisognerebbe considerare per ciascuno degli $n$ caratteri uno dei caratteri disponibili. 
+
+La funzione di valutazione in questo problema è la distanza dalla stringa obiettivo, calcolabile come la somma delle distanze dei singoli caratteri dalla stringa corrente alla stringa obiettivo. 
+
+I caratteri disponibili sono i $100$ caratteri stampabili su Python, visualizzabili con \verb|.printable|, dopo aver importato l'opportuno modulo \verb|string|. Il numero di stati possibili è $100^n$, 
+mentre per ognuna delle $n$ posizioni si hanno $100$ posizioni diverse, quindi dato uno stato si hanno $100\cdot n$ stati adiacenti. 
+
+Per generare uno stato iniziale, si può generare una stringa di $n$ caratteri scelti casualmente:
+\begin{minted}{python}
+    import random
+    import string
+    
+    def generate_random_string(length):
+        return [random.choice(string.printable) for _ in range(length)]
+\end{minted}
+
+Per calcolare la distanza tra due stringhe si può utilizzare la funzione built-in \verb|ord()| che restituisce il codice Unicode del carattere inserito come parametro. Si può iterare su ognuno di questi caratteri 
+e calcolarne la distanza dalla stringa obiettivo:
+\begin{minted}{python}
+    def evaluate(sol):
+        trg = list(targetString)
+        diff = 0
+        for i in range(len(trg)):
+            diff += abs(ord(sol[i]) - ord(trg[i]))
+        return diff
+\end{minted}
 
 
+Per scegliere il successore bisogna scegliere casualmente la posizioni da modificare ed il carattere da sostituire:
+\begin{minted}{python}
+    def tweak(sol):
+        i = random.randint(0, len(sol) - 1)
+        sol[i] = random.choice(string.printable)
+\end{minted}
 
-%% TODO add se l'euristica è consistente è anche ammissibile
+L'algoritmo quindi itera continuamente fino a quando lo stato corrente non è nullo, visitando sempre e solo stati di valore minore di quello corrente. Dato che gli algoritmi Hill-Climbing risolvono sia problemi di 
+massimo che di minimo, essendo tra loro duali. Si può scegliere se farlo partire da una stringa casuale oppure da stringa specificata dall'utente. 
+\begin{minted}{python}
+    def first_choice_hill_climbing(initialString):
+        currentState = initialString
+        # currentState = generate_random_string(length)
+        currentEval = evaluate(initialString)
 
-%% TODO add 6(58:xx), 8, 9 nov
+        while True:
+            if currentEval == 0:
+                break
+            
+            nextState = tweak(list(currentState))
+            nextEval = evaluate(nextState)
 
+            if nextEval < currentEval:
+                currentState = nextState
+                currentEval += nextEval
+\end{minted}
+
+Questi algoritmi operano nel discreto, anche se molte volte si lavora su domini continui, e sono necessari altri controlli e test diversi per poter implementare algoritmi di ricerca. 
+
+\subsubsection{Algoritmo Simulated Annealing: Problema delle n Regine}
+
+In questo algoritmo si parte da uno stato iniziale casuale e si sceglie casualmente un successore, come nell'algoritmo precedente, e si accettano sempre stati adiacenti migliori, mentre in base ad una probabilità 
+se peggiori. Una variabile chiamata temperatura determina il cambiamento di questa probabilità. All'aumentare della temperatura diventa sempre meno probabile che stati adiacenti di valore peggiore vengono 
+scelti dall'algoritmo. Questo algoritmo termina quando trova uno stato obiettivo, oppure se rispetta cerca condizioni di terminazione. 
+
+Il problema delle $n$ regine consiste nell'individuare una disposizione su una scacchiera $n\times n$, dove $n$ regine presenti non si attaccano fra di loro. Ovvero se si potessero muovere non potrebbero 
+catturarsi a vicenda. Una regina negli scacchi si può muovere sia verticalmente, che orizzontalmente, che diagonalmente. 
+In questo problema lo spazio degli stati consiste in stati contenenti $n$ regine, una in ogni colonna ed una in ogni riga. In questo modo bisogna solamente analizzare conflitti sulle diagonali. In questo modo 
+viene limitata notevolmente lo spazio degli stati e viene semplificata la sua rappresentazione, invece che con una matrice, con un semplice vettore. 
+Dato uno stato per considerare i successori si considera uno scambio tra due colonne, per mantenere il primo vincolo sugli stati. 
+Lo stato obiettivo è un qualsiasi stato dove le regine non sono in conflitto tra di loro. La funzione di valutazione sono il numero di attacchi in una data disposizione della scacchiera, che si vuole 
+minimizzare. 
+Una scacchiera si può rappresentare come un vettore lungo $n$, dove l'indice individua la colonna, ed il valore contenuto la riga corrispondente, poiché una sola regina può essere su ogni colonna ed ogni riga. 
+Per passare da uno stato ad uno adiacente si utilizza una funzione \verb|tweak()|. Questa funzione scambia due colonne, scegliendo casualmente due indici ed invertendo i loro valori:
+\begin{minted}{python}
+    def tweak(sol):
+        solCopy = np.copy(sol)
+
+        x = random.randint(0, n-1)
+        y = random.randint(0, n-1)
+        while x == y:
+            y = random.randint(0, n-1)
+        solCopy[x], solCopy[y] = solCopy[y], solCopy[x]
+
+        return solCopy
+\end{minted}
+
+Per inizializzare il problema si sceglie casualmente uno stato iniziale. Quindi partendo da uno stato iniziale, come potrebbe essere una disposizione avente le regine sulla diagonale principale, ed operare 
+un certo numero di volte la funzione \verb|tweak()| per ottenere uno stato casuale:
+\begin{minted}{python}
+    def initialize(sol):
+        for _ in range(0, initialSteps):
+            sol = tweak(sol)
+        return sol
+\end{minted}
+
+Questo valore \verb|initialSteps| deve essere un numero significativo per realizzare ad ogni esecuzione uno stato nuovo casuale. 
+Convenzionalmente la funzione di valutazione nel Simulated-Annealing viene chiamata energia, poiché in metallurgia per effettuare questo processo si vuole appunto minimizzare l'energia del sistema. 
+La funzione di valutazione deve considerare solamente gli spostamenti in diagonale delle regine sulla scacchiera. Queste si possono spostare in quattro possibili direzioni: $(1,1)$, $(1,-1)$, $(-1, 1)$ e $(-1,-1)$. 
+Ovvero possono incrementare o decrementare gli indici di riga o colonna di uno. Per verificare se sono presenti conflitti, data la posizione originale di una regina, si segue una delle diagonali individuata da 
+una di queste quattro direzioni, fino a raggiungere il bordo della scacchiera. Si può implementare realizzando la scacchiera tramite una matrice contenente solo valori nulli, ed inserendo le regine 
+con un valore specifico. In questo modo ci si può spostare sulle diagonali come su un piano cartesiano discreto, su direzioni individuate da spostamenti unitari d$x$ e d$y$. Iterando su ogni regina, si 
+considera la sua posizione corrente $x$ e $y$, e si incrementa progressivamente tramite questi spostamenti unitari su una delle diagonali. Ad ogni passo si controlla se la posizione è interna alla scacchiera, 
+ed in caso si termina la ricerca per questa diagonale, oppure se la casella corrispondente contiene una regina, ed in caso si incrementa il contatore dei conflitti. Questa ricerca dei conflitti termina dopo 
+aver percorso le diagonali di tutte le regine contenute nello stato passato come parametro, restituendo il numero di conflitti ottenuti. Questo numero sarà sempre pari, poiché per ogni coppia di regine in conflitto 
+sono possibili due attacchi sia dalla prima che dalla seconda regina. 
+\begin{minted}{python}
+    def energy(sol):
+        board = [[0] * n for i in range(n)]
+        for i in range(0, n):
+            board[sol[i]][i] = 1
+        
+        dx = [1, 1, -1, -1]
+        dy = [1, -1, 1, -1]
+
+        conf = 0
+        for i in range(0, n):
+            x = sol[i]
+            y = i
+            for j in range(0, 4):
+                tempx = x
+                tempy = y
+                while True:
+                    tempx = tempx + dx[j]
+                    tempy = tempy + dy[j]
+                    if (tempx < 0 or
+                        tempx >= n or
+                        tempy < 0 or
+                        tempy >= n):
+                        break
+                    if board[tempx][tempy]:
+                        conf += 1
+        return conf
+\end{minted}
+
+In seguito bisogna definire i parametri iniziali dell'algoritmo, quali la temperatura massima \verb|TMax| e minima \verb|TMin|, per cui termina l'algoritmo anche se non è stata individuata una soluzione, il numero di passi per 
+iterazione \verb|TSteps|, prima di cambiare la temperatura. Il numero di passi per scegliere uno stato iniziale casuale, e la dimensione della scacchiera \verb|n|. Si considera il numero di passi iniziali uguali 
+alla dimensione della scacchiera. Si utilizza inoltre un parametro $0<\alpha<1$: \verb|alpha| per diminuire la temperatura \verb|T|. 
+
+L'algoritmo inizia scegliendo uno stato casuale, passando uno stato con le regine sulla diagonale, e si salva la valutazione di questo stato. Si inizializza lo stato migliore ed il suo valore con i valori 
+dello stato corrente. 
+In seguito si itera fino alla temperatura minima oppure fino ad aver trovato la soluzione, iterando per ogni temperatura diversa sugli stati adiacenti dello stato corrente. Si considerano se hanno un valore 
+minore oppure se vengono accettati con una data probabilità. Per calcolare la probabilità si utilizza il modulo \verb|math|, con la funzione \verb|.exp()| per il calcolo di un esponenziale. In caso si è scelto 
+uno stato corrente si verifica se si tratta di uno stato migliore dello stato migliore precedentemente trovato, ed in caso si aggiorna, solamente se è migliore e non con probabilità. 
+
+\begin{minted}{python}
+    def simulated_annealing():
+        currentState = initialize(range(0, n))
+        currentEnergy = energy(currentState)
+
+        bestState = currentState
+        bestEnergy = currentEnergy
+
+        T = TMax
+
+        while T > TMin and bestEnergy != 0:
+            for _ in range(0, TSteps):
+                useNew = False
+                nextState = tweak(currentState)
+                nextEnergy = energy(nextState)
+                
+                if (nextEnergy < currentEnergy or 
+                    random.random() > math.exp((currentEnergy-nextEnergy)/T)):
+                    useNew = True
+                
+                if useNew:
+                    currentState = nextState
+                    currentEnergy = nextEnergy
+
+                    if currentEnergy < bestEnergy:
+                        bestState = currentState
+                        bestEnergy = currentEnergy
+                T = T * alpha
+        return bestState
+\end{minted}
 
 \clearpage
 
