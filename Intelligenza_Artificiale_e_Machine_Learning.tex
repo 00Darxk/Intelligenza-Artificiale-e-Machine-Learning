@@ -361,6 +361,55 @@ Sul campo della robotica i risultati ottenuti sono scadenti rispetto a compiti c
 Recentemente la Boston Dynamics ha deciso di abbandonare i suoi investimenti su di Atlas. 
 Spot ha quindi preso il posto di Atlas, un robot con le fattezze di un cane, più semplice da realizzare rispetto ad un sistema bipede. 
 
+Dato un problema, un'istanza è un insieme di caratteristiche o ``features'', che possono essere di interesse ``target'' o meno. Queste vengono raccolte per ogni 
+problema. E da questo insieme di caratteristiche si può generare un albero di decisione binario, dove ogni biforcazione è data da una condizione su una certa 
+feature. Questo albero è completo se arrivando ad una foglia, questa è pura, ovvero non sono richiesti altri controlli sulle caratteristiche dell'istanza per 
+determinare una soluzione. 
+Per generare questo approccio si possono attuare approcci greedy che creano tutte le possibili decisioni, oppure in modo più efficiente utilizzando la 
+teoria dell'informazione di Shannon, e da euristiche legate al problema. Nel caso dell'informazione l'entropia è il numero di bit necessario in media per memorizzare 
+il messaggio da una sorgente. L'entropia è tanto più elevata quanto è imprevedibile il messaggio proveniente da una sorgente, tanto maggiore è il numero di bit 
+necessari per memorizzarlo. 
+Per cui per ogni ramo si cerca la caratteristica che fornisce il maggior guadagno di informazione, in questo modo si diminuiscono il numero di 
+caratteristiche da dover controllare per dover raggiungere una soluzione. 
+
+Uno dei risultati importanti è Eliza, il primo chatbot della storia, un punto in avanti in IA e ML, e nella risoluzione dei problemi negli anni '70. Questi erano 
+strumenti statistici. La differenza tra quei modelli statistici ed i modelli odierni, è la quantità di dati su cui sono stati addestrati. Uno dei primi ambiti dell'IA 
+fu la traduzione automatica, ma nonostante tutti i sistemi proposti per questo utilizzo. La maggior parte dei finanziamenti venivano dall'impianto militare, negli Stati 
+Uniti specialmente dalla DARPA. Negli anni '80 Marin Minsky consigliò di non utilizzare reti neurali, nonostante le loro possibilità, poiché le risorse di calcolo 
+del tempo non lo permettevano. 
+
+Nell'idea delle CNN le prime reti neurali, vennero analizzate reti neurali animali, sull'aspetto visivo per tentare di copiare la natura ed ottenere gli stessi effetti 
+benefici. 
+Negli anni 2000 il classificatore Bayesiano si può dimostrare essere il migliore classificatore possibile, in condizioni di incertezza. Un altro tipo di macchina 
+le Support Vector Machine, si utilizza teoria e principi di ottimizzazione, introdotta negli anni '90. Si basa su principi geometrici invece che probabilistici, 
+rappresentando i vari punti, che appartengono a determinate classi,  su un iperpiano, in un ambiente di apprendimento supervisionato. Queste SVM individuano l'iperspazio 
+di separazione ottimo, per ottimizzare al meglio il processo di Machine Learning. 
+
+Oltre a caratteristiche testuali si potrebbero utilizzare feature visuali per poter identificare caratteristiche da parte di immagini nel riconoscimento. Si vuole 
+utilizzare feature che permettono il maggiore guadagno di informazioni. Dalle feature primarie si possono realizzare feature secondarie, le SIFT, ``Space Invariant Feature Transformer'', 
+delle caratteristiche derivate invariante rispetto ad una serie di trasformazioni geometriche. In modo da riconoscere la caratteristica nonostante sia stata effettuata 
+una di queste trasformazioni. 
+
+Nel 2012 venne rivoluzionata la ImageNet challenge nell'ambito della visione artificiale e riconoscimento di immagini da parte di IA. Esistono delle piattaforme tramite 
+cui chi ha i fondi di ricerca, dato un obiettivo, può chiedere di ottenere etichette su un set di dati. Queste piattaforme vengono chiamate turchi meccanici, poiché 
+le operazioni vengono svolte da umani e non da macchine. Ha favorito lo sviluppo e l'introduzione del ``Neep Neural Network'', DNN, aumentando novelette 
+le prestazioni su queste task. 
+Questo fu dovuto a Geoffrey Hinton ed un suo studente Alex Krizhevsky, dall'università di Toronto, che realizzarono questa tecnologia di DNN. Vennero in seguito 
+assunti da Google per implementare questa tecnica nei loro prodotti, chiamata AlexNet. 
+Per cercare un'immagine si cercava dalla sua caption, mentre le immagini non etichettate erano effettivamente invisibili a questo approccio. Con questa tecnologia 
+invece è possibile individuare anche immagini non etichettate, cercando immagini simili da quella fornita dall'utente. 
+
+Con l'introduzione delle reti ricorrenti le loro prestazioni incrementarono notevolmente. Google utilizza infatti reti neurali ricorrenti GMLT per la traduzione 
+automatica del linguaggio naturale. Già Turing in alcuni dei suoi studi ha mostrato come è possibile prevedere data una frase la prima lettere o parola della frase 
+successiva. 
+Questi sistemi di traduzione automatica tuttavia falliscono se l'utente ha un accento diverso da quello inglese, su cui sono stati principalmente addestrati. 
+Ulteriormente l'errore aumenta notevolmente se aumenta il rapporto segnale rumore SNR, sia per un agente artificiale sia che per un utente umano. 
+
+Si sono realizzati strumenti di riconoscimento di oggetti e di immagini. YOLO, ``You Only Look Once'' è uno strumento che effettua un compromesso tra velocità 
+ed attendibilità nel riconoscimento degli oggetti e della locazione. Fornisce la probabilità secondo cui l'oggetto che si s ta guardando appartiene ad una certa classe 
+e fornisce anche questo valore in percentuale. Soprattutto permette di riconoscere con certa accuratezza anche in ambienti ``cluttered'' con un alta 
+complessità della scena in tempo reale. Questo è un programma open source, scaricabile gratuitamente. 
+
 
 \clearpage
 
@@ -821,8 +870,6 @@ Uno dei difetti è che la scelta del nuovo stato è effettuata interamente dalla
 
 \subsubsection{Algoritmo A*}
 
-%% TODO A^* in math_mode?
-
 L'algoritmo A* risolve i problema dell'algoritmo greedy, considerando anche il percorso parziale nella sua funzione di valutazione: $f(n)=g(n)+h(n)$, fornisce 
 quindi una stima del costo del cammino dallo stato iniziale ad uno stato obiettivo, vincolato a passare per il nodo $n$. 
 
@@ -877,7 +924,10 @@ lungo quel percorso. Si può considerare anche come un tipo di diseguaglianza tr
     h(n_i)\leq c(n_i,n_j)+h_(n_j)
 \end{equation*}
 
-%% TODO img diseguaglianza triangolare condizione di consistenza
+\begin{figure}[H]
+    \centering%
+    \includegraphics{disuguaglianza_consistenza.pdf}%
+\end{figure}
 
 La condizione di consistenza impone che i valori della funzione di valutazione $f$ dei nodi 
 nell'albero di ricerca siano strettamente non-decrescenti all'allontanarsi dal nodo di 
@@ -915,9 +965,12 @@ ed uno spazio degli stati aventi ciascuno una sua valutazione. Si può immaginar
 di questo stato rappresenta la sua valutazione. L'algoritmo quindi itera su ognuno di questi stati per cercare quello di altezza maggiore, o minore, identificando 
 quindi la soluzione al problema, indipendentemente dal cammino preso per raggiungerla. Questi punti di massimo rappresentano dei picchi, i cui punti adiacenti sono 
 strettamente minori dello stato di massimo. Quindi l'algoritmo che parte da uno stato iniziale deve cercare un massimo globale in questo spazio, determinando quale sia 
-tra i vari massimi locali ed i massimi locali piatto, e le ``spalle'' massimi locali ``piatti'', prima di un massimo globale. 
+tra i vari massimi locali ed i massimi locali piatto, e le ``spalle'' massimi locali ``piatti'', prima di un massimo globale:
 
-%% TODO aggiungere immagine esempio dei massimi
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{grafico_massimi.pdf}%
+\end{figure}
 
 Questi algoritmi chiamati anche di miglioramento iterativo, si muovono sulla superficie cercando questi picchi, senza tenere traccia del cammino effettuato, tenendo 
 solamente traccia dello stato attuale e dei suoi vicini o successori, gli stati immediatamente adiacenti. 
