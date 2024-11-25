@@ -1,0 +1,63 @@
+% !TEX TS-program = lualatex
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{pgfcore}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{cancel}
+\usetikzlibrary{graphs,graphdrawing,calc}
+\pgfplotsset{compat=1.18}
+\begin{document}
+\usegdlibrary{trees}
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[blue, draw, text=black] {$s_0$};
+
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[draw, text=black] {$s_0$}    
+        child { node[draw, red, text=black] {$s_1$} edge from parent node[fill=white]{$4$}}
+        child { node[draw, red, text=black] {$s_2$} edge from parent node[fill=white]{$2$}} 
+        child { node[draw, blue, text=black] {$s_3$} edge from parent node[fill=white]{$3$}} 
+    ;
+
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[draw, text=black] {$s_0$}    
+        child { node[draw, red, text=black] {$s_1$} edge from parent node[fill=white]{$4$}}
+        child { node[draw, blue, text=black] {$s_2$} edge from parent node[fill=white]{$2$}} 
+        child { node[draw, text=black] {$s_3$} edge from parent node[fill=white]{$3$}
+            child { node[draw, red, text=black] {$s_2$} edge from parent node[fill=white]{$4$}}
+            child { node[draw, red, text=black] {$s_4$} edge from parent node[fill=white]{$4$}} 
+            child { node[draw, red, text=black] {$s_5$} edge from parent node[fill=white]{$7$}}  
+        } 
+    ;
+    
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[draw, text=black] {$s_0$}    
+        child { node[draw, red, text=black] {$s_1$} edge from parent node[fill=white]{$4$}}
+        child { node[draw, text=black] {$s_2$} edge from parent node[fill=white]{$2$}
+            child { node[draw, blue, text=black] {$s_4$} edge from parent node[fill=white]{$3$}}
+        } 
+        child { node[draw, text=black] {$s_3$} edge from parent node[fill=white]{$3$}
+            child { node[draw, red, text=black] {$\cancel{s_2}$} edge from parent node[fill=white]{$4$}}
+            child { node[draw, red, text=black] {$s_4$} edge from parent node[fill=white]{$4$}} 
+            child { node[draw, red, text=black] {$s_5$} edge from parent node[fill=white]{$7$}}  
+        } 
+    ;
+
+    \tikz[tree layout, nodes={circle, thick}, inner sep=0.5pt]
+    \node[draw, text=black] {$s_0$}    
+        child { node[draw, red, text=black] {$s_1$} edge from parent node[fill=white]{$4$}}
+        child { node[draw, text=black] {$s_2$} edge from parent node[fill=white]{$2$}
+            child { node[draw, black, text=black] {$s_4$} edge from parent node[fill=white]{$3$}}
+        } 
+        child { node[draw, text=black] {$s_3$} edge from parent node[fill=white]{$3$}
+            child { node[draw, red, text=black] {$\cancel{s_2}$} edge from parent node[fill=white]{$4$}}
+            child { node[draw, red, text=black] {$\cancel{s_4}$} edge from parent node[fill=white]{$4$}} 
+            child { node[draw, blue, text=black] {$s_5$} edge from parent node[fill=white]{$7$}}  
+        } 
+    ;
+
+
+
+\end{document}

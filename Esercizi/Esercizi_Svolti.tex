@@ -69,9 +69,9 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
-\section{Esercitazione del 13/11/24}
+\section{Esercitazione del 13 Novembre}
 
-\subsection*{Esercizio 1}
+\subsection{Esercizio 1}
 
 Dato il seguente Spazio degli Stati: $s_0,s_1,s_2,s_3,s_4,s_5$, con stato iniziale $s_0$, e stato obiettivo $s_5$. 
 Questi stati sono collegati da certi operatori di costo:
@@ -106,8 +106,8 @@ da espandere.
     \item Si espande lo stato iniziale $s_0$, nella frontiera si ha $[s_2,s_1]$, dove $f(s_2)=3+7$ e $f(s_1)=5+6$;
     \item Si espande il nodo $s_2$, con $f(s_2)=10$, per cui nella frontiera entra il nodo $s_4$ e $s_0$: $[s_1,s_4, s_0]$, con $f(s_1)=5+6$, $f(s_4)=8+5$ e $f(s_0)=8+10$;
     \item Si espande il nodo $s_1$, con $f(s_1)=12$, per cui nella frontiera entra il nodo $s_3$: $[s_3, s_4, s_0]$, con $f(s_3)=8+4$, $f(s_4)=8+5$ e $f(s_0)=8+10$;
-    \item Si espande il nodo $s_3$, con $f(s_3)=12$, per cui nella frontiera entra il nodo $s_2$, $s_4$ ed $s_5$: $[s_4, s_5, s_4, s_0, s_2]$, con $f(s_4)=8+5$, $f(s_5)=14+0$, $f(s_4)=12+5$, $f(s_0)=8+10$ ed $f(s_2)=12+7$;
-    \item Si espande il nodo $s_4$, con $f(s_4)=13$, per cui nella frontiera entra il nodo $s_2$, $s_3$ ed $s_5$: $[s_5, s_5, s_3, s_4, s_0, s_2, s_2]$, con $f(s_5)=11+0$, $f(s_5)=14+0$, $f(s_3)=12+4$, $f(s_4)=12+5$, $f(s_0)=8+10$, $f(s_2)=12+7$, $f(s_2)=13+7$;
+    \item Si espande il nodo $s_3$, con $f(s_3)=12$, per cui nella frontiera entra il nodo $s_2$, $s_4$ ed $s_5$: $[s_4(13), s_5, s_4(17), s_0, s_2]$, con $f(s_4)=8+5$, $f(s_5)=14+0$, $f(s_4)=12+5$, $f(s_0)=8+10$ ed $f(s_2)=12+7$;
+    \item Si espande il nodo $s_4$ con $f(s_4)=13$, per cui nella frontiera entra il nodo $s_2$, $s_3$ ed $s_5$: $[s_5(11), s_5(14), s_3, s_4, s_0, s_2(19), s_2(20)]$, con $f(s_5)=11+0$, $f(s_5)=14+0$, $f(s_3)=12+4$, $f(s_4)=12+5$, $f(s_0)=8+10$, $f(s_2)=12+7$, $f(s_2)=13+7$;
     \item Si espande il nodo $s_5$, con $f(s_5)=11$. Questo nodo è il nodo obiettivo, quindi l'algoritmo termina. 
 \end{enumerate}
 
@@ -134,7 +134,7 @@ La funzione euristica $h$ utilizzata è maggiore del costo effettivo per il nodo
 Quindi non è una funzione ammissibile. La soluzione trovata 
 non è garantito sia la soluzione ottima. 
 
-\subsection*{Esercizio 2}
+\subsection{Esercizio 2}
 
 Scrivere il codice Python per la gestione di una lista concatenata ordinata, avvalendosi delle classi. \\
 \begin{minted}{python}
@@ -170,7 +170,7 @@ Scrivere il codice Python per la gestione di una lista concatenata ordinata, avv
                 p.next = newNode
 \end{minted}
 
-\subsection*{Esercizio 3}
+\subsection{Esercizio 3}
 
 Illustrare nel dettaglio l'algoritmo ``Greedy'', presentando il codice Python, opportunamente commentato per il problema della ricerca di un 
 itinerario. \\
@@ -270,5 +270,64 @@ figli vengono inseriti all'interno della frontiera.
                                         h[State(childState).name])
                     fringe.put((childNode.h, childNode))
 \end{minted}
+
+\clearpage
+
+\section{Esercitazione del 25 Novembre}
+
+\subsection{Esercizio 1}
+
+Dati i seguenti stati $s_0, s_1,s_2,s_3,s_4,s_5$, si hanno le seguenti operazioni:
+\begin{itemize}
+    \item $F$ di costo 2: $F(s_0)=s_2$;
+    \item $G$ di costo 3: $G(s_0)=s_3$, $G(s_2)=s_4$, $G(s_4)=s_2$;
+    \item $H$ di costo 4: $H(s_0)=s_1$, $H(s_3)=s_2$, $H(s_3)=s_4$, $H(s_4)=s_3$;
+    \item $I$ di costo 5: $I(s_5)=s_1$;
+    \item $L$ di costo 7: $L(s_3)=s_5$;
+\end{itemize}
+
+Con la seguente funzione euristica: $h(s_0)=10$, $h(s_1)=7$, $h(s_2)=7$, $h(s_3)=5$, $h(s_4)=4$ e $h(s_5)=0$. 
+
+\begin{enumerate}
+    \item Disegnare lo spazio degli stati;
+    \item Eseguire l'algoritmo A* con modalità graph-search, fino alla terminazione disegnando l'albero di ricerca, riportando per ogni passo il 
+contenuto della frontiera e della close, il nodo scelto per l'espansione ed i nodi generati;
+    \item Riportare la soluzione trovata dell'algoritmo, indicando se tale soluzione è o non è quella ottima e indicando se la funzione euristica 
+$h$ rispetta la condizione di ammissibilità (motivare la risposta). 
+\end{enumerate}
+
+\subsubsection*{Domanda 1}
+
+Si ha lo spazio degli stati:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{spazio_stati_25-11-24.pdf}%
+\end{figure}
+
+\subsubsection*{Domanda 2}
+
+
+Si effettua l'algoritmo A* in modalità graph-search, quindi quando viene espanso un nodo, il suo stato corrispondente viene inserito nella lista close e quando viene scelto per l'espansione viene scartato e si passa al passo successivo. I nodi relativi ai nodi già visitati dato che non verranno sicuramente espansi non vengono inseriti nella frontiera quando vengono generati da uno stato genitore. Si descrive il processo dell'algoritmo:
+\begin{enumerate}
+    \item La close è vuota, nella frontiera è presente solo il nodo corrispondente allo stato iniziale $[s_0]$, e la close è vuota $[]$;
+    \item Viene estratto dalla frontiera ed espanso lo stato $s_0$ ed i suoi figli $s_1$, $s_2$ ed $s_3$ vengono inseriti nella frontiera $[s_3,s_2,s_1]$ con $f(s_3)=8$, $f(s_2)=9$ e $f(s_1)=11$. La close contiene lo stato iniziale $[s_0$];
+    \item Viene espanso il nodo $s_3$ e vengono inseriti nella frontiera i suoi figli $s_2$, $s_4$ e $s_5$. Bisogna distinguere i due nodi associati entrambi allo stato $s_2$, tramite il valore della loro funzione di valutazione: $[s_2(9),s_5,s_1,s_4,s_2(14)]$ con $f(s_2)=8$, $f(s_5)=10$, $f(s_1)=11$, $f(s_4)=11$ e $f(s_2)=14$. Mentre la close contiene i nodi $[s_0,s_3]$;
+    \item Viene espanso il nodo $s_2$ e si inserisce il suo nodo figlio nella frontiera, specificando il valore per distinguerlo dall'altro nodo associato allo stato $s_4$. Poiché lo stato $s_2$ è già stato visitato si potrebbe rimuovere dalla frontiera, poiché anche se venisse scelto non verrebbe espanso. La frontiera contiene i nodi $[s_4(9),s_5,s_1,s_4(11),\cancel{s_2}]$, con $f(s_4)=9$, $f(s_5)=10$, $f(s_1)=11$, $f(s_4)=11$ e $f(s_2)=14$. La close contiene i nodi $[s_0,s_3,s_2]$;
+    \item Viene espanso il nodo $s_4$, i suoi nodi corrispondono a stati presenti nella close, quindi non vengono inseriti nella frontiera. La frontiera è quindi $[s_5,s_1,\cancel{s_4},\cancel{s_2}]$. La close contiene i nodi $[s_0,s_3,s_2,s_4]$;
+    \item Viene estratto il nodo $s_5$, questo rappresenta lo stato obiettivo, quindi l'algoritmo termina. 
+\end{enumerate}
+
+In nero sono indicati i nodi espansi, quindi all'interno della close, in rosso i nodi all'interno della frontiera ed in blu i nodi scelti per l'espansione nel passo corrente, l'algoritmo termina quando viene scelto il nodo associato allo stato $s_5$ per l'espansione:
+
+\begin{figure}[H]%
+    \centering
+    \includegraphics[trim={3.9cm 0 0 0},scale=0.9]{albero_ricerca_25-11-24.pdf}%
+\end{figure}
+
+\subsubsection*{Domanda 3}
+
+La soluzione individuata è $s_0\rightarrow s_3\rightarrow s_5$, di costo $10$. Queste rappresenta la soluzione ottima. La funzione euristica è ammissibile, poiché per ogni stato $s_i$ la funzione euristica $h(s_i)$ è minore, o uguale per gli stati $s_0$ e $s_5$, al costo effettivo del cammino dal nodo $s_i$ al nodo obiettivo $s_5$. 
+
+%% TODO resto esercitazione rec 25/11/24
 
 \end{document}

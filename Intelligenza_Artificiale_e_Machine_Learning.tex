@@ -2264,7 +2264,7 @@ successori all'interno della frontiera:
             currentNode = itemRemoved.node
 
             if currentNode.state.checkGoalState():
-                currentNode.state.printPath()
+                currentNode.printPath()
                 break
             else: 
                 childStates = currentNode.state.successorFunction()
@@ -2362,7 +2362,7 @@ la soluzione ottenuto e terminare l'esecuzione dell'algoritmo:
             currentNode = itemRemoved.node
 
             if currentNode.state.checkGoalState():
-                currentNode.state.printPath()
+                currentNode.printPath()
                 break
 \end{minted}
 Altrimenti bisogna verificare se non è già stato espanso, in caso si aggiunge alla lista dei 
@@ -2430,7 +2430,7 @@ Per scegliere il successore bisogna scegliere casualmente la posizioni da modifi
 L'algoritmo quindi itera continuamente fino a quando lo stato corrente non è nullo, visitando sempre e solo stati di valore minore di quello corrente. Dato che gli algoritmi Hill-Climbing risolvono sia problemi di 
 massimo che di minimo, essendo tra loro duali. Si può scegliere se farlo partire da una stringa casuale oppure da stringa specificata dall'utente. 
 \begin{minted}{python}
-    def first_choice_hill_climbing(initialString):
+    def First_Choice_Hill_Climbing(initialString):
         currentState = initialString
         # currentState = generate_random_string(length)
         currentEval = evaluate(initialString)
@@ -2444,7 +2444,7 @@ massimo che di minimo, essendo tra loro duali. Si può scegliere se farlo partir
 
             if nextEval < currentEval:
                 currentState = nextState
-                currentEval += nextEval
+                currentEval  = nextEval
 \end{minted}
 
 Questi algoritmi operano nel discreto, anche se molte volte si lavora su domini continui, e sono necessari altri controlli e test diversi per poter implementare algoritmi di ricerca. 
