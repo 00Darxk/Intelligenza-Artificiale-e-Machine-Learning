@@ -1843,7 +1843,7 @@ assegnare \verb|p|. Si vogliono realizzare i seguenti metodi sulle liste singola
 
         def insert_head(self, newNode):
             if self.__head == None:
-                self.__tail = self._head
+                self.__tail = self.__head
             newNode.next = self.__head
             self.__head = newNode
 
@@ -1860,7 +1860,7 @@ assegnare \verb|p|. Si vogliono realizzare i seguenti metodi sulle liste singola
             if self.__head == None:
                 return None
             if position == 0:
-                self.__head = self._head.next
+                self.__head = self.__head.next
                 return None
             p = self.__head
             i = 0
@@ -2106,6 +2106,8 @@ Si considera un'implementazione utilizzando questo approccio della sequenza di F
 
 Anche questo approccio ha un'implementazione in tempo lineare $O(n)$. 
 
+\subsection{Algoritmi di Ricerca}
+
 \subsubsection{Algoritmo Greedy: Problema di Ricerca di un Itinerario}
 
 L'algoritmo ``Greedy'' è un algoritmo best-first, che utilizza conoscenza euristica per 
@@ -2125,8 +2127,15 @@ Per implementare questo tipo di algoritmi di viaggio è necessario rappresentare
 stati, generalmente ottenuto da una mappa, quindi come un grafo connesso. Si può realizzare 
 come un dizionario, dove uno stato viene utilizzato come chiave e corrisponde ad un insieme 
 dei suoi stati successori:
-\begin{minted}{python}
-    connections[stato] = {successore1, ... , successoreN}
+\begin{minted}[mathescape, escapeinside=||]{python}
+            # Nome Stato:   
+    connections[ " ... " ] = 
+    {   # Nome Primo Stato Successore:
+        " . . . ",     
+        |$\cdots$| , 
+        #Nome Ultimo Stato Successore:
+        " . . . " 
+    }
 \end{minted}
 
 Non è l'unica possibilità per rappresentare un grafo, esistono infatti molte librerie 
@@ -2141,8 +2150,9 @@ del grafo.
 
 Anche la funzione euristica $h$ viene implementata tramite un dizionario, contenente per ogni 
 stato, utilizzato come chiave, il suo valore:
-\begin{minted}{python}
-    h[stato] = valore
+\begin{minted}[mathescape, escapeinside=||]{python}
+    #  Nome Stato:  Valore Euristica:
+    h[ " ... " ] = |$h(s_i)$|
 \end{minted}
 
 Per realizzare i nodi dell'albero di ricerca si crea una nuova classe, chiamata \verb|Node|, 
@@ -2164,7 +2174,7 @@ per rappresentare graficamente l'albero:
             self.state = state
             self.parent = parent
             self.h = h
-            self.child = []
+            self.children = []
             self.depth = 0
 \end{minted}
 
@@ -2203,14 +2213,16 @@ connessione degli stati, e per controllare se è lo stato obiettivo:
                 self.name = name
 
         def getInitialState(self):
-            initialState = statoIniziale
+                        #  Nome Stato Iniziale:
+            initialState = " ... " 
             return initialState
 
         def successorFunction(self):
             return connections[self.name]
 
         def checkGoalState(self)
-            return self.name == statoObiettivo
+                                # Nome Stato Obiettivo:
+            return self.name ==   " ... "
 \end{minted}
 
 Per implementare la frontiera si utilizza una lista ordinata con classi ed oggetti, ma esistono 
@@ -2314,14 +2326,25 @@ in frontiera.
 In questa implementazione è necessario conoscere la distanza parziale, quindi lo spazio 
 degli stati viene realizzato tramite un dizionario, dove i valori sono costituiti da coppie 
 stato successore e distanza:
+\begin{minted}[mathescape, escapeinside=||]{python}
+            #  Nome Stato $i$-esimo:
+    connections[ " ... " ] = 
+    {   # Nome Primo Stato Successore |$j$|-esimo e distanza:
+        [" . . . ", |$c_{i,j}$|], 
+        |$\cdots$|  , 
+        # Nome Ultimo Stato Successore |$k$|-esimo e distanza:
+        [" . . . ", |$c_{i,k}$|] 
+    }
+\end{minted}
 \begin{minted}{python}
     connections[stato] = {[successore1, distanza1], ..., [successoreN, distanzaN]}
 \end{minted}
 
 La funzione euristica viene definita allo stesso modo dell'algoritmo precedente, 
 tramite un dizionario:
-\begin{minted}{python}
-    h[stato] = valore
+\begin{minted}[mathescape, escapeinside=||]{python}
+    #  Stato:    Valore Euristica:
+    h[ " ... " ] = |$h(s_i)$|
 \end{minted}
 
 Si definisce la classe di un nodo, che ora deve contenere anche la distanza parziale:
@@ -2332,7 +2355,7 @@ Si definisce la classe di un nodo, che ora deve contenere anche la distanza parz
             self.parent = parent
             self.f = f
             self.partialPath = partialPath
-            # self.child = []
+            # self.children = []
             # self.depth = 0
 \end{minted}
 
@@ -2430,9 +2453,11 @@ Per scegliere il successore bisogna scegliere casualmente la posizioni da modifi
 L'algoritmo quindi itera continuamente fino a quando lo stato corrente non è nullo, visitando sempre e solo stati di valore minore di quello corrente. Dato che gli algoritmi Hill-Climbing risolvono sia problemi di 
 massimo che di minimo, essendo tra loro duali. Si può scegliere se farlo partire da una stringa casuale oppure da stringa specificata dall'utente. 
 \begin{minted}{python}
-    def First_Choice_Hill_Climbing(initialString):
-        currentState = initialString
-        # currentState = generate_random_string(length)
+    def First_Choice_Hill_Climbing(initialString = None):
+        if initialString == None:
+            currentState = generate_random_string(length)
+        else:
+            currentState = initialString
         currentEval = evaluate(initialString)
 
         while True:

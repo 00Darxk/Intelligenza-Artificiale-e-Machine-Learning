@@ -139,9 +139,12 @@ non è garantito sia la soluzione ottima.
 Scrivere il codice Python per la gestione di una lista concatenata ordinata, avvalendosi delle classi. \\
 \begin{minted}{python}
     class Node:
-        def __init__(self, data, next)
-            self.__data = data
-            self.__next = next
+        data = None
+        next = None
+        
+        def __init__(self, data, next):
+            self.data = data
+            self.next = next
 
     class List:
         def __init__(self):
@@ -164,7 +167,7 @@ Scrivere il codice Python per la gestione di una lista concatenata ordinata, avv
 
             else:            
                 p = self.__head
-                while p.next != None and p.data < newNode.data:
+                while p.next != None and p.next.data < newNode.data:
                     p = p.next
                 newNode.next = p.next
                 p.next = newNode
