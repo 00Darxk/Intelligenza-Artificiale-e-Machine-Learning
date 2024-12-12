@@ -39,6 +39,7 @@
 \numberwithin{equation}{subsection}
 \newcommand{\tageq}{\tag{\stepcounter{equation}\theequation}}
 \newcommand{\vv}[1]{\verb{\text{#1}}}
+\newcommand{\vect}[1]{\boldsymbol{\mathbf{#1}}}
 \AtBeginDocument{%
   \renewcommand{\figurename}{Fig.}
 }
@@ -962,7 +963,7 @@ $n$ ha già trovato il percorso ottimo per $n$. In questo modo la ricerca su gra
 differente dalla ricerca su un albero per quanto riguarda l'ottimalità della soluzione. 
 
 \subsection{Algoritmo di Ricerca Locale: Hill-Climbing}
-
+\label{sec:hill-climbing}
 
 Nei problemi precedenti quando l'algoritmo risolutivo raggiungeva uno stato obiettivo, il cammino verso quello stato rappresenta una soluzione 
 del problema. Tuttavia in alcuni problemi lo stato obiettivo contiene tutte le informazioni rilevanti per la soluzione, dove il cammino è 
@@ -2848,7 +2849,7 @@ valore predetto ed il valore reale. Si potrebbe considerare anche la media tra i
 quadrato per compensarlo. 
 
 \begin{equation}
-    \text{RMSE}=\displaystyle\sqrt{\displaystyle\frac{1}{2}\sum_{i=1}^n\left(\texttt{pred}_i-\texttt{true}_i\right)^2}
+    \text{RMSE}=\displaystyle\sqrt{\displaystyle\frac{1}{2}\sum_{i=1}^N\left(\texttt{pred}_i-\texttt{true}_i\right)^2}
 \end{equation}
 
 \subsubsection{Matrice di Confusione}
@@ -2925,6 +2926,332 @@ Sulla base della curva ROC per valutare se un classificatore è meglio di un alt
 integrale numerico. Un classificatore casuale ha una percentuale di falsi positivi pari al 
 50\%, come la percentuale di falsi negativi, quindi la curva ROC è una bisettrice del piano, 
 con un AUC pari a $0.5$. 
+
+\subsection{Regressione}
+
+I modelli a regressione sono molto utilizzati per prevedere variabili su una scala continua, utili per risolvere problemi in diversi ambiti per analizzare variabili, predire andamenti, 
+etc. Con questi metodi bisogna addestrare un agente a prevedere il valore una variabile target, a differenza della classificazione dove viene predetta una certa categoria. 
+
+\subsubsection{Simple Regression}
+
+Il modello a regressione lineare semplice, chiamata anche univariata. Consiste nel 
+provare le relazioni esistenti tra una variabile descrittiva $x$ e la variabile target $y$. 
+
+Per prevedere un certo valore bisogna effettuare prima delle misurazioni o osservazioni 
+sul dataset su cui si lavora. Queste osservazioni verranno utilizzate per addestrare il sistema, e dovrà essere in grado di prevedere il valore della variabile $y$, per una variabile descrittiva non presente nel dataset di addestramento. 
+Si tratta quindi di un modello di apprendimento supervisionato. Ogni punto può essere rappresentato su di un piano cartesiano. 
+
+Il primo passo necessario è definire l'approssimazione di questa funzione incognita chiamata 
+ipotesi, definendo lo spazio delle ipotesi $H$, definendo un insieme di polinomi fino ad un 
+grado massimo $k$. In questo spazio si vuole definire la funzione $f(x)$, di ipotesi che 
+approssima al meglio le osservazioni. Queste seguono una funzione sconosciuta al modello. 
+
+Non è facile stabilire data un'ipotesi $f$ se questa si tratta di una buona approssimazione, della funzione sconosciuta. Una buona ipotesi verrà generalizzata bene, prevedendo 
+correttamente esempi che non ha ancora incontrato. 
+
+Nel modello Simple Linear Regression Model, si vuole utilizzare un modello lineare per la 
+funzione $f$, dove per ogni valore dell'ascissa, si ha un valore vero $y_i$, ed un valore 
+previsto dalla funzione $\hat{y}_i=f(x_i)$. 
+Si individua questa retta con due pesi $w_0$, l'intercetta e $w_1$ la pendenza della retta:
+\begin{equation*}
+    \hat{y}_i=f(x_i)=w_0+w_1x_i
+\end{equation*}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.75]{regressione_lineare.pdf}%    
+\end{figure}
+
+L'errore di questo valore previsto si definisce per ogni punto $x_i$ come $\varepsilon_i$:
+\begin{gather*}
+    y_i-\hat{y}_i=\varepsilon_i\tageq\\
+    y_i=w_0+w_1x_i+\varepsilon_i
+\end{gather*}
+
+
+Una volta definita la forma della retta bisogna definire questi due pesi per approssimare la 
+funzione incognita, secondo un certo criterio ancora da stabilire. 
+
+Un criterio abbastanza ovvio è quello di individuare due pesi che minimizzano gli errori 
+che si trovano sui vari esempi presenti. 
+Si considera la differenza tra il valore attuale ed il valore previsto, ma se si considerasse solamente la differenza, differenze positive ammortizzerebbero le differenze 
+negative, e quindi non si avrebbe una buona rappresentazione dell'errore. 
+Quindi si considera una funzione RSS, ``Residual Sum of Squares'', largamente utilizzata, simile alla RMSE, vista in precedenza per l'accuratezza di un classificatore. Quest'approccio in generale si chiama 
+metodo dei minimi quadrati. Su $n$ misurazioni effettuate quindi, 
+si definisce la RSS come:
+\begin{equation}
+    \text{RSS}(w_0,w_1)=\displaystyle\sum_{i=1}^N(y_i-\hat{y}_i)^2=\sum_{i=1}^N(y_i-(w_0+w_1x_i))^2
+\end{equation}
+
+Si vuole cercare i valori dei pesi $\hat{w}_0$ e $\hat{w}_1$ che minimizzano la funzione RSS. 
+
+Ad ogni iterazione il valore previsto dalla funzione viene confrontato con il valore 
+iniziale, comparando i valori misurati si calcola il nuovo vettore dei pesi $\hat{\vect{w}}$, 
+per determinare una nuova funzione lineare $f$. 
+
+Rappresenta la ricerca di un minimo nello spazio dei pesi. Si può utilizzare il concetto di 
+gradiente della funzione RSS, che si può dimostrare essere convessa, quindi esiste un 
+minimo globale associato ad un gradiente nullo. 
+
+Data una funzione $g(\vect{w}):\mathbb{R}^2\to\mathbb{R}$, con $\vect{w}=\begin{pmatrix}w_0&w_1\end{pmatrix}$, il suo gradiente viene definito come:
+\begin{equation*}
+    \nabla g(\vect{w})=\displaystyle\frac{\partial g(\vect{w})}{\partial w_0}\vect{i}+\frac{\partial g(\vect{w})}{\partial w_1}\vect{j}
+\end{equation*}
+
+Se ci si sposta nella direzione del gradiente ci si sposta nella direzione di massima pendenza. Quindi per minimizzare la funzione di costo bisogna spostarsi nella direzione opposta rispetto al gradiente. 
+
+Si calcola quindi il gradiente della funzione RSS:
+\begin{gather*}
+    \nabla\text{RSS}(\vect{w})=\begin{bmatrix}
+        \displaystyle\frac{\strut\partial\text{RSS}(\vect{w})}{\strut\partial w_0}\\
+        \displaystyle\frac{\strut\partial\text{RSS}(\vect{w})}{\strut\partial w_1}
+    \end{bmatrix}=\begin{bmatrix}
+        \displaystyle\frac{\partial}{\partial w_0}\left(\sum_{i=1}^N(y_i-(w_0+w_1x_i))^2\right)\\
+        \displaystyle\frac{\partial}{\partial w_1}\left(\sum_{i=1}^N(y_i-(w_0+w_1x_i))^2\right)
+    \end{bmatrix}=\begin{bmatrix}
+        \displaystyle\sum_{i=1}^N\frac{\partial}{\partial w_0}\left(y_i-(w_0+w_1x_i)\right)^2\\
+        \displaystyle\sum_{i=1}^N\frac{\partial}{\partial w_1}\left(y_i-(w_0+w_1x_i)\right)^2
+    \end{bmatrix}\\
+    \nabla\text{RSS}(\vect{w})=\begin{bmatrix}
+        \displaystyle-2\sum_{i=1}^N\left(y_i-({w}_0+{w}_1x_i)\right)\\
+        \displaystyle-2\sum_{i=1}^Nx_i\left(y_i-({w}_0+{w}_1x_i)\right)
+    \end{bmatrix}=\begin{bmatrix}
+        \displaystyle-2\sum_{i=1}^N\left(y_i-\hat{y}_i(\vect{w})\right)\\
+        \displaystyle-2\sum_{i=1}^Nx_i\left(y_i-\hat{y}_i(\vect{w})\right)
+    \end{bmatrix}\tageq
+\end{gather*}
+
+A questo punto bisogna risolvere il problema determinano il punto dello spazio degli stati 
+dove il gradiente è nullo. Si può risolvere in due modi, in forma chiusa, uguagliando a zero il gradiente e risolvendo esplicitamente il sistema risultante. Questo approccio è semplice uno spazio bidimensionale, ma all'aumentare delle dimensioni diventa sempre più costoso in termini di risorse di calcolo, quindi non è sempre conveniente. 
+Un altro metodo utilizza l'algoritmo di discesa del gradiente, ``Gradient Descent'', essenzialmente un Hill-Climbing, sui minimi, analogo all'algoritmo sui massimi già trattato precedentemente \ref{sec:hill-climbing}. Questo algoritmo sceglie ad ogni iterazione uno stato adiacente di gradiente minore e lo selezione come nuovo corrente, fino ad un criterio di convergenza, poiché lavorando su valori continui, è molto difficile arrivare al punto di 
+minimo assoluto. Si termina l'algoritmo quindi ad una certa soglia vicina al punto di minimo 
+assoluto, e lo ``step size'', la distanza attraversata ad ogni passaggio dell'algoritmo. 
+
+Si comincia con la forma chiusa:
+\begin{gather*}
+    \nabla\text{RSS}(\vect{\hat{w}})=\begin{bmatrix}
+        \displaystyle-2\sum_{i=1}^N\left(y_i-(\hat{w}_0+\hat{w}_1x_i)\right)\\
+        \displaystyle-2\sum_{i=1}^Nx_i\left(y_i-(\hat{w}_0+\hat{w}_1x_i)\right)
+    \end{bmatrix}=\vect{0}\\
+    \begin{cases}
+        \displaystyle-2\sum_{i=1}^N\left(y_i-(\hat{w}_0+\hat{w}_1x_i)\right)=\sum_{i=1}^Ny_i-\cancelto{N\cdot\hat{w}_0}{\sum_{i=1}^N\hat{w}_0}-\hat{w}_1\sum_{i=1}^Nx_i=0\\
+        \displaystyle-2\sum_{i=1}^Nx_i\left(y_i-(\hat{w}_0+\hat{w}_1x_i)\right)=\sum_{i=1}^nx_iy_i-\hat{w}_0\sum_{i=1}^nx_i-\hat{w}_1\sum_{i=1}^nx_i^2=0
+    \end{cases}\\
+    \begin{cases}
+        \hat{w}_0=\displaystyle\frac{\sum_{i=1}^Ny_i}{N}-\hat{w}_1\frac{\sum_{i=1}^Nx_i}{N}\\
+        \hat{w}_1=\displaystyle\frac{\sum_{i=1}^nx_iy_i-\hat{w}_0\sum_{i=1}^nx_i}{\sum_{i=1}^nx_i^2}=\frac{\displaystyle\sum_{i=1}^nx_iy_i-\frac{\sum_{i=1}^nx_i\sum_{i=1}^ny_i}{N}}{\displaystyle\sum_{i=1}^nx_i^2-\frac{\left(\sum_{i=1}^nx_i\right)^2}{N}}
+    \end{cases}
+\end{gather*}
+
+
+Con l'algoritmo di gradient descent bisogna aggiornare ad ogni iterazione i pesi 
+per spostarci nella direzione opposta al gradiente. Si considera uno step size $\alpha>0$:
+\begin{gather*}
+    \vect{w}^{(t+1)}\leftarrow\vect{w}^{(t)}-\alpha\cdot\nabla\text{RSS}\big(\vect{w}^{(t)}\big)=\begin{bmatrix}
+        w_0^{(t)}-\alpha\cdot\displaystyle\frac{\partial\text{RSS}\left(\vect{w}^{(t)}\right)}{\partial w_0}\\
+        w_1^{(t)}-\alpha\cdot\displaystyle\frac{\partial\text{RSS}\left(\vect{w}^{(t)}\right)}{\partial w_1}
+    \end{bmatrix}\\
+    \begin{bmatrix}
+        w_0^{(t+1)}\strut\\
+        w_1^{(t+1)}\strut
+    \end{bmatrix}\leftarrow\begin{bmatrix}
+        w_0^{(t)}\displaystyle+2\alpha\cdot\sum_{i=1}^N\left(y_i-\hat{y}_i\big(\vect{w}^{(t)}\big)\right)\\
+        w_1^{(t)}\displaystyle+2\alpha\cdot\sum_{i=1}^Nx_i\left(y_i-\hat{y}_i\big(\vect{w}^{(t)}\big)\right)
+    \end{bmatrix}\tageq
+\end{gather*}
+
+Ad ogni passo dell'algoritmo bisogna effettuare questi due passaggi. Si definisce un criterio di convergenza, definendo una soglia $\varepsilon>0$ arbitrariamente piccola. 
+L'algoritmo quindi termina quando la norma del gradiente raggiunge o supera questa soglia:
+\begin{equation}
+    ||\nabla\text{RSS}(\vect{w}^{(t)})||_2\leq\varepsilon
+\end{equation}
+
+Si definisce l'algoritmo quindi come:
+\begin{minted}[escapeinside=//, mathescape]{c}
+    /$\vect{w}^{(1)}$/ <- 0
+    t <- 1
+    while /$||\nabla\text{RSS}(\vect{w}^{(t)})||_2>\varepsilon$/
+        /$w_0^{(t+1)}\leftarrow w_0^{(t)}\displaystyle+2\alpha\cdot\sum_{i=1}^N\left(y_i-\hat{y}_i\big(\vect{w}^{(t)}\big)\right)$/
+        /$w_1^{(t+1)}\leftarrow w_1^{(t)}\displaystyle+2\alpha\cdot\sum_{i=1}^Nx_i\left(y_i-\hat{y}_i\big(\vect{w}^{(t)}\big)\right)$/
+        t <- t + 1
+\end{minted}
+
+Nella prima iterazione il vettore $\vect{w}^{(1)}$ può essere anche inizializzato in modo 
+casuale. 
+
+\subsubsection{Multiple Regression}
+
+Fino ad ora si è ipotizzato un andamento lineare per la funzione $f$, ma molto spesso questa 
+funzione non rappresenta al meglio le misurazioni ottenute. 
+Si potrebbe quindi pensare di avere una funzione quadratica o polinomiale:
+\begin{equation*}
+    f(x)=w_0+w_1x+\cdots w_px^p
+\end{equation*}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.75]{regressione_polinomiale.pdf}%    
+\end{figure}
+
+\begin{equation}
+    y_i=\hat{y}_i+\varepsilon_i=w_0+w_1x+\cdots w_px^p+\varepsilon_i
+\end{equation}
+Non necessariamente una funzione che passa su tutti i punti è la migliore, il fenomeno 
+dell'``over-fitting'', infatti è da evitare. Se un sistema si adatta troppo alle osservazioni si rischia di non generalizzare bene il sistema. 
+
+Avendo una funzione polinomiale si parla di Polynomial Regression. In genere ogni 
+potenza della $x$ viene chiamata ciascuna caratteristica o feature:
+\begin{equation*}
+    \texttt{feature } i+1=x^{i}
+\end{equation*}
+
+Si può considerare un caso più generale dove si ha al posto di queste feature una funzione $\phi_j$, dipendente dall'input $x_i$:
+\begin{gather*}
+    y_i=w_0\phi_0(x_i)+w_1\phi_1(x_i)+\cdots w_D\phi_D(x_i)+\varepsilon_i\\
+    y_i=\displaystyle\sum_{j=0}^Dw_j\phi_j(x_i)+\varepsilon_i\tageq
+\end{gather*}
+
+Se ci fossero più input in input ci dovrebbe essere non uno scalare $x_i$, ma un vettore di feature $\vect{x}_i$:
+\begin{equation}
+    y_i=\displaystyle\sum_{j=0}^Dw_j\phi_j(\vect{x}_i)+\varepsilon_i
+\end{equation}
+Tutte le funzioni $\phi_j$ prendono quindi come input un vettore $\vect{x}_i$. 
+
+
+Per addestrare il sistema, analogamente alla regressione lineare, si può utilizzare la funzione RSS:
+\begin{equation*}
+    \text{RSS}(\vect{w})=\displaystyle\sum_{i=1}^N(y_i-\hat{y}_i)^2=\sum_{i=1}^N\left(y_i-\sum_{j=0}^Dw_j\phi_j(\vect{x}_i)\right)^2
+\end{equation*}
+
+Si può dimostrare che questa funzione di costo RSS è convessa. 
+
+%% TODO img processo di training (anche per regressione lineare senza estrazione delle features)
+
+Molte volte è comodo rappresentare questa funzione, relativa all'$i$-esimo valore di $y$ in notazione matriciale:
+\begin{gather*}
+    y_i=\displaystyle\sum_{j=0}^Dw_j\phi_j(\vect{x}_i)+\varepsilon_i\\
+    y_i=\begin{bmatrix}
+        w_0&\cdots&w_D
+    \end{bmatrix}\cdot\begin{bmatrix}
+        \strut\phi_0(\vect{x}_i)\\
+        \vdots\\
+        \strut\phi_D(\vect{x}_i)
+    \end{bmatrix}+\varepsilon_i
+\end{gather*}
+Quindi dati questi tre vettori:
+\begin{gather*}
+    \begin{matrix}
+        \vect{x}_i=\begin{bmatrix}
+            \strut x_{i,1}\\\vdots\\\strut x_{i,d}
+        \end{bmatrix}&
+        \vect{w}_i=\begin{bmatrix}
+            \strut w_{0}\\\vdots\\\strut w_{D}
+        \end{bmatrix}&
+        \phi(\vect{x}_i)=\begin{bmatrix}
+            \strut\phi_{0}(\vect{x}_i)\\\vdots\\\strut\phi_{D}(\vect{x}_i)
+        \end{bmatrix}            
+    \end{matrix}
+\end{gather*}
+Si può definire il valore $i$-esimo di $y$ come:
+\begin{equation*}
+    y_i=\vect{w}^T\cdot\vect{\phi}(\vect{x}_i)+\varepsilon_i=\phi(\vect{x_i})^T\cdot\vect{w}+\varepsilon_i
+\end{equation*}
+
+Si possono quindi rappresentare tutte le osservazioni $\vect{y}$ in modo compatto come:
+\begin{gather*}
+    \vect{y}=\begin{bmatrix}
+        \strut y_1\\\vdots\\\strut y_N
+    \end{bmatrix}=\begin{bmatrix}
+        \phi_0(\vect{x}_1)&\cdots&\phi_D(\vect{x}_1)\\
+        \vdots&\ddots&\vdots\\
+        \phi_0(\vect{x}_N)&\cdots&\phi_D(\vect{x}_N)\\
+    \end{bmatrix}\cdots\begin{bmatrix}
+        \strut w_{0}\\\vdots\\\strut w_{D}
+    \end{bmatrix}+\begin{bmatrix}
+        \strut \varepsilon_{1}\\\vdots\\\strut \varepsilon{N}
+    \end{bmatrix}\\
+    \vect{y}=\vect{\Phi}\cdot\vect{w}+\vect{\varepsilon}\tageq
+\end{gather*}
+
+Le righe di $\vect{\Phi}$ corrisponde ad un'osservazione, mentre le colonne corrispondono 
+alle specifiche features. 
+Definiti questi vettori si può esprimere allora la funzione di valutazione RSS come:
+\begin{equation}
+    \text{RSS}(\vect{w})=\displaystyle\sum_{i=1}^N(y_i-\hat{y}_i)^2=\sum_{i=1}^N\varepsilon_i^2=\vect{\varepsilon}^T\cdot\vect{\varepsilon}
+\end{equation}
+
+Si può ricavare il vettore $\vect{\varepsilon}$, dalla forma compatta delle osservazioni $\vect{y}$:
+\begin{gather*}
+    \vect{y}=\vect{\Phi}\cdot\vect{w}+\vect{\varepsilon}\rightarrow\vect{\varepsilon}=\vect{y}-\vect{\Phi}\cdot\vect{w}\\
+    \text{RSS}(\vect{w})=\left(\vect{y}-\vect{\Phi}\cdot\vect{w}\right)^T\cdot\left(\vect{y}-\vect{\Phi}\cdot\vect{w}\right)\tageq
+\end{gather*}
+Si è ottenuta la funzione RSS in forma matriciale. Si può quindi rappresentare il gradiente mediante regole del calcolo differenziale matriciale come:
+\begin{equation}
+    \nabla\text{RSS}(\vect{w})=\nabla\left[\left(\vect{y}-\vect{\Phi}\cdot\vect{w}\right)^T\cdot\left(\vect{y}-\vect{\Phi}\cdot\vect{w}\right)\right]=-2\vect{\Phi}^T(\vect{y}-\vect{\Phi}\vect{\vect{w}})
+\end{equation}
+
+Per minimizzare la funzione di costo si può utilizzare la forma chiusa oppure il gradient descent, definendo lo step size ed il criterio di convergenza. 
+In forma chiusa si può esprimere facilmente, data la rappresentazione matriciale:
+\begin{gather*}
+    \nabla\text{RSS}(\vect{\hat{w}})=-2\vect{\Phi}^T(\vect{y}-\vect{\Phi}\vect{\vect{\hat{w}}})=\vect{0}\\
+    -2\vect{\Phi}^T\vect{y}+2\vect{\Phi}^T\vect{\Phi}\vect{\vect{\hat{w}}}=\vect{0}\\
+    \cancel{2}\vect{\Phi}^T\vect{\Phi}\vect{\vect{\hat{w}}}=\cancel{2}\vect{\Phi}^T\vect{y}\\
+    \cancelto{\vect{I}}{(\vect{\Phi}^T\vect{\Phi})^{-1}(\vect{\Phi}^T\vect{\Phi})}\vect{\hat{w}}=(\vect{\Phi}^T\vect{\Phi})^{-1}\vect{\Phi}^T\vect{y}\\
+    \vect{\hat{w}}=(\vect{\Phi}^T\vect{\Phi})^{-1}\vect{\Phi}^T\vect{y}\tageq
+\end{gather*}
+
+
+Per quanto riguarda l'algoritmo gradient descent, è analogo alla regressione lineare, 
+definendo allo stesso modo un passo $\alpha$: 
+\begin{equation*}
+    \begin{bmatrix}
+        w_0^{(t+1)}\strut\\
+        \vdots\\
+        w_D^{(t+1)}\strut
+    \end{bmatrix}\leftarrow\begin{bmatrix}
+        w_0^{(t)}-\alpha\cdot\displaystyle\frac{\partial\text{RSS}\left(\vect{w}^{(t)}\right)}{\partial w_0}\\\vdots\\
+        w_D^{(t)}-\alpha\cdot\displaystyle\frac{\partial\text{RSS}\left(\vect{w}^{(t)}\right)}{\partial w_D}
+    \end{bmatrix}
+\end{equation*}
+I singoli pesi vengono calcolati analogamente alla regressione lineare, ciò che cambia sono 
+le derivate parziali. Rispetto ad un generico peso $j$-esimo la derivata parziale è:
+\begin{gather*}
+    \displaystyle\frac{\partial\text{RSS}(\vect{w}^{(t)})}{\partial w_j}=\sum_{i=1}^N2\left(y_i-\hat{y}_i(\vect{w}^{(t)})\right)\cdot-\frac{\partial\hat{y}_i\left(\vect{w}^{(t)}\right)}{\partial w_j}=2\sum_{i=1}^N\left(y_i-\hat{y}_i(\vect{w}^{(t)})\right)\cdot-\phi_j(\vect{x}_i)\\
+    \displaystyle\frac{\partial\text{RSS}(\vect{w}^{(t)})}{\partial w_j}=-2\sum_{i=1}^N\phi_j(\vect{x}_i)\left(y_i-\hat{y}_i(\vect{w}^{(t)})\right)\tageq
+\end{gather*}
+
+Il criterio di convergenza è analogo, poiché si ha una stessa funzione convessa, si decide un valore di soglia $\varepsilon>0$ arbitrario tale che la norma della funzione RSS è sempre 
+maggiore di questo valore per continuare le iterazioni:
+\begin{equation}
+    ||\nabla\text{RSS}(\vect{w}^{(t)})||_2\leq\varepsilon
+\end{equation}
+
+
+Si definisce l'algoritmo quindi come:
+\begin{minted}[escapeinside=//, mathescape]{c}
+    /$\vect{w}^{(1)}$/ <- 0
+    t <- 1
+    while /$||\nabla\text{RSS}(\vect{w}^{(t)})||_2>\varepsilon$/
+        for /$j=0,\cdots,D$/
+            /$w_j^{(t+1)}\leftarrow w_j^{(t)}\displaystyle+2\alpha\cdot\sum_{i=1}^N\phi_j(\vect{x}_i)\left(y_i-\hat{y}_i(\vect{w}^{(t)})\right)$/
+        t <- t + 1
+\end{minted}
+
+\subsubsection{Workflow}
+
+Le due task da affrontare per attuare una regressione sono la scelta del modello e la valutazione del modello. Nella selezione del modello bisogna scegliere dei parametri di 
+tuning $\lambda$ per controllare il modello. Dopo averlo scelto bisogna effettuare una valutazione del ``Generalization Error'' o ``True Error''. Quindi bisogna avere un ulteriore insieme di dati di osservazione, non appartenenti al training set, su cui puoi essere valutato questo modello. L'errore dei dati di test dovrebbe avvicinarci il più possibile all'errore vero, non noto. Se fosse possibile determinare l'errore vero, allora non servirebbe creare un modello per predire il valore $y$. 
+
+Si potrebbe operare con un approccio intuitivo, ma sbagliato, dove per ogni modello di 
+complessità $\lambda$ si stimano dei pesi $\hat{\vect{w}}_\lambda$, valutando le 
+prestazioni sui dati di test, e scegliendo i parametri $\lambda^*$ che ottengono il più basso test error. Per la valutazione del modello si considera il test error calcolato sul $\vect{\hat{w}}_{\lambda^*}$. 
+Questo approccio ha un difetto intrinseco, poiché determina i valori dei parametri $\lambda^*$ delle ipotesi non solo sui valori di training ma anche con i valori del test set, quindi non sarà possibile giudicare in maniera adeguata il modello. 
+Questo fenomeno nell'area dell'IA si chiama ``Peaking'', dove l'ipotesi viene selezionata in base alle sue prestazioni sull'insieme di test. 
+
+L'informazione di test avrebbe dovuto rimanere confinata nel test, ma si è infiltrata nell'algoritmo di apprendimento. 
+Una soluzione consiste nell'utilizzare tre diversi set, se ciò è permesso dal numero di osservazioni, creando un ulteriore validation set. Se si risparmiano osservazioni sul training set, allora non si crea un modello adeguato, se si risparmia sul training set allora non viene valutato adeguatamente il modello. 
+Nella fase di addestramento invece di addestrare il sistema sul test set, si valuta sul validation set. Quindi si determina l'ipotesi migliore su questo set e si valuta sul test set. 
+Non è presente una regola generale per dividere i dati, in generale il training set comporta la maggior percentuale, mentre il training ed il set test hanno all'incirca la stessa percentuale delle osservazioni totali. 
 
 
 
