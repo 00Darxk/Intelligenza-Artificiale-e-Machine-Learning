@@ -2679,7 +2679,6 @@ Problemi tipici della regressione sono:
     \item Object Detection: la stima delle posizioni e le dimensioni della bounding box di oggetti in un immagine o video. Mentre il problema di classificazione associato è l'associazione di una classe all'oggetto dentro questa bounding box.
 \end{itemize}
 
-
 \subsubsection{Clustering}
 
 Un'altra applicazione comune è il clustering, il classico problema dell'apprendimento non 
@@ -2687,7 +2686,7 @@ supervisionato. Sulla base della similarità o dissimilarità su di un dataset n
 possibile raggruppare i pattern in cluster, di cui nemmeno il numero è noto a priori. Questi 
 cluster possono essere poi utilizzati come delle classi. 
 
-Un classificatore di questo tipo si chiama K-NN, e sceglie nel piano gli i primi identificatori più vicini, e sulla base di un voto di maggioranza, sulla base di quanti di questi campioni sono assegnati a ciascuna delle classi. 
+Un classificatore di questo tipo si chiama $k$-NN, e sceglie nel piano gli i primi identificatori più vicini, e sulla base di un voto di maggioranza, sulla base di quanti di questi campioni sono assegnati a ciascuna delle classi. 
 Questi data point possono essere utilizzati a loro volta come classi per realizzare un 
 modello di apprendimento supervisionato. 
 
@@ -2724,7 +2723,7 @@ La PCA è una tecnica non supervisionata, non tiene conto della differenza tra l
 massimo le informazioni che permettono di discriminare tra pattern. 
 Una tecnica chiamata t-SNE, ``Stochastic Neural Embedding'', basata su reti neurali profonde, proposta da Geoffrey Hinton ed un suo studente. Che funziona particolarmente bene quando si vuole ridurre a due o tre dimensioni i dati. 
 
-\subsubsection{Representaion Learning}
+\subsubsection{Representation Learning}
 
 Ci sono delle features grezze che possono diminuire l'efficacia dei modelli per rappresentare i modelli. Esistono delle tecniche per creare feature a partire dai dati grezzi per rendere più efficace l'identificazione dei pattern, quest'applicazione prende il nome di ``Feature Engineering''. 
 
@@ -2732,6 +2731,202 @@ Ci sono delle features grezze che possono diminuire l'efficacia dei modelli per 
 
 I problemi di computer vision si dividono in due problemi, dove è presente una singola 
 classe, quindi si hanno problemi di classificazione e locazione, mentre se sono presenti più classi in una stessa immagine si hanno problemi di object detection o istance segmentation, localizzando diversi oggetti attribuite a diverse classi. 
+
+\subsection{Apprendimento}
+
+Su questi dati per effettuare le operazioni descritte un modello di ML deve essere in grado di apprendere. Si individuano due tipi di apprendimento, un approccio supervisionato, dove ogni datapoint è associato ad una classe. 
+Si dice che il training set è etichettato, spesso in applicazioni di riconoscimento di immagini, approccio molto tipico nella classificazione, regressione ed in alcune 
+tecniche di riduzione di dimensionalità. 
+
+L'approccio duale consiste nell'apprendimento non supervisionato, come nella social 
+network analysis, dove sulla base delle caratteristiche degli utenti si individuano dei cluster. 
+Questo approccio viene usato principalmente nei problemi di clustering, dove il training 
+set non è etichettato, e nella maggior parte delle tecniche di riduzione di dimensionalità. 
+Molto spesso questi algoritmi di clustering devono anche individuare il numero di classi in 
+un dataset. 
+
+Un altro algoritmo che ha ricominciato ad essere utilizzato, grazie all'aumento delle prestazioni 
+delle risorse di calcolo, è l'approccio semi-supervisionato, dove il training set è 
+parzialmente etichettato. La distribuzione dei pattern non etichettati può aiutare ad ottimizzare la 
+regola di classificazione. 
+Molto spesso viene utilizzato su applicazioni geometriche, si individua una distanza di decisione, 
+tra questi datapoint etichettati. In seguito sui datapoint non etichettati si analizza la 
+superficie di separazione ed il suo cambiamento nell'avvicinamento ad uno di questi datapoint. 
+
+
+Un ulteriore tecnica di addestramento si chiama batch, ed effettua l'addestramento una 
+singola volta, dopo il quale l'algoritmo si trova in modalità di lavoro, e non è in grado di 
+apprendere ulteriormente. 
+Un modello duale è incrementale dove sono possibili diverse sessioni di addestramento, in 
+sequenze di batch. Il rischio di questo approccio è che successive sessioni di addestramento 
+il sistema dimentichi quello che ha appreso in precedenza. Attualmente con le risorse a disposizione 
+non sono presenti questi rischi. 
+
+
+L'apprendimento di tipo naturale, è molto simile al'apprendimento umano, implica una quantità limitata 
+di istruzioni dirette, in un approccio supervisionato, seguito da esperienze non supervisionate, 
+in modo coesistente. 
+
+Un altro approccio molto utilizzato è il Reinforcement Learning, dove l'apprendimento si 
+basa sulla reazione dell'ambiente, in seguito ad un'azione dell'agente. L'ambiente può 
+fornire delle ricompense positive o negative, ottenute dall'agente, che utilizza per 
+scegliere l'azione successiva. Molto spesso la ricompensa può essere ritardata rispetto ad una 
+certa azione. 
+L'obiettivo è di apprendere la sequenza di azioni migliori in un dato stato per ottenere il 
+massimo dei risultati. 
+
+I domini più utilizzati sono quelli della robotica e dei videogiochi, dove è difficile formalizzare 
+la realtà di interesse e descrivere in maniera completa questa realtà. 
+
+Il Deep Reinforcement Learning, è un reinforcement learning dove il dato in input all'agente 
+non è formalizzato ma è direttamente un dato grezzo. Nel 2013 questo approccio da parte di ricercatori 
+del DeepMind ha permesso ad agenti di imparare a giocare a videogiochi Atari. Questo loro 
+approccio di ``Deep Q-Learning'' che si basa sull'equazione di Bellman. Hanno ottenuto ottimi risultati da parte degli agenti che in certi casi ha superato l'agente umano.  
+
+\subsubsection{Parametri e Funzione Obiettivo}
+
+Un modello di ML è definito da un insieme di parametri $\Theta$, come i pesi delle connessioni 
+di una rete neurale. 
+Questo modello è costituito da una serie di equazioni non particolarmente complicate, con 
+tantissimi parametri, anche nell'ordine di milioni per reti profonde, che possono essere i pesi delle connessioni, stabilite durante l'addestramento. 
+
+In una rete questi pesi vengono acquisiti con un apprendimento supervisionato, deve quindi 
+esistere una funzione che dipende dai dati di apprendimento \verb|train| e questi insiemi di parametri $\Theta$. 
+Questa funzione viene chiamata funzione obiettivo:
+\begin{equation}
+    f(\texttt{train}, \Theta)
+\end{equation}
+
+L'apprendimento consiste nel modificare questi parametri, cercando una loro soluzione ottima $\Theta^*$. Si vuole trovare l'ottimalità della soluzione, da massimizzare, oppure 
+minimizzando l'errore o la perdita, in base a come viene definita questa funzione $f$:
+\begin{gather*}
+    \Theta^*=\text{argmax}_\Theta f(\texttt{train},\Theta)\\
+    \Theta^*=\text{argmin}_\Theta f(\texttt{train},\Theta)
+\end{gather*}
+
+Questo si può effettuare esplicitamente con metodi matematici, a partire dalla sua definizione, con tecniche di ``Gradient-Descent'', calcolando le derivate parziali rispetto 
+ai vari parametri e ponendo questo gradiente uguale a zero, risolvendo per i parametri. 
+Altrimenti si può calcolare implicitamente utilizzando delle euristiche che modificano questi parametri, in modo coerente con la funzione $f$. Uno di questi approccio è il 
+clustering con algoritmo $k$-means. 
+
+Questi parametri sono legati ad un approccio geometrico e forniscono informazioni sulla 
+regolarità della superficie di separazione. Trovando una superficie di separazione ottima, 
+si è in grado di discriminare al meglio le classi. 
+
+\subsubsection{Iperparametri}
+
+Nelle reti neurali a monte di questi parametri devono essere definiti altri parametri chiamati iperparametri $H$, e devono essere scelta a priori, prima ancora di realizzare il modello. 
+Questi iperparametri possono esser il numero di neuroni in una rete neurale, il valore $k$, nell'algoritmo $k$-NN, un polinomio per la regressione lineare o loss function da minimizzare. 
+Questi vengono scelti quando viene realizzato il modello. Dopo aver scelto questi parametri si avvia il training vero e proprio. 
+Si segue un approccio esaustivo per sceglierli, secondo l'idea di analizzare tutte le possibili combinazioni tra vari iperparametri in base alle loro prestazioni. 
+
+Si considera un intervallo all'interno del quale possono essere presenti questi iperparametri, e se sono presenti molti iperparametri e questo intervallo scelto per ognuno di essi è anche molto esteso il problema di individuare una loro combinazione può crescere in maniera esponenziale, rendendo il problema ingestibile sotto un punto di vista pratico. 
+
+Si utilizzano quindi tecniche come la ricerca casuale, o altre tecniche di ottimizzazione 
+probabilistiche come l'ottimizzazione Bayesiana, che utilizza il teorema di Bayes, oppure 
+tecniche di ``Evolutionary Computing'', basate sull'evoluzione. Quest'ultime tecniche si 
+ispirano al modello di evoluzione e di selezione naturale, dove la popolazione migliore di 
+iperparametri è quella in grado di adattarsi al meglio all'ambiente. 
+
+Algoritmi genetici erano molto diffusi una ventina di anni fa, anche se recentemente stanno 
+venendo utilizzati più spesso. 
+
+Bisogna valutare le prestazioni di questi iperparametri, in caso di classificazione si 
+potrebbe lavorare direttamente con la funzione da ottimizzare. Ma generalmente si vuole 
+lavorare sulla semantica del problema, quindi l'accuratezza su certi insiemi di dati. 
+Si rappresenta l'accuratezza in termini percentuali. 
+
+In problemi di classificazione con cardinalità delle classi molto sbilanciate, si potrebbe 
+raggiungere una percentuale di accuratezza vicina al 100\% senza aver mai attribuito dei datapoint alle classi più rare. 
+Questo è un classificatore che funziona solamente su questo particolare dominio, ma su un 
+qualsiasi altro dominio dove non è presente questa distribuzione di classi l'agente avrà un'accuratezza molto minore. 
+Esistono diverse tecniche per gestire questo fenomeno, nei problemi di regressione si utilizza 
+una metrica chiamata ``Root Mean Squared Error'', RMSE, molto utilizzata nei sistemi di 
+raccomandazione. Per ogni oggetto prova a predire la valutazione di un utente su un oggetto 
+o un servizio che ancora non ha acquistato. Questa metrica valuta la distanza tra questo 
+valore predetto ed il valore reale. Si potrebbe considerare anche la media tra i vari valori. Ma il valore predetto potrebbe essere positivo o negativo, quindi si considera il 
+quadrato per compensarlo. 
+
+\begin{equation}
+    \text{RMSE}=\displaystyle\sqrt{\displaystyle\frac{1}{2}\sum_{i=1}^n\left(\texttt{pred}_i-\texttt{true}_i\right)^2}
+\end{equation}
+
+\subsubsection{Matrice di Confusione}
+
+Un'altra modalità per valutare le prestazioni di un classificatore è la matrice di confusione, una heatmap realizzata operando su un dataset con un certo numero $n$ di classi. 
+La matrice $n\times n$, presente sulle righe i valori reali e sulle colonne i valori predetti. Un classificatore sempre accurato avrebbe valori non nulli presenti solamente sulle diagonali, quindi avrebbe un'esatta corrispondenza tra i valori predetti e quelli 
+attuali. Nella realtà su ogni colonna è presente un valore percentuale che indica la probabilità secondo cui quell'elemento viene attribuito ad una determinata classe. 
+
+%% TODO img matrice di confusione
+
+\subsubsection{Problemi Closed e Open Set}
+
+Un'altra differenza da analizzare è se i problemi sono closed o open set. Nei sistemi closed set, l'insieme delle classi è predefinito ed immutabile, quindi ogni pattern appartiene 
+sicuramente ad una di queste classi note. In molti casi reali invece è possibile che 
+questi pattern possono appartenere ad una delle classi note o nessuna di queste. 
+Per risolvere questo problema è possibile aggiungere classi fittizie al problema, e si 
+aggiungono training set con esempi negativi, ovvero appartenenti a classi fittizie. Altrimenti è possibile aggiungere valori soglia, e si assegna un pattern alla classe più probabile, solo quando la probabilità è maggiore di questo valore di confidenza. Se la soglia è molto alta si avranno tanti falsi positivi, analogamente se fosse bassa ci sarebbero tanti falsi negativi. 
+Un sistema di questo tipo deve poter confrontare la probabilità $p$ che un pattern appartenga alla classe rispetto al valore di soglia $t$:
+\begin{equation*}
+    p>t
+\end{equation*}
+
+\subsubsection{Sistemi con Soglia}
+
+Sulla base di questo valore di soglia si definisce un classificatore binario per decidere se 
+assegnare al pattern corrente un valore positivo o negativo. Sono possibili quattro situazioni nel tentativo di classificare un pattern:
+\begin{itemize}
+    \item Vero Positivo (TP);
+    \item Vero Negativo (TN);
+    \item Falso Positivo (FP), detto anche errore di tipo 1, o False;
+    \item Falso Negativo (FN), detto anche errore di tipo 2, o Miss. 
+\end{itemize}
+
+In base all'applicazione, è necessario impostare la soglia, valutando se sono preferibili 
+falsi positivi o falsi negativi. Nel settore dell'assistenza sanitaria, si vuole minimizzare i falsi negativi, per una data patologia, poiché si vuole minimizzare il numero di paziente 
+che non vengono curati. Mentre i falsi positivi non pongono problemi, poiché non presentano 
+la patologia in questione, ed alle analisi successive risulteranno negativi. Mentre i falsi 
+negativi non verranno sottoposti a queste ulteriori analisi. 
+Ad oggi modelli di ML sono molto comuni in questo settore esattamente per questo scopo. 
+
+Si possono calcolare diversi valori percentuali sulla probabilità di:
+\begin{itemize}
+    \item Veri positivi (TPR): $\displaystyle\frac{\text{TP}}{\text{P}}$;
+    \item Veri negativi (TNR): $\displaystyle\frac{\text{TN}}{\text{N}}$;
+    \item Falsi positivi (FPR): $\displaystyle\frac{\text{FP}}{\text{P}}$;
+    \item Falsi negativi (FNR): $\displaystyle\frac{\text{FN}}{\text{N}}$;
+\end{itemize}
+
+L'accuratezza si calcola come la percentuale delle scelte positivi effettuate:
+\begin{equation}
+    \text{Acc.}=\displaystyle\frac{\text{TP}+\text{TN}}{\text{P}+\text{N}}
+\end{equation}
+
+Nei sistemi con soglia si può misurare l'andamento dei valori di errore FNR e FPR rispetto 
+al valore della soglia. Si nota come il all'aumentare della soglia diminuiscono i falsi 
+positivi ed aumentano i falsi negativi, al contrario per la diminuzione della soglia. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{valore_soglia.pdf}%
+\end{figure}
+
+Queste due curve possono essere espresse tramite le curve DET, ``Detection Error Tradeoff'', 
+definita in maniera implicita del valore di soglia, dove su un asse sono presenti i falsi negativi e sull'altro asse i falsi positivi. Ogni valore della curva rappresenta quindi un 
+valore di soglia. Una curva più utilizzata è la ROC, ``Receiver Operating Characteristic'', proposta nella seconda guerra mondiale dagli ingegneri elettrotecnici che lavorano ai radar, per riconoscere i nemici nelle battaglie aeree. Il punto ideal della curva ROC è un 
+TPR pari ad uno ed un FPR pari a zero. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{det_roc.pdf}%
+\end{figure}
+
+Sulla base della curva ROC per valutare se un classificatore è meglio di un altro si determina il suo integrale sotto la curva (AUC). Questo è uno scalare nell'intervallo $[0,1]$. Questo determina la prestazione media del classificatore, può essere calcolato come un 
+integrale numerico. Un classificatore casuale ha una percentuale di falsi positivi pari al 
+50\%, come la percentuale di falsi negativi, quindi la curva ROC è una bisettrice del piano, 
+con un AUC pari a $0.5$. 
+
+
 
 
 \end{document}
