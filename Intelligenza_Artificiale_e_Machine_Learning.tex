@@ -27,6 +27,8 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
+    pdftitle={Appunti di Intelligenza Artificiale e Machine Learning},
+    pdfauthor={Giacomo Sturm}
 }
 
 \newsavebox{\tempbox} %{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}}
@@ -225,7 +227,7 @@ consistenza, rappresenta un processo di apprendimento supervisionato o meno su q
 poter gestire e generalizzare i nuovi dati nello stesso dominio applicativo. 
 
 Uno dei grandi passi avanti nel campo delle immagini si deve al grande dataset ImageNet, grazie ad una 
-ricercatrice e professoressa di Stanford, che ha investito il suo tempo nel progetto. Questo insieme contiene 
+ricercatrice e professoressa di Stanford Fei-Fei Li, che ha investito il suo tempo nel progetto. Questo insieme contiene 
 milioni di immagini descritte e la loro classe di appartenenza dell'oggetto raffigurato, sono infatti 
 principalmente immagini in primo piano. Tramite insiemi di dati come questi, il sistema apprende in un 
 approccio supervisionato, poiché ad ogni immagine viene indicata la classe di appartenenza, ed in alcuni casi 
@@ -392,7 +394,7 @@ una di queste trasformazioni.
 
 Nel 2012 venne rivoluzionata la ImageNet challenge nell'ambito della visione artificiale e riconoscimento di immagini da parte di IA. Esistono delle piattaforme tramite 
 cui chi ha i fondi di ricerca, dato un obiettivo, può chiedere di ottenere etichette su un set di dati. Queste piattaforme vengono chiamate turchi meccanici, poiché 
-le operazioni vengono svolte da umani e non da macchine. Ha favorito lo sviluppo e l'introduzione del ``Neep Neural Network'', DNN, aumentando novelette 
+le operazioni vengono svolte da umani e non da macchine. Ha favorito lo sviluppo e l'introduzione del ``Deep Neural Network'', DNN, aumentando novelette 
 le prestazioni su queste task. 
 Questo fu dovuto a Geoffrey Hinton ed un suo studente Alex Krizhevsky, dall'università di Toronto, che realizzarono questa tecnologia di DNN. Vennero in seguito 
 assunti da Google per implementare questa tecnica nei loro prodotti, chiamata AlexNet. 
@@ -406,9 +408,17 @@ Questi sistemi di traduzione automatica tuttavia falliscono se l'utente ha un ac
 Ulteriormente l'errore aumenta notevolmente se aumenta il rapporto segnale rumore SNR, sia per un agente artificiale sia che per un utente umano. 
 
 Si sono realizzati strumenti di riconoscimento di oggetti e di immagini. YOLO, ``You Only Look Once'' è uno strumento che effettua un compromesso tra velocità 
-ed attendibilità nel riconoscimento degli oggetti e della locazione. Fornisce la probabilità secondo cui l'oggetto che si s ta guardando appartiene ad una certa classe 
+ed attendibilità nel riconoscimento degli oggetti e della locazione. Fornisce la probabilità secondo cui l'oggetto che si sta guardando appartiene ad una certa classe 
 e fornisce anche questo valore in percentuale. Soprattutto permette di riconoscere con certa accuratezza anche in ambienti ``cluttered'' con un alta 
-complessità della scena in tempo reale. Questo è un programma open source, scaricabile gratuitamente. 
+complessità della scena in tempo reale. Questo è un programma open source, scaricabile gratuitamente, per cui è presente in molte applicazioni come la guida autonoma, il riconoscimento facciale, l'analisi di radiografie, etc. 
+Un altro strumento utile per la programmazione è lo standard OpenCV, ``Computer Vision'', 
+che ha standardizzato il modo in cui si gestisce la visione virtuale di un calcolatore. Realizzato e reso disponibile da un ingegnere dell'Intel Garry Bradski nei primi anni 2000, da allora si è affermato come lo standard de facto per la computer vision. 
+Negli anni 2000 ogni volta che una certa azienda o start-up raggiungeva un certo livello tecnologico, veniva 
+acquisita da parte delle più grandi aziende del settore ICT, ``Information e Communication Technologies'', e le loro tecnologie venivano 
+implementate nei loro servizi. 
+
+Nel 1995 era nato un nuovo motore di ricerca Netscape che fu valutato oltre un miliardo di dollari, nonostante non avesse un fatturato a quel livello. Dopo l'11 Settembre gli investimenti in questi settori scesero nettamente. Gli investimenti risalirono dopo il 2012 
+con l'avvento del Deep Learning. 
 
 
 \clearpage
@@ -727,7 +737,7 @@ iterativamente tutti i limiti possibili fino a quando non individua una soluzion
 
     |\textcolor{black}{for}| depth = 0 to |$ \infty $|   do
         if |\textcolor{red}{DEPTH-LIMITED-SEARCH}|(problem, depth) succeeds
-        then return ist result
+        then return its result
     end
 \end{minted}
 
@@ -816,7 +826,7 @@ una funzione di stima del costo della soluzione, per si considera il nodo $n$ ap
 L'algoritmo ``Best First Search'' ordina i nodi inseriti nella frontiera dal migliore al peggiore secondo una data funzione di valutazione $f$. Il nodo scelto da espandere 
 è quello valutazione migliore, in genere con $f(n)$ minore, per cui a differenza di funzioni di valutazione $f$ si hanno diverse versioni di questo algoritmo di ricerca. 
 
-La ricerca guidata dal costo (\ref{sec:Dijkstra})si può considerare un caso particolare della ricerca best first dove la funzione di valutazione $f(n)$ coincide 
+La ricerca guidata dal costo (\ref{sec:Dijkstra}) si può considerare un caso particolare della ricerca best first dove la funzione di valutazione $f(n)$ coincide 
 con la funzione di costo del cammino $g(n)$ dallo stato iniziale al nodo $n$. Queste rappresenta un'informazione di euristica nulla. 
 
 \begin{minted}[escapeinside=||]{c}
@@ -951,7 +961,6 @@ Se la condizione di consistenza è soddisfatta su $h$, allora quando l'algoritmo
 $n$ ha già trovato il percorso ottimo per $n$. In questo modo la ricerca su grafo non è 
 differente dalla ricerca su un albero per quanto riguarda l'ottimalità della soluzione. 
 
-
 \subsection{Algoritmo di Ricerca Locale: Hill-Climbing}
 
 
@@ -1053,7 +1062,7 @@ viene accetta con una probabilità che dipende dalla differenza della valutazion
 
     t <- 0
     current <- |\textcolor{magenta}{RANDOM}|(problem)
-    best <- |\textcolor{magenta}{MAKE-NODE}|(NULL)
+    best <- |\textcolor{magenta}{MAKE-NODE}|()
 
     repeat
         next <- |\textcolor{magenta}{RANDOM}|(|\textcolor{magenta}{EXPAND}|(current))
@@ -2399,7 +2408,7 @@ nodi ed aggiungerli alla frontiera, se non sono già stati visitati:
                 for (childState, distance) in childStates:
                     g = childState.partialPath + distance
                     f = g + h[childState]
-                    childNode = (childState, currentChild, f, g)
+                    childNode = Node(childState, currentChild, f, g)
 
                     if childState.name not in close:
                         fringe.add(Item(childNode.f, childNode))
@@ -2592,5 +2601,40 @@ uno stato corrente si verifica se si tratta di uno stato migliore dello stato mi
 \end{minted}
 
 \clearpage
+
+\section{Fondamenti di Machine Learning}
+
+In programmi convenzionali, è possibile determinare l'output, dati un insieme di input ed il 
+suo algoritmo, in modo deterministico. Questo però non è possibile per programmi che utilizzano 
+machine learning. Si utilizzano dei modelli che vengono addestrati ad eseguire un'operazione, con certe prestazioni. Ma il loro comportamento non è noto a priori, ma dipende dai dati di input. L'output per una stessa task cambia a seconda dei dati in input. 
+In generale il ricercatore di ML prende il nome di ``Data Scientist'', poiché i dati, e non 
+gli algoritmi hanno ruolo centrale in questo settore. 
+Si utilizza spesso il termine di ``Pattern'' per riferirsi ai dati, oltre a rappresentare 
+un forma, esempio o modello, si utilizzerà questo termine per riferirsi ad un generico 
+data point, un elemento all'interno di una task. 
+Uno dei padri del pattern recognition Satoshi Watanabe, un settore con ampia intersezione ed influenza con il ML, definisce il pattern come l'opposto del caos. 
+Sopratutto a livello della biometria il ML e la computer vision sono costantemente presenti, 
+nelle loro analisi su dati sia comportamentali o fisiologico. Tramite questi dati è 
+possibile identificare o riconoscere un individuo. 
+
+Si analizzeranno solamente pattern di tipo numerico, quindi misurabili. Sono caratteristiche 
+che hanno un valore numerico e sono soggette ad un ordinamento. Tipicamente sono valori continui, ma possono anche essere discreti. Si rappresentano come vettori di features, vettori numerici contenenti le singole caratteristiche misurabili. Ognuna delle features del vettore assume un valore numerico misurabile, ed insieme definiscono un pattern. 
+
+Dei dati altrettanto importanti sono i dati categorici, caratteristiche qualitative o 
+la presenza assenza di una caratteristica, quindi molto spesso sono features binarie. In 
+alcuni casi sono soggetti ad ordinamento, alcune caratteristiche per essere analizzate devono essere categorizzabili. Normalmente vengono gestiti da sistemi a regole e alberi di 
+classificazione. 
+
+I dati più complicati sono delle sequenze, spaziali o temporali, come suoni, frasi, immagini, video, etc. Spesso la lunghezza delle sequenze sono variabili, e la loro posizione 
+interna e le relazioni con gli elementi adiacenti, i predecessori ed i successori, sono importanti. 
+Bisogna definire una struttura di similarità per poter confrontare tra di loro due sequenze. Tecniche utilizzate sono il ``Dynamic Time Warping'' (DTW), ``Hidden Markov Models'' (HMM), 
+``Recurrent Neural Networks'' (RNN), ``Long Short-Term Memory'' (LSTM). 
+
+Osservando un determinato fenomeno si può realizzare un ``heatmap'', caratterizzata da 
+toni freddi o caldi, dove più sono caldi più la feature è alta, e più sono freddi più è 
+bassa. Non rappresenta necessariamente una mappa di calore, ma deve la sua struttura e 
+rappresentazione convenzionale a questo tipo di mappe. Questo riguarda tantissimi 
+fenomeni dove è possibile rappresentare su un piano le features analizzate. 
+
 
 \end{document}
