@@ -2609,6 +2609,9 @@ suo algoritmo, in modo deterministico. Questo però non è possibile per program
 machine learning. Si utilizzano dei modelli che vengono addestrati ad eseguire un'operazione, con certe prestazioni. Ma il loro comportamento non è noto a priori, ma dipende dai dati di input. L'output per una stessa task cambia a seconda dei dati in input. 
 In generale il ricercatore di ML prende il nome di ``Data Scientist'', poiché i dati, e non 
 gli algoritmi hanno ruolo centrale in questo settore. 
+
+\subsection{Pattern}
+
 Si utilizza spesso il termine di ``Pattern'' per riferirsi ai dati, oltre a rappresentare 
 un forma, esempio o modello, si utilizzerà questo termine per riferirsi ad un generico 
 data point, un elemento all'interno di una task. 
@@ -2630,11 +2633,105 @@ interna e le relazioni con gli elementi adiacenti, i predecessori ed i successor
 Bisogna definire una struttura di similarità per poter confrontare tra di loro due sequenze. Tecniche utilizzate sono il ``Dynamic Time Warping'' (DTW), ``Hidden Markov Models'' (HMM), 
 ``Recurrent Neural Networks'' (RNN), ``Long Short-Term Memory'' (LSTM). 
 
+Altri tipi di dati possono essere strutturati, in strutture complesse come alberi o grafi. Per esempio in bioinformatica, per l'analisi delle strutture genetiche, oppure nel riconoscimento e processamento del linguaggio naturale, dove l'output desiderato è l'insieme dei parse tree plausibili. Si utilizzano tecnica come le ``Structured SVMs'', ``Bayesian Networks'' oppure HMM. 
+
+
 Osservando un determinato fenomeno si può realizzare un ``heatmap'', caratterizzata da 
 toni freddi o caldi, dove più sono caldi più la feature è alta, e più sono freddi più è 
 bassa. Non rappresenta necessariamente una mappa di calore, ma deve la sua struttura e 
 rappresentazione convenzionale a questo tipo di mappe. Questo riguarda tantissimi 
 fenomeni dove è possibile rappresentare su un piano le features analizzate. 
+
+
+Avendo pochi dati in un dataset è possibile generarne di nuovi da dati preesistenti con una tecnica chiamata ``Data Augmentation''. Oppure si possono utilizzare reti neurali già 
+addestrate, con una tecnica chiamata ``Transfer Learning''. Esistono dei metodi che permettono di aggiungere insieme alla risposta del sistema una condizione, o pattern, individuato tra i dati in input che l'ha portato a scegliere quella risposta. In questo modo il sistema è in grado di fornire una spiegazione per la sua risposta. 
+
+\subsection{Applicazioni}
+
+\subsubsection{Classificazione}
+
+Le applicazione classiche del ML sono primo tra tutti la classificazione. Ovvero dato un dataset, un piano la classificazione deve assegnare ad ognuno di questi pattern o data point 
+una classe di appartenenza. Bisogna apprendere dai dati e generare una funzione che permette di effettuare un mapping tra lo spazio dei dati e lo spazio delle classi. Nel caso di sole due classi si usa il termine ``Binary Classification'', con più classi invece ``Multi-Class Classification''. Anche se spesso si utilizza il termine riconoscimento. 
+
+Una classe è quindi un insieme di pattern aventi delle caratteristiche simili o comuni 
+tra di loro. Il concetto di classe è semantico e dipende strettamente dall'applicazione. 
+
+Problemi di classificazione classici sono:
+\begin{itemize}
+    \item Spam Detection: strumenti, operativi nei client di posta, per identificare se la posta è indesiderata o illegittima. Il pattern sono le singole mail e le classi sono mail legittime o spam;
+    \item Credit Card Fraud Detection: i pattern sono le singole transazioni e le classi sono transazioni fraudolente o operazioni legittime;
+    \item Face Recognition: presuppone l'identificazione facciale, su cui effettuare il riconoscimento. Classifica le faccia in uno dei soggetti appartenenti ad un dataset;
+    \item Pedestrian Classification;
+    \item Medical Diagnosis;
+    \item Stock Trading. 
+\end{itemize}
+
+\subsubsection{Regressione}
+
+L'altra grande applicazione del ML è la regressione, sia la regressione che la classificazione sono predizioni. Ma nella regressione si attribuisce un valore continuo ad un pattern. Corrisponde ad apprendere una funzione approssimante delle coppie di input-output. Si parla di funzioni di grado di regolarità, con certe condizioni analitiche che devono rispettare, quali la continuità o la derivabilità. 
+
+Problemi tipici della regressione sono:
+\begin{itemize}
+    \item Stima dei Prezzi, in certi tipi di mercati;
+    \item Stima del Rischio, per compagnie assicurative;
+    \item Predizione Energia Prodotta;
+    \item Modelli Sanitari di Predizione dei Costi;
+    \item Object Detection: la stima delle posizioni e le dimensioni della bounding box di oggetti in un immagine o video. Mentre il problema di classificazione associato è l'associazione di una classe all'oggetto dentro questa bounding box.
+\end{itemize}
+
+
+\subsubsection{Clustering}
+
+Un'altra applicazione comune è il clustering, il classico problema dell'apprendimento non 
+supervisionato. Sulla base della similarità o dissimilarità su di un dataset non etichettato, dopo aver definito queste misure e metriche per individuare similarità, è 
+possibile raggruppare i pattern in cluster, di cui nemmeno il numero è noto a priori. Questi 
+cluster possono essere poi utilizzati come delle classi. 
+
+Un classificatore di questo tipo si chiama K-NN, e sceglie nel piano gli i primi identificatori più vicini, e sulla base di un voto di maggioranza, sulla base di quanti di questi campioni sono assegnati a ciascuna delle classi. 
+Questi data point possono essere utilizzati a loro volta come classi per realizzare un 
+modello di apprendimento supervisionato. 
+
+Problemi di clustering sono:
+\begin{itemize}
+    \item Marketing: definizione di gruppi di utenti in base ai consumi. 
+    \item Genetica: raggruppamento sulla base delle analogie del DNA;
+    \item Bioinformatica: partizionamento dei gruppi di geni con simili caratteristiche, per individuare sequenze genetiche nuove rispetto a quelle note;
+    \item Social Network Analysis: si possono analizzare gli utenti sulla base delle loro interazioni, individuando gruppi di utenti con interessi o interazioni simili; 
+    \item Visione: segmentazione non supervisionata, non trattata in questo corso. 
+\end{itemize}
+
+Il flusso virtuale di un immagine nella computer visione effettua il processo analogo 
+compiuto dal cervello umano, cercando i bordi nell'immagine. Questi bordi possono essere 
+raggruppati per creare delle regioni. Quest'operazione si chiama segmentazione, una volta 
+che si hanno questi segmenti si possono classificare. Con delle informazioni a contorno si potrebbe definire il grado di accuratezza di questa classificazione, ma in un ambiente non supervisionato ciò non è possibile. Si utilizza spesso nell'ambito delle immagini satellitari per individuare immagini, in seguito classificate successivamente. 
+
+\subsubsection{Riduzione di Dimensionaltà}
+
+Un'altra applicazione molto usata nell'ambito del ML, meno diffuse rispetto ai primi è la 
+riduzione di dimensionalità. Il data point potrebbe avere un certo numero di features molto 
+elevato, nell'ambito dei ``Big Data'', rappresentabili in spazi con un numero altrettanto 
+elevato di dimensioni. Si può dimostrare che questo numero di dimensioni non aiutano l'analisi, ma introducono rumore. Quindi è conveniente individuare metodi per ridurre la dimensione dei dati, effettuando un mapping da $\mathbb{R}^d$ a $\mathbb{R}^k$, dove 
+$k<d$. 
+
+Questa operazione deve minimizzare la perdita delle informazioni, riducendo la dimensionalità dei dati. 
+Una di queste tecniche è la PCA, risale agli anni '30, da Fisher, così come la LDA. 
+
+Queste tecniche combinano tra di loro dimensioni generando nuove features e diminuendo 
+le features totali. Esistono delle tecniche per rendere rappresentabili su schermo 
+i dataset, per visualizzarli in un ambiente 2D o 3D, partendo da $d>3$. Scartando informazioni ridondanti o inutili. 
+
+La PCA è una tecnica non supervisionata, non tiene conto della differenza tra le classi, e nella riduzione di dimensionalità preserva il più possibile l'informazione dei pattern. Mentre nella LDA, ``Linear Discriminant Analysis'', tiene conto delle classi e preserva al 
+massimo le informazioni che permettono di discriminare tra pattern. 
+Una tecnica chiamata t-SNE, ``Stochastic Neural Embedding'', basata su reti neurali profonde, proposta da Geoffrey Hinton ed un suo studente. Che funziona particolarmente bene quando si vuole ridurre a due o tre dimensioni i dati. 
+
+\subsubsection{Representaion Learning}
+
+Ci sono delle features grezze che possono diminuire l'efficacia dei modelli per rappresentare i modelli. Esistono delle tecniche per creare feature a partire dai dati grezzi per rendere più efficace l'identificazione dei pattern, quest'applicazione prende il nome di ``Feature Engineering''. 
+
+\subsubsection{Problemi di Computer Vision}
+
+I problemi di computer vision si dividono in due problemi, dove è presente una singola 
+classe, quindi si hanno problemi di classificazione e locazione, mentre se sono presenti più classi in una stessa immagine si hanno problemi di object detection o istance segmentation, localizzando diversi oggetti attribuite a diverse classi. 
 
 
 \end{document}
