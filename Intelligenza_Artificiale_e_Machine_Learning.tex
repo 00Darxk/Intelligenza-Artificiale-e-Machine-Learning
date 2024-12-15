@@ -2,6 +2,7 @@
 
 \usepackage{cancel}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage[includehead,nomarginpar]{geometry}
 \usepackage{graphicx}
 \usepackage{amsfonts} 
@@ -15,7 +16,7 @@
 \usepackage{minted}
 %\usepackage{subfig}
 \usepackage[italian]{babel}
-%\usepackage{float}
+\usepackage{float}
 %\usepackage{wrapfig}
 %\usepackage[export]{adjustbox}
 \allowdisplaybreaks
@@ -3253,7 +3254,322 @@ Una soluzione consiste nell'utilizzare tre diversi set, se ciò è permesso dal 
 Nella fase di addestramento invece di addestrare il sistema sul test set, si valuta sul validation set. Quindi si determina l'ipotesi migliore su questo set e si valuta sul test set. 
 Non è presente una regola generale per dividere i dati, in generale il training set comporta la maggior percentuale, mentre il training ed il set test hanno all'incirca la stessa percentuale delle osservazioni totali. 
 
+\subsection{Nozioni di Matematica}
 
+\subsubsection{Funzioni Convesse}
+
+Un insieme $C$ in uno spazio vettoriale $V^k(O)$, si dice convesso se per ogni due punti $\vect{v},\vect{w}\in C$, il segmento che unisce i due punti appartiene anch'esso all'insieme $C$:
+\begin{equation}
+    \forall\vect{v},\,\vect{w}\in C,,\,\forall\lambda\in[0,1]\text{ t.c. }\lambda\vect{v}+(1-\lambda)\vect{w}\in C\implies C:\text{ Convesso}
+\end{equation}
+
+Ovvero tutti i punti appartenenti a questo segmento appartengono all'insieme $C$. 
+
+Nel caso bidimensionale si può verificare graficamente questa condizione, considerando un 
+insieme $C$ convesso, una retta:
+%% TODO img insieme convesso caso bidimensionale (retta)
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+Si può esprimere l'espressione come:
+\begin{equation*}
+    \lambda\vect{v}+(1-\lambda)\vect{w}=\vect{w}+\lambda(\vect{v}-\vect{w})
+\end{equation*}
+
+Per ogni valore di $\lambda\in[0,1]$, quindi si ha che questo punto appartiene all'insieme $C$, poiché si ottiene traslando il vettore $\vect{w}$, certamente appartenente all'insieme, 
+di un fattore ottenuto dalla differenza con $\vect{v}$, quindi anche questo dovrà appartenere all'insieme. 
+Si può osservare come questo rappresenti una traslazione di un punto già presente nell'insieme lungo la retta $C$. 
+
+
+Una funzione $g:C\to\mathbb{R}$ si dice convessa, se per ogni coppia di punti appartenenti 
+all'insieme $C$, $\vect{v},\vect{w}\in C$, la funzione $g$ nell'intervallo tra questi due punti è sempre al di sotto del segmento generato collegando i punti $g(\vect{v})$ e 
+$g(\vect{w})$ sulla funzione:
+\begin{equation}
+    \forall\vect{v},\,\vect{w}\in C,\,\lambda\in[0,1]\text{ t.c. }g(\lambda\vect{v}-(1-\lambda)\vect{w})\leq\lambda g(\vect{v})+(1-\lambda)g(\vect{w})\implies g: \text{Convessa}
+\end{equation}
+
+Si può verificare graficamente data una funzione $g:\mathbb{R}\to\mathbb{R}$, con $C\equiv\mathbb{R}$, quindi si considera ogni coppia di scalari $v,w\in\mathbb{R}$, e si suppone che l'insieme $\mathbb{R}$ sia convesso. 
+%% TODO img funzione convessa caso monodimensionale (parabola) 
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+%% TODO add strongly convex (saltata nel programma)
+
+
+Per una funzione convessa $g(\vect{w})$ differenziabile, per ogni punto dell'insieme di 
+definizione $\mathbb{D}$, il piano tangente a questo punto della funzione giace sempre al di sotto 
+della funzione:
+\begin{equation*}
+    \forall\vect{v},\vect{w}\in \mathbb{D}\implies(\vect{w})\geq g(\vect{w})+\nabla g(\vect{v})^T(\vect{w-\vect{v}})
+\end{equation*}
+%% TODO img proprietà funzione convessa caso monodimensionale (parabola) 
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+\subsubsection{Derivate Parziali}
+
+Si considera una funzione $g$ definita su un campo $A$, di due variabili $w_0$ e $w_1$. Si 
+considera un punto $\overline{P}$ appartenente ad $A$, di coordinate $(\overline{w}_0, \overline{w}_1)$. Esiste allora un interno circolare di centro $\overline{P}$ e opportuno 
+raggio $\sigma$, contenuto in $A$:
+\begin{equation*}
+    0<|\Delta w_0|<\sigma
+\end{equation*}
+
+Si ha $(\overline{w}_0+\Delta w_0, \overline{w}_1)\in A$, e si può calcolare il suo rapporto incrementale parziale rispetto alla variabile $w_0$:
+\begin{equation*}
+    \displaystyle\frac{g(\overline{w}_0+\Delta w_0,\overline{w}_1)-g(\overline{w}_0,\overline{w}_1)}{\Delta w_0}
+\end{equation*}
+Il limite di questo rapporto incrementale si definisce derivata parziale rispetto a $w_0$, 
+se esiste la funzione $g$ si dice parzialmente derivabile rispetto ad $w_0$ nel punto di $\overline{P}$:
+\begin{equation*}
+    \lim_{\Delta w_0\to 0}\displaystyle\frac{g(\overline{w}_0+\Delta w_0,\overline{w}_1)-g(\overline{w}_0,\overline{w}_1)}{\Delta w_0}
+\end{equation*} 
+
+Se questa funzione $g$ è parzialmente derivabile non solo in questo punto, ma su ogni punto 
+nel campo $A$ dov'è definita, ed assume per ogni punto un valore definito e determinato, 
+allora si definisce la derivata parziale di $g$ rispetto a $w_0$, sul campo $A$ di due 
+variabili $w_0$ e $w_1$:
+\begin{equation}
+    \displaystyle\frac{\partial g}{\partial w_0}
+\end{equation}
+
+Analogamente si può definire il limite del rapporto incrementale rispetto a $w_1$, sul 
+punto $\overline{P}$, se questo rapporto incrementale ha un limite ben definito su ogni 
+punto del campo $A$, allora si può definire analogamente la derivata parziale di 
+$g$ rispetto a $w_1$, sul campo $A$ di due variabili $w_0$ e $w_1$:
+\begin{gather*}
+    \lim_{\Delta w_1\to 0}\displaystyle\frac{g(\overline{w}_1,\overline{w}_1+\Delta w_1)-g(\overline{w}_0,\overline{w}_1)}{\Delta w_1}\\
+    \displaystyle\frac{\partial g}{\partial w_1}
+\end{gather*}
+
+Per funzioni a più di una variabile però la continuità in un punto non dipende dalla 
+derivabilità della funzione. La funzione $g$ può quindi essere derivabile rispetto ad 
+entrambe le sue variabili nel punto $\overline{P}$, ma essere comunque discontinua nel stesso punto. 
+
+Queste derivate parziali si possono definire analogamente per funzioni di più variabili $g(\vect{w})$. 
+
+\subsubsection{Gradiente di una Funzione}
+
+Il gradiente si può considerare la generalizzazione del concetto di derivata, per 
+variabili a più variabili. Si considera una funzione $g(\vect{w})$ di $n$ variabili, 
+allora si definisce il gradiente il vettore le cui componenti sono le derivate parziali 
+della funzione:
+\begin{equation}
+    \nabla g(\vect{w})=\begin{bmatrix}
+        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_0}\\\vdots\\
+        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_n}
+    \end{bmatrix}
+\end{equation}
+
+%% TODO img gradiente funzione convessa caso bidimensionale (paraboloide) 
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Si considera un caso bidimensionale con $g(\vect{w})=g(w_0,w_1)$. Si considera quindi 
+una retta $n$ sul piano $w_0,\,w_1$, la cui intersezione con il gradiente genera due 
+angoli i cui coseni sono rispettivamente $\alpha$ con l'asse $w_0$ e $\beta$ con l'asse $w_1$. 
+
+Si considera un punto $P$ di coordinate iniziali $(w_0,w_1)$, se ci si sposta di una 
+distanza $\rho$ su questa retta $n$, si raggiungerà un punto $Q$ di coordinate $(w_0+\alpha\rho,w_1+\beta\rho)$. 
+Si considera il rapporto incrementale dello spostamento effettuato su questa retta $n$ 
+partendo dal punto $P$. Il limite di questo rapporto incrementale, se determinato e 
+finito viene chiamato derivata rispetto ad una direzione $n$ della funzione $g$. 
+
+%% TODO img derivate direzionale funzione convessa caso bidimensionale (paraboloide) 
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Si può dimostrare che questa derivata direzionale gode delle seguenti proprietà:
+\begin{equation}
+    \displaystyle\frac{\partial g(\vect{w})}{\partial n}=\alpha\cdot\frac{\partial g(\vect{w})}{\partial w_0}+\beta\cdot\frac{\partial g(\vect{w})}{\partial w_1}
+\end{equation}
+
+Definito $\hat{vect{n}}$ il versore della direzione $n$, allora la derivata direzionale 
+si può esprimere come il prodotto scalare tra questo versore ed il gradiente della funzione $g$:
+\begin{gather*}
+    \nabla g(w_0,w_1)\cdot\hat{\vect{n}}=
+    \begin{bmatrix}
+        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_0}\\        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_1}
+    \end{bmatrix}\cdot\begin{bmatrix}
+        \alpha&\beta
+    \end{bmatrix}=\alpha\cdot\frac{\partial g(\vect{w})}{\partial w_0}+\beta\cdot\frac{\partial g(\vect{w})}{\partial w_1}
+\end{gather*}
+
+La derivata direzionale di una funzione $g$ su una retta $n$ rappresenta una proiezione del gradiente $\nabla g$ sulla retta $n$. Ed è massima quando la direzione del gradiente coincide con la direzione della retta $n$, e minima quando le due direzioni sono tra di loro 
+ortogonali. 
+
+\subsubsection{Algoritmo di Gradient Descent}
+
+La proprietà del gradiente di fornire la direzione di pendenza più ripida permette di 
+realizzare due algoritmi di ricerca duali su spazi continui, di salita l'algoritmo di 
+Hill-Climbing, per la ricerca di massimi, ed algoritmi di Gradient Descent, per la ricerca 
+di minimi. 
+
+Questi algoritmi partono da uno stato iniziale $\vect{w}^{(t)}$ e si spostano nella stessa o opposta direzione del gradiente, di un passo $\alpha$, per passare ad un nuovo 
+stato $w^{(t+1)}$, cercando di arrivare ad un punto di massimo o di minimo, oppure un punto 
+molto vicino. 
+
+\begin{minted}[escapeinside=//, mathescape]{c}
+    /$\vect{w}^{(1)}$/ <- /$\vect{0}$/
+    t <- 1
+    while /$||\nabla g(\vect{w}^{(t)})||_2>\varepsilon$/
+        /$\vect{w}^{(t+1)}\rightarrow\vect{w}^{(t)}\pm\alpha\nabla g(\vect{w}^{(t)})$/
+        t <- t + 1
+\end{minted}
+
+Lo stato iniziale può essere scelto casualmente oppure assegnato al vettore nullo. 
+Si definisce una soglia, sopra la quale l'algoritmo continua la sua discesa, o salita. Questo 
+algoritmo funziona molto bene su funzioni convesse, invece su funzioni non convesse, dove 
+si trovano dei punti di minimo locali, allora riscontra gli stessi problemi discussi per l'algoritmo di Hill-Climbing, precedentemente. 
+
+\subsubsection{Calcolo di Probabilità}
+
+Variabili aleatorie sono quantità di interesse determinate dal risultato di un esperimento 
+casuale, ovvero non determinabile a priori con certezza. Per cui è possibile 
+assegnare una probabilità ai suoi possibili valori. 
+
+Il valore atteso è uno dei concetti più importanti del campo della statistica. Data 
+una variabile aleatoria discreta $X$, che può assumere i valori $x_1,\cdots,x_N$, si definisce il valore atteso come la media pesata di questi valori, dove i pesi sono 
+la probabilità di ognuno di questi valori:
+\begin{equation}
+    E[X]\triangleq\sum_{i=1}^N(x_iP(X=x_i))
+\end{equation}
+
+Si chiama anche media di $X$, oppure ``Expectation''. Anche se viene chiamato valore 
+atteso di $X$, non rappresenta uno dei possibili valori della variabile aleatoria $X$, ma 
+rappresenta il limite a cui tende il valore della variabile su un numero infinito di 
+misurazioni. 
+
+Si definisce l'``Indicator Function'' di un evento $A$ come:
+\begin{equation*}
+    I[A]\triangleq\begin{cases}
+        1&\text{Se }A\text{ si verifica}\\
+        0&\text{Se }A\text{ non si verifica}
+    \end{cases}
+\end{equation*}
+Il suo valore atteso è quindi:
+\begin{equation*}
+    E[I]=1\cdot P(I=1)+\cancelto{0}{0\cdot P(I=0)}=P(A)
+\end{equation*}
+
+Il valore atteso di un Indicator Function è la probabilità stessa dell'evento $A$ corrispondente. 
+
+Per la funzione valore atteso valgono le seguenti proprietà:
+\begin{gather*}
+    E[a+b]=E[a]+E[b]\\
+    E[k\cdot a]=k\cdot E[a]\\
+    E[a\cdot b]=E[a]\cdot E[b]
+\end{gather*}
+
+Dove $k$ è costante ed $a$ e $b$ sono due eventi indipendenti, nell'ultima proprietà. 
+
+Si definisce la varianza di una funzione aleatoria $X$ come:
+\begin{equation}
+    \sigma^2_x=\text{Var}(X)\triangleq E[(X-\mu_x)^2]
+\end{equation}
+
+Si può esprimere alternativamente come:
+\begin{gather*}
+    \text{Var}(X)\triangleq E[(X-\mu_x)^2]=E[X^2-2\mu_xX+\mu_x^2]=E[X^2]-2\mu\cdot\cancelto{\mu_x}{E[X]}+\mu_x^2\cdot\cancel{E[1]}\\
+    \text{Var}(X)\triangleq E[X^2]-2\mu_x^2+\mu_x^2=E[X^2]-\mu_x^2=E[X^2]-E[X]^2\tageq
+\end{gather*}
+
+\subsection{Valutatone delle Prestazioni}
+
+La valutazione delle prestazioni di un sistema è estremamente cruciale, ed i criteri di 
+valutazione permettono di scegliere modelli migliori, per cui è necessario definire 
+delle metriche per poter valutare questi diversi modelli, in questo caso di regressione, ma si utilizzano anche per altri tipi di sistemi. Si definisce quindi una 
+funzione di ``Loss'', che definisce quanto si perde utilizzano previsione del modello $f_{\vect{\hat{w}}}(\vect{x})$, dopo essere stato addestrato, invece che il valore reale $\hat{y}$:
+\begin{equation}
+    L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]
+\end{equation}
+
+Questa funzione $L$ rappresenta il costo che si ha con la funzione $f$, con il vettore dei 
+pesi $\vect{\hat{w}}$, su di un input $\vect{x}$. 
+
+Può essere definita come errore assoluto:
+\begin{equation*}
+    L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]=|\hat{y}- f_{\vect{\hat{w}}}(\vect{x})|
+\end{equation*}
+Oppure come errore quadratico:
+\begin{equation*}
+    L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]=(\hat{y}- f_{\vect{\hat{w}}}(\vect{x}))^2
+\end{equation*}
+
+Ai fini della valutazione del ``loss'', bisogna definire il Training Error, l'errore di 
+un sistema addestrato minimizzando l'errore sul training set. 
+Il Generalization Error o True Error, è l'errore sul valore effettivo, ma non è possibile 
+calcolarlo, poiché richiederebbe di conoscere a priori tutti i possibili valori e associazioni del problema. Il Test Error si utilizza per approssimare il True Error, 
+valutando il modello sul test set. 
+
+Si considerano gli andamenti di questi errori, ed il problema dell'``Over-Fitting'', non solo su modelli di ML, ma anche in generale. 
+
+Dato un insieme di dati non bisogna utilizzarle tutte per allenare il modello, bisogna 
+dividere quest'insieme in un insieme di training ed uno di testing. Si sceglie quindi 
+un modello e si calcolano i pesi $\vect{w}$ da minimizzare con la funzione RSS. 
+Una volta addestrato il modello si può calcolare il training error, definendo la funzione di Loss. Definita questa funzione si può calcolare il training errore come l'errore medio definito sugli $N$ punti dell'insieme di training:
+\begin{equation}
+    \text{Training Error}=\displaystyle\frac{1}{N}\cdot\sum_{i=1}^NL[y_i,f_{\vect{\hat{w}}}(\vect{x}_i)]
+\end{equation}
+
+Si considera come cambia questo errore rispetto alla complessità del modello, partendo da un modello costante, ed aumentando il grado della funzione $f(x)$. 
+%% TODO img training error vs complessità del modello 
+
+Intuitivamente passano da un modello costante ad un modello lineare l'errore diminuisce, 
+questo continua fino ad un modello complesso, che potrebbe passare su tutti i datapoint. 
+Ma il Training Errore non è una buona metrica, poiché è troppo ottimistico. Non rappresenta una buona misura delle prestazioni di previsione del sistema, infatti un modello polinomiale potrebbe essere molto buono solamente con i dati del training set, mentre risulta 
+poco accurato su altri insiemi di dati. 
+
+Per valutare questa caratteristica si considerano tutte le possibili coppie $(\vect{x},y)$ 
+per un certo problema. E l'errore di generalizzazione si calcola come la media della funzione di Loss su tutti questi punti. Ma questo è irrealizzabile, quindi bisogna approssimare questo errore effettivo, avendo un numero limitato di osservazioni. 
+
+Bisognerebbe cercare di pesare tutte le coppie $(\vect{x}, y)$ in base alla loro probabilità di essere presenti nella zona di interesse, quindi prendendo in considerazione la 
+distribuzione dell'insieme rispetto a $\vect{x}$ ed anche la distribuzione del valore $y$ in a parità di $\vect{x}$. 
+
+Da un punto di vista formale si può definire questo valore avvalendosi del valore atteso:
+\begin{equation}
+    \text{Generalization Error}=E_{\vect{x},y}[L(\hat{y}, f_{\vect{\hat{w}}}(\vect{x}))] 
+\end{equation}
+
+Per valutare i modelli in base a questo errore si considera una rappresentazione 
+del piano $\vect{x},y$ che mostri le diverse gradazioni dei dei vari punti corrispondenti 
+alla distribuzione di probabilità nel data set. 
+%% TODO img generalization error con distribuzione di probabilità
+
+Bisogna determinare come varia questo errore rispetto alla funzione $f$ e come si 
+adatta alle osservazioni del training set, ed in che modo possa predire i valori di dati 
+non presenti nel training set, pesati rispetti alle loro probabilità. 
+
+Analogamente al training error, partendo da un modello costante, aumentando la complessità 
+l'errore diminuisce, ma questo non è un andamento costante, poiché si potrebbe 
+verificare il fenomeno dell'over-fitting, dove il modello segue esattamente solo i dati presenti nel training set, e non è in grado di prevedere altri dati al di fuori di questo insieme. Superata una certa complessità quindi l'errore ricomincia a salire. 
+%% TODO img generalization error vs complessità del modello 
+
+Non è possibile calcolare il Generalization Error, poiché dovrebbe essere nota la vera distribuzione di probabilità di tutte le coppie $(\vect{x}, y)$. 
+
+L'ultimo tipo di errore è il Test Error, calcolato come la media della somma del Loss, nei 
+punti nel Test Set:
+\begin{equation}
+    \text{Test Error}=\displaystyle\frac{1}{N_\text{test}}\sum_{i\in1}^{N_{\text{test}}}L[y_i,f_{\vect{\hat{w}}}(\vect{x}_i)]
+\end{equation}
+
+Il Test Set deve essere scelto in modo tale da approssimare al meglio il Generalization Error. 
+%% TODO img training, generalization, test error a confronto. 
+
+Il fenomeno del sovra-adattamento si può definire in modo formale dati questi errori. 
+Dato un modello con parametri $\vect{\hat{w}}$, si ha over-fitting se esiste un modello con 
+parametri stimati $\vect{w}'$, tale che il training error del primo modello è 
+minore, mentre il true error del primo modello è maggiore di quello relativo al secondo 
+modello. 
 
 
 \end{document}
