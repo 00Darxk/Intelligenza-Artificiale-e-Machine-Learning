@@ -3505,6 +3505,8 @@ Oppure come errore quadratico:
     L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]=(\hat{y}- f_{\vect{\hat{w}}}(\vect{x}))^2
 \end{equation*}
 
+\subsubsection{Training, Generalization e Test Error}
+
 Ai fini della valutazione del ``loss'', bisogna definire il Training Error, l'errore di 
 un sistema addestrato minimizzando l'errore sul training set. 
 Il Generalization Error o True Error, è l'errore sul valore effettivo, ma non è possibile 
@@ -3570,6 +3572,133 @@ Dato un modello con parametri $\vect{\hat{w}}$, si ha over-fitting se esiste un 
 parametri stimati $\vect{w}'$, tale che il training error del primo modello è 
 minore, mentre il true error del primo modello è maggiore di quello relativo al secondo 
 modello. 
+
+\subsubsection{Classificatori Binari}
+
+Per valutare le prestazioni si possono utilizzare metriche generiche, oppure metriche più 
+consone al task del modello. Nel ML si possono utilizzare metriche molto usate nell'ambito dell'``Information Retrieval'', ovvero dei motori di ricerca, come Precision e Recall negli anni '60. 
+Molto spesso utilizzate quando si ha una classificazione binaria, per i motori di ricerca i risultati possono essere determinanti o non determinanti ad una certa query. 
+
+La precision e la recall sono delle metriche ancora migliori di altre metriche come il RSS per valutare le prestazioni di un classificatore binario. 
+
+La precision si può definire come la percentuale di risultati rilevanti che sono 
+recuperati:
+\begin{equation}
+    \text{p}=\displaystyle\frac{\text{TP}}{\text{TP}+\text{FP}}
+\end{equation}
+
+La recall invece si definisce come la percentuale dei risultati recuperati che sono 
+rivelanti:
+\begin{equation}
+    \text{r}=\displaystyle\frac{\text{TP}}{\text{TP}+\text{FN}}=\text{TPR}
+\end{equation}
+
+Il seguente grafico rappresenta l'andamento della precision e della recall per una data soglia, dove ogni punto della curva rappresenta un valore di soglia, di coordinate date dai rispettivi valori di precision e recall:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{precision_recall.pdf}%
+\end{figure}
+
+In un sistema di ML generalmente queste due metriche sono tra di loro inversamente proporzionali. Più che la precision e la recall bisogna considerare un parametro che tiene conto di entrambi chiamato $F_1$-Score, definito come la media armonica di precision e recall, è quindi il reciproco della media dei reciproci delle due metriche:
+\begin{equation}
+    F_1=\displaystyle\frac{2}{\frac{1}{\text{p}}+\frac{1}{\text{r}}}=2\cdot\frac{\text{p}\cdot\text{r}}{\text{p}+\text{r}}
+\end{equation}
+
+Per valori di soglia elevati la possibilità di individuare elementi rilevanti diminuisce, mentre se si abbassa la soglia molti più elementi vengono individuati come rilevanti, quindi 
+diminuisce la precisione del sistema. 
+
+All'aumentare delle prove, la precision diminuisce mentre la recall aumenta. 
+
+La ``Specificity'' indica quando è accurato il sistema, indica la percentuale di non 
+positivi dichiarati positivi:
+\begin{equation}
+    \text{s}=\displaystyle\frac{\text{TN}}{\text{TN}+\text{FP}}
+\end{equation}
+
+Mentre la ``Sensitivity'' coincide alla recall. 
+Molto spesso queste metriche dipendono dall'applicazione. 
+
+In modelli di object detection bisogna individuare le istanze di un elemento ed in seguito 
+viene classificato. Per cui le valutazioni devono essere divise in queste due fasi, prima si controlla che individua correttamente un oggetto tramite la sua bounding box, ed in seguito determinare che la classificazione sia corrette. 
+Se fosse un modello di face detection allora sarebbe un classificatore binario. 
+
+Si possono definire diverse metriche per questi modelli, per i diversi tipi di errore, come 
+classe errata o bounding box non trovata, o sbagliata. La prima fase coincide con un modello di regressione e può essere analizzata con gli strumenti descritti nelle sezioni precedenti, 
+\begin{itemize}
+    \item AP, ``Average Precision'': definita come l'AUC sotto la curva Recall-Precision per oggetti della singola classe:
+    \begin{equation}
+        \text{AP}=\displaystyle\int_0^1\text{p}(\text{r})\text{dr}
+    \end{equation}
+    \item mAP, mean AP: definita come la media delle AP su tutte le classi:
+    \begin{equation}
+        \text{mAP}=\displaystyle\frac{1}{N}\sum_{i=1}^N\text{AP}_i
+    \end{equation}
+    \item IoU, ``Intersection over Union'': rappresenta la percentuale della bounding box che si trova all'interno della bounding box definita nell'insieme.  
+\end{itemize}
+
+In generale se questo valore di IoU è maggiore di $0.5$ si considera la classe giusta, altrimenti si considera errata. Questo è un valore che viene determinato alla creazione del modello per poter calcolare TP e FP, con una certa confidenza. 
+
+\subsubsection{Selezione Iperparametri}
+
+In generale sul training set vengono determinati i parametri $\Theta$, possono essere i pesi delle connessioni di una rete neurale, mentre il validation set si utilizza per definire 
+gli iperparametri $H$, ma questi devono essere scelti a priori prima di effettuare l'addestramento, per poi cercare i loro valori ottimali. 
+
+Per evitare il sovra-adattamento quando il dataset lo consente si effettua la procedura chiamata ``$k$-Fold Cross-Validation'', ovvero si divide il set di training in $k$, in genere 5 o 10, fold, ovvero piccoli dataset mescolati. Si effettua $k$ volte l'addestramento, dove $k-1$ vengono scelti come set di addestramento e l'ultimo come insieme di testing. In questo modo le prestazioni del modello sono la media delle prestazioni su questi $k$ insiemi e si possono 
+valutare più combinazioni di iperparametri $H$, individuando la combinazione con l'accuratezza migliore. Dopo aver scelto questi iperparametri ottimali si riaddestra il modello sull'intero training set ed a questo punto si possono valutare le prestazioni con il test set. 
+
+Se i dataset sono di piccoli dimensione, si può arrivare al caso estremo del ``Leave One Out'', dove tutti i fold hanno dimensione pari ad uno. Si utilizza come dataset di validation quindi un singolo data point. 
+
+Per effettuare questa procedura bisogna suddividere il dataset, e bisogna mantenere le corrispondenze corrette con le etichette, nonostante gli elementi vengano rimescolati casualmente. 
+Si utilizza la libreria Python Scikit Learn, \verb|sklearn| per effettuare questo processo, tramite le funzioni \verb|shuffling|, \verb|train_test_split| e \verb|cross_val_score|, che valuta da un unico training set $k$ il sistema, restituendo un array con i valori di prestazioni su ognuno dei $k$ addestramenti. 
+In questa libreria sono presenti metodi di classificazione, regressione e clustering. 
+Questa libreria offre la ``Support Vector Machine'', SVM, che permette di valutare ogni iperparametri singolarmente per poter determinare il loro valore ottimale, utilizzando diversi kernel, sempre offerti dalla libreria. 
+
+Gli iperparametri vanno scelti a monte del modello e la ricerca dei valori ottimali può essere laboriosa. Quindi si vuole automatizzare la loro ricerca, il metodo ``Grid Search'' 
+consiste nell'utilizzo di questa SVM, definendo per ogni iperparametro un insieme di valori da provare. Si può quindi effettuare un'analisi sulle combinazioni di tutti i questi possibili valori per tutti gli iperparametri, operazione molto costosa, poiché presenta dei raffinamenti incrementali delle prestazioni. 
+Il kernel rappresenta il modello della SVM utilizzata, può essere lineare o polinomiale. 
+
+Un'altra maniera di operare consiste nella ``Random Search'' selezionando casualmente le 
+combinazioni di valori degli iperparametri. 
+Altre tecniche sono la Bayesian Optimization, selezionando ulteriori combinazioni da verificare dal punto di vista probabilistico, e la ``Evolutionary Optimization'', che si 
+basa sul concetto di evoluzione, dove la popolazione più forte che sopravvive consiste nella combinazione migliore di iperparametri. Una sottoclasse consiste negli algoritmi genetici, che verranno trattati approfonditamente nel corso di Intelligenza Artificiale. 
+
+\subsubsection{Controllare l'Overfitting}
+
+L'obiettivo che si vuole ottenere è la convergenza, ovvero che l'accuratezza aumenti 
+e la funzione di loss diminuisca, sui valori del training set. Si vuole ottenere la convergenza sull'insieme di test per avere un modello adeguato. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{convergenza.pdf}%
+\end{figure}
+
+Si possono verificare vari casi, la loss potrebbe decresce con andamento oscillatorio, quindi il metodo di ottimizzazione potrebbe non essere efficace, oppure gli iperparametri potrebbero non essere ottimali, oppure il learning rate è inadeguato, questo rappresenta uno dei parametri più complessi da assegnare, quindi è necessaria una ricerca migliore. 
+
+La funzione di loss potrebbe decrescere, ma l'accuratezza potrebbe non aumentare, quindi è stata scelta una funzione di loss errata. 
+
+Inoltre è possibile che l'accuratezza non si avvicini al 100\% sui dati di train, questo può essere poiché i gradi di libertà del modello sono troppo pochi, quindi si dovrebbero aumentare progressivamente per ottenere le prestazioni richieste. 
+
+
+Si vorrebbe generalizzare il sistema, ovvero avere un'accuratezza il massimo possibile 
+anche sul valid test, dopo aver addestrato il sistema sul training test. Quindi si cerca la capacità di trasferire l'elevata accuratezza dall'insieme di training ad un altro insieme, su cui il sistema ancora non è stato addestrato. 
+Alcune volte si indica valid invece di test set, quindi si suppone che il valid test sia 
+rappresentativo di test. Il problema che si riscontra da questa analisi è quello del sovra-adattamento. In caso il sistema abbia elevati gradi di libertà, è possibile abbia una accuratezza elevata sul training set, ma il modello non riesce a trasferire l'accuratezza anche su altri insiemi di test. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{overfitting.pdf}%
+\end{figure}
+
+Si vuole quindi arrestare l'addestramento quando si raggiunge il picco nell'accuratezza sul test set, e questo rappresenta il modello ideale per il dato problema, con certi iperparametri scelti. Per cui monitorando l'andamento dell'accuratezza si può decidere quando arrestare l'addestramento, se questo viene effettuato iterativamente. 
+
+La soglia di Occam, è un principio di economia o parsimonia, ed afferma che se sono possibili più soluzioni, di privilegiare quella più semplice. 
+Si parte quindi da un certo numero di gradi di libertà, analizzando diversi parametri, oltre l'accuratezza, come la regolarità della soluzione appresa. La regolarità può essere controllata introducendo un ulteriore iperparametro, chiamato fattore di regolarizzante alla 
+funzione di loss che penalizza soluzioni irregolari. 
+
+In generale si consiglia di utilizzare dati il più possibile rappresentativi di tutte le possibili situazioni, e di un numero adeguato. Altrimenti si può effettuare del cloud sourcing per etichettare i dati. 
+Nel caso dove è difficile avere pattern rappresentativi del problema si possono trovare delle aree del piano delle soluzioni non necessariamente corrette, e quindi in caso rimuoverle. 
+
+Inoltre è consigliabile automatizzare fin dall'inizio le procedure di valutazione delle prestazioni. Diversi modelli vanno testati utilizzando gli stessi protocolli. Bisogna effettuare test statistici per escludere a priori l'ipotesi nulla, ovvero che le differenza tra vari algoritmi siano dovute al caso, soprattutto in ambienti dove diversi modelli sono molti simili tra di loro. 
 
 
 \end{document}

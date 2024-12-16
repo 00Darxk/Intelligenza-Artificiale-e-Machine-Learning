@@ -1,0 +1,10 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}
+    \draw[thick, -|](-0.1,0)--++(4,0)node[right]{Recall}node[below]{\scriptsize 100\%};
+    \draw[-|, thick](0,-0.1)--++(0,2.2)node[above]{Precision}node[left]{\scriptsize 100\%};
+    \draw[thick, blue]plot[smooth, domain=0.05:3.8](\x, {1.9-0.2*e^(\x*1.5-3.5)+0.05});
+    \draw(0,0)node[below left]{\scriptsize 0\%};
+\end{tikzpicture}
+\end{document}
