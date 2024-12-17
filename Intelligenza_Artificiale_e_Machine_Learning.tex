@@ -3700,5 +3700,215 @@ Nel caso dove è difficile avere pattern rappresentativi del problema si possono
 
 Inoltre è consigliabile automatizzare fin dall'inizio le procedure di valutazione delle prestazioni. Diversi modelli vanno testati utilizzando gli stessi protocolli. Bisogna effettuare test statistici per escludere a priori l'ipotesi nulla, ovvero che le differenza tra vari algoritmi siano dovute al caso, soprattutto in ambienti dove diversi modelli sono molti simili tra di loro. 
 
+\subsection{Classificatore di Bayes}
+
+Il classificatore di Bayes si basa sull'omologo teorema, ed è un modello basato sulla probabilità. \`{E} tra i modelli di ML più utilizzati, utilizzato nell'analisi e 
+classificazione dell'attitudine dei messaggi di utenti su social network o per identificare messaggi di spam, etc. 
+
+Si analizzeranno due tipi di approcci ed i criteri necessari per scegliere quale utilizzare:
+\begin{itemize}
+    \item Approccio Parametrico: distribuzione Multi-Normale;
+    \item Approccio Non Parametrico: Parzen Window. 
+\end{itemize}
+
+Si ha un agente in un ambiente, con un comportamento non noto a priori, ma probabilistico. Se l'ambiente non è deterministico, quindi in caso di incertezza la teoria della probabilità è il modo migliore in cui si può analizzare il problema. 
+
+Si definisce lo spazio di probabilità una terna $(\Omega, \mathscr{A},P)$, dove $\Omega$ è lo spazio degli insiemi, rappresentanti tutti i risultati possibili, $\mathscr{A}$ è la $\sigma$-algebra, ovvero l'insieme di eventi per i quali si può calcolare la probabilità $P$, compresa tra zero ed uno. 
+
+Una $\sigma$-algebra è una famiglia di insiemi che rispetta tre condizioni:
+\begin{gather*}
+    \emptyset\in\mathscr{A}\\
+    A\in\mathscr{A}\implies\overline{A}\in\mathscr{A}\\
+    A_k\in\mathscr{A},\,\text{per }k=1,\cdots,N\implies\bigcup_{k=1}^NA_k\in\mathscr{A}
+\end{gather*}
+
+La probabilità di un evento $A\in\mathscr{A}$ si effettua dal rapporto di tutti i casi favorevoli in $\Omega$ e tutti i possibili risultati in $\Omega$:
+\begin{equation*}
+    P(A)\triangleq\displaystyle\frac{\text{dim}\,\Omega_A}{\text{dim}\,\Omega}
+\end{equation*}
+
+Una probabilità deve rispettare gli assiomi di Kolmogorov:
+\begin{itemize}
+    \item La misura di ogni evento è compresa fra zero ed uno:
+    \begin{equation*}
+        \forall A\in\mathscr{A},\,P(A)\in[0,1]
+    \end{equation*}
+    \item La misura dell'intero insieme di eventi è pari ad uno:
+    \begin{equation*}
+        P(\Omega)=1
+    \end{equation*}
+    \item La probabilità dell'unione di eventi disgiunti è pari alla somma delle probabilità dei singoli eventi. Due eventi di dicono disgiunti quando la loro intersezione è nulla:
+    \begin{equation*}
+        \forall A, B\in\mathscr{A}\text{ t.c. }A\cap B=\emptyset\implies P(A\cup B)=P(A)+P(B)
+    \end{equation*}
+\end{itemize}
+Due eventi disgiunti quindi non hanno alcuna correlazione statistica, quindi due feature disgiunte tra di loro non avranno in alcun modo impatto l'una sull'altra. 
+
+Dato uno spazio di probabilità $(\Omega, \mathscr{A},P)$due eventi $A, B\in\mathscr{A}$ si definiscono disgiunti se 
+vale la seguente proprietà sulle loro probabilità:
+\begin{equation*}
+    P(A\cap B)=P(A)\cdot P(B)
+\end{equation*}
+Quest'assioma è alla base di alcuni classificatori, ma rappresenta un'idealizzazione poiché due eventi non saranno mai disgiunti, ma si può dimostrare che rappresenta un buon modello. 
+
+
+Un modello probabilistico è uno spazio di possibili esiti, descrizioni complete di stati, mutualmente esclusivi insieme alla misura della probabilità di ciascun elemento
+
+Il teorema di Bayes su cui si basa il classificatore di Bayes, si basa sulla probabilità condizionata. Dati due eventi $A,B\in\mathscr{A}$, la probabilità condizionata di $A$ consiste nella probabilità che avvenga $A$, noto l'avvenimento dell'evento $B$: 
+\begin{equation*}
+    P(A|B)
+\end{equation*}
+Rappresenta una correzione delle aspettative dell'evento $A$, in seguito all'osservazione dell'evento $B$. Questo evento condizionante deve avere una probabilità non nulla di verificarsi, altrimenti non avrebbe senso la sua probabilità. 
+
+Si può dimostrare che in condizioni probabilistiche, con distribuzioni di probabilità note, 
+l'approccio probabilistico è la soluzione migliore. 
+Si suppone di avere uno spazio $\vect{V}$ $d$-dimensionale di pattern e un insieme di $s$ classi $W=\left\{w_1\cdots,s\right\}$ disgiunte costituite da elementi di $\vect{V}$. 
+
+Una densità di probabilità diventa una probabilità se viene moltiplicata per un intervallo, 
+arbitrariamente piccolo. 
+Per ogni datapoint $\vect{x}$ in $\vect{V}$, per ogni classe $w_j\in\vect{W}$, si indica con $p(\vect{x}|w_j)$ la densità di probabilità condizionale di $\vect{x}$, data la sua classe di appartenenza $w_j$. Si indica la probabilità a priori $P(w_j)$, indipendente dalle osservazioni, per ogni classe $w_j$ dell'insieme $W$, probabilità che il prossimo pattern da classificare sia di classe $w_j$. 
+Per ogni elemento $\vect{x}\in\vect{V}$ si indica la densità di probabilità assoluta $p(\vect{x})$ di $\vect{x}$, la somma delle densità di probabilità che il prossimo pattern da classificare sia $\vect{x}$:
+\begin{equation}
+    \forall\vect{x}\in\vect{V},\,p(\vect{x})\triangleq\displaystyle\sum_{i=1}^sp(\vect{x}|w_j)\cdot P(w_j),\text{ con }\sum_{i=1}^sP(w_j)=1
+\end{equation}
+
+Per ogni classe $w_j\in W$ e per ogni pattern $\vect{x}\in\vect{V}$ si definisce la probabilità a posteriori $P(w_j|\vect{x})$ di $w_j$ dato $\vect{x}$, la probabilità che avendo osservato il pattern $\vect{x}$, la sua classe di appartenenza sia $w_j$. Questa rappresenta l'obiettivo della classificazione, individuare per ogni classe la probabilità a posteriori che un pattern appartiene a questa classe. 
+Si può calcolare mediante il teorema di Bayes come:
+\begin{equation}
+    P(w_j|\vect{x})=\displaystyle\frac{p(\vect{x}|w_j)\cdot P(w_j)}{p(\vect{x})}
+\end{equation}
+
+Dato un pattern $\vect{x}$ da classificare in una delle $s$ classi $w_j$, e note le probabilità a priori $P(w_j)$ di ogni classe e la densità di probabilità condizionali $p(\vect{x}|w_j)$, la regola di classificazione di Bayes assegna a $\vect{x}$ la classe $b$ per cui è massima la probabilità a posteriori:
+\begin{equation}
+    b=\text{argmax}\left\{P(w_j|\vect{x})\right\}
+\end{equation}
+
+Quindi massimizzare la probabilità a posteriori corrisponde a massimizzare la probabilità condizionata. Si può dimostrare che la regola di Bayes è quella ottima, poiché minimizza l'errore di classificazione $P(\text{errore})$. Si considera un caso di un classificatore binario, ed uno spazio monodimensionale $\vect{V}$. Data una densità di probabilità, il suo integrale corrisponde alla probabilità di quell'evento. 
+
+La probabilità di errore corrisponde si ottiene dall'integrale sullo spazio degli eventi $\mathbb{R}_i$ della classe $w_i$, dell'evento $x\in V$ di classe $w_j$ e probabilità condizionata $p(x|w_j)\cdot P(w_j)$. Questo si effettua per entrambi le classi e si somma la probabilità di errore in entrambi i casi:
+\begin{equation*}
+    P(\text{errore})=\displaystyle\int_{\mathbb{R}_1}p(x|w_2)P(w_2)\text{d}x+\int_{\mathbb{R}_2}p(x|w_1)P(w_1)\text{d}x
+\end{equation*}
+
+%% TODO img
+
+Si può identificare un valore di separazione $x^*$, per determinare l'errore come l'area sotto le due curve. Il valore Bayesiano $x_t$ corrisponde all'intersezione tra le due curve di probabilità, e si può dimostrare che se questo valore corrisponde al valore di separazione, allora l'errore riducibile è pari a zero. 
+
+Mentre per le probabilità a priori $P(w_i)$ delle varie classi il calcolo è semplice, 
+per calcolare la densità probabilità condizionale $p(\vect{x}|w_i)$ il procedimento è più complesso. Dato un pattern $\vect{x}\in\vect{V}$, si può considerare un cerchio di raggio $r$, dove $r$ rappresenta un iperparametro, si può stimare la densità di probabilità contando le occorrenze delle varie classi $w_j\in W$ che cadono nell'intorno centrato in $\vect{x}$. 
+La probabilità assoluta $p(\vect{x})$ quindi si calcola date queste due approssimazioni moltiplicando la probabilità a priori delle probabilità delle classi per la densità di probabilità condizionale delle varie classi, da cui si può 
+ottenere grazie al teorema di Bayes le probabilità a posteriori $P(w_i|\vect{x})$. 
+L'approccio Bayesiano assegna quindi un pattern alla probabilità a posteriori maggiore calcolata in questo modo. 
+Questo non fornisce solamente l'appartenenza, ma fornisce anche una probabilità di appartenenza ad una classe, e questo comporta vantaggi notevoli nell'ambito della classificazione. 
+
+Ciò che interessa è calcolare il numeratore del teorema di Bayes, calcolabile in maniera approssimativa nel moto descritto precedentemente. Il problema è il calcolo della densità probabilità condizionata. Esistono due approcci per calcolarla, l'approccio parametrico e l'approccio non parametrico, poiché la conoscenza delle densità di probabilità è possibile solo in teoria. 
+
+Nell'approccio parametrico si ipotizza che la densità di probabilità sia di un certo tipo, 
+in generale si assume sia una gaussiana, ma bisogna stimare i parametri, i gradi di libertà, di questa gaussiana, ovvero valore medio $\mu$ e la varianza $\sigma^2$, nel caso monodimensionale. Nel caso di una distribuzione multinormale, 
+il vettore medio e la matrice di covarianza, generalizzazione dei parametri precedenti. Questi parametri vengono stimati sulla base del training set, ipotizzando una distribuzione campionaria. 
+Questi parametri permettono di effettuare certe valutazioni sul comportamento delle features. 
+
+
+L'altro approccio si chiama non parametrico e non effettua alcuna ipotesi sulla distribuzione di probabilità, ma si calcola questa densità utilizzando il metodo di Bernoulli oppure della Parzen Window.
+L'approccio non parametrico si basa sull'apprendere la distribuzione direttamente dal training set, ed è un'operazione complicata applicabile in pochi casi. Può essere che in alcuni casi la determinazione della distribuzione campionaria sia più complessa del problema stessa. 
+
+\subsubsection{Approccio Parametrico}
+
+L'approccio parametrico si utilizza quando sono note delle conoscenze dal problema su quale potrebbe essere la densità di probabilità e quindi si ha una ragionevole certezza che la forma ipotizzata sia adeguata al problema. L'approccio parametrico per definizione ha un numero di gradi di libertà basso, per cui diminuisce il rischio di overfitting, quando il training set è piccolo. 
+
+La densità di probabilità della distribuzione normale, monodimensionale, è:
+\begin{equation*}
+    p(x)=\displaystyle\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+\end{equation*}
+%% TODO ?:
+% $\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]$
+%% TODO img gaussiana
+Bisogna considerare che la notazione per la densità di probabilità della distribuzione normale e della probabilità è la medesima, e quindi questo potrebbe causare confusione, poiché rappresentano due grandezze diverse. 
+
+Dove $\mu$ è il valore medio, la deviazione standard $\sigma$, la distanza tra il valore medio ed il punto di flesso della gaussiana, ed il suo quadrato $\sigma^2$ chiamato varianza. 
+La gaussiana è tale che più ci si allontana dal valore meglio più diminuisce, quindi generalmente si considera solo l'intervallo compreso fino a $2\sigma$, poiché quando cadono al di fuori di questo intervallo il contributo della gaussiana vale meno del $5\%$, quindi si suppone sia nullo. 
+
+Uno stimatore possibile per determinare i parametri della distribuzione è il metodo della 
+Massima Verosimiglianza, ``Maximum Likelihood''. Consente di massimizzare la realizzazione campionaria, in base ai valori assunti da parametri statistici stimati. 
+
+Il valor medio di determina come la media tra i campioni nel training set:
+\begin{equation*}
+    \mu=\displaystyle\frac{1}{N}\sum_{i=1}^Nx_i
+\end{equation*} 
+Per stimare la varianza si calcola la media delle deviazioni standard del campione ed il valore medio:
+\begin{equation*}
+    \sigma=\displaystyle\frac{1}{N}\sum_{i=1}^N(x_i-\mu)^2
+\end{equation*}
+
+In questo modo si può definire la gaussiana dati questi parametri, che rappresenta la densità di probabilità. Per definire la probabilità bisogna moltiplicare questa densità per l'entità di un intervallo. 
+
+Tuttavia non si avranno solo due classi o una features, quindi servono dei modi per poter rappresentare queste informazioni. Si utilizza una notazione matriciale, dove ogni pattern $\vect{x}_i$ $i$-esimo rappresenta un vettore con $j$ componenti $x_i^j$. La densità di probabilità nella distribuzione multinormale è definita come:
+\begin{equation}
+    p(\vect{x})=\displaystyle\frac{1}{(2\pi)^{d/2}{|\Sigma|}^{1/2}}e^{-\frac{1}{2}(\vect{x}-\vect{\mu})^T\Sigma^{-1}(\vect{x}-\vect{\mu})}
+\end{equation}
+
+Dove $\Sigma=[\sigma_{ij}]$ rappresenta la matrice di covarianza $d\times d$, e generalizza il concetto di varianza. Questa matrice è sempre simmetrica, ovvero trasposta di sé stessa, e definita positiva, ovvero che gli autovalori sono strettamente positivi. E $\vect{\mu}=[\mu_1,\cdots,\mu_d]$ rappresenta il valore medio, dove $d$ è la dimensione di $\vect{x}$, ovvero il numero di features. 
+
+Si definisce la matrice trasposta data una matrice $\Sigma=[\sigma_{ij}]$ come $\Sigma^T=[\sigma_{ji}]$. Si definisce la matrice inversa $\Sigma^{-1}$ la matrice tale che moltiplicata per la matrice originaria produce la matrice identità $\Sigma\cdot\Sigma^{-1}=I$. Si definisce la matrice trasposta coniugata come la matrice trasposta dove ogni valore viene sostituito al suo complesso coniugato. 
+
+Data una matrice $\Sigma$ quadrata di ordine $n$, in un campo $\mathbb{K}$ che può essere $\mathbb{R}$ o $\mathbb{C}$, si dice uno scalare $\lambda_i\in\mathbb{K}$ un autovalore della matrice quadrata se esiste un vettore colonna non nullo $\vect{v}\in\mathbb{K}^n$ tale che:
+\begin{equation*}
+    \Sigma\cdot\vect{v}=\lambda_i\cdot\vect{v}
+\end{equation*}
+Questo vettore $\vect{v}$ viene chiamato autovettore relativo all'autovalore $\lambda_i$. 
+Dato questo autovettore anche $\alpha\vect{v}$ rappresenta un autovettore associato all'autovalore $\lambda_i$. 
+
+Si assume che tutti i vettori interessati siano vettori colonna, e per passare da vettore colonna a riga si utilizza la trasposta. Se la matrice $\Sigma$ è simmetrica, il numero di 
+parametri che la definisce è $d\cdot(d+1)/2$, questi rappresentano i gradi di libertà della matrice. 
+
+Gli elementi diagonali $\sigma_{ii}$ rappresentano le varianze dei rispettivi $x^i$, $\sigma_i^2$, mentre gli elementi non diagonali $\sigma_{ij}$ rappresentano le covarianze tra $x^i$ e $x^j$. Se sono nulli queste due feature sono statisticamente indipendenti, se è positivo sono correlati positivamente, altrimenti sono correlati negativamente. 
+
+Per $d=2$, la forma della distribuzione è quella di un ellisse, dove il vettore medio $\vect{\mu}=\begin{bmatrix}\mu_1&\mu_2\end{bmatrix}$ individua il centro dell'ellisse, mentre le varianze $\sigma_{11}$ e $\sigma_{22}$ rappresentano l'allungamento dell'ellisse sull'asse 
+principale, questo è legato allo spazio di variazione delle features. 
+I due valori $\sigma_{12}=\sigma_{21}$ determinano la rotazione delle ellissi sugli assi principali. Se questi valori fuori dalla diagonale principale sono nulli, allora le ellissi sono parallele agli assi principali. Se è maggiore di zero l'ellisse è ruotata in senso antiorario, se sono negativi, sarnano rotate in senso orario. 
+Gli assi dell'ellisse sono paralleli agli autovettori di $\Sigma$, i valori si $\sigma_i$ e $\sigma_j$ rappresentano gli autovalori di questa matrice. 
+
+%% TODO img ellissi 
+
+Quando le feature sono statisticamente indipendenti si utilizzano i classificatori di Na\"{i}ve Bayes, e si possono dimostrare lavorare bene su molti dataset. Ma questa caratteristica è molto rara per due features. In realtà si può applicare anche su molti casi dove l'assunzione di indipendenza statistica non viene verificata. 
+
+Nella gaussiana bidimensionale l'esponente viene definito come distanza di Mahalanobis $r$:
+\begin{equation}
+    r^2={(\vect{x}-\vect{\mu})^T\Sigma^{-1}(\vect{x}-\vect{\mu})}
+\end{equation}
+
+Spesso utilizzata invece della distanza euclidea, tiene conto degli spazi di variazione e di come sono collegati tra di loro. 
+
+Si possono individuare curve di distanze di Mahalanobis costanti, utilizzate per determinare la distanza tra due pattern e la relazione della distanza con lo spazio di variazione della feature e le loro correlazioni. 
+Per eseguire il calcolo della funzione distribuzione multinormale, si effettua un processo analogo a quello monodimensionale, generalizzando al caso dove i pattern hanno più di una feature. 
+Si può applicare quindi il metodo della massima verosimiglianza allo stesso modo, effettuando le operazioni per ciascuna componente del vettore medio e della matrice di covarianza:
+\begin{equation}
+    \vect{\mu}=\begin{bmatrix}
+        \strut\mu_1\\\vdots\\\strut\mu_d
+    \end{bmatrix}=\begin{bmatrix}
+        \displaystyle\frac{1}{N}\sum_{j=1}^Nx_j^1\\\vdots\\
+        \displaystyle\frac{1}{N}\sum_{j=1}^Nx_j^d
+    \end{bmatrix}=\displaystyle\sum_{i=1}^N\vect{x}_i
+\end{equation}
+
+La matrice di covarianza si calcola per ogni $\sigma_{ij}$:
+\begin{equation*}
+    \sigma_{ij}=\displaystyle\frac{1}{N}\sum_{k=1}^N(x_k^i-\mu_i)\cdot(x_k^j-\mu_j)
+\end{equation*}
+Si può rappresentare quindi in forma vettoriale come:
+\begin{equation}
+    \Sigma=\displaystyle\frac{1}{N}\sum_{i=1}^N(\vect{x}_i-\vect{\mu})\cdot(\vect{x}_j-\vect{\mu})^T
+\end{equation}
+
+%% TODO img distribuzione multinormale d=2
+
+Si rappresentano in uno spazio tridimensionale come una gaussiana bidimensionale, dove 
+le dimensioni del piano danno le due feature, ed il valore della densità di probabilità rappresenta l'altezza di questa superficie. 
+Analogamente dal valore di separazione, per distinguere due classi tra di loro, date le distribuzioni multinormali di queste classi, si utilizza la superficie di separazione . 
+
+%% TODO img ?? distribuzione multinormale due classi, superficie di separazione
+
+Se il punto cade su una di queste superfici decisionali, allora il suo valore è ambiguo, queste rappresentano zone intermedie tra le distribuzioni di probabilità. 
+Nel caso di due classi, le curve possono assumere due forme, in genere due iperboli, se le matrici di covarianza sono tra di loro uguali, la superficie è un iperpiano, ovvero ha una dimensione inferiore di uno rispetto alla superficie su cui è definita. Altrimenti se le due matrici di covarianza sono diverse tra di loro la superficie decisionale è un iper-quadratica. 
 
 \end{document}
