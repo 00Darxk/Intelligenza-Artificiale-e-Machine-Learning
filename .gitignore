@@ -307,3 +307,8 @@ TSWLatexianTemp*
 
 # Local Directories
 Materiale_Corso/
+
+# pgfplots
+*.dat
+*.script
+*.lua

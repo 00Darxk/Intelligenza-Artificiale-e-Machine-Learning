@@ -14,7 +14,7 @@
 \usepackage{fancyhdr}
 \usepackage{romanbarpagenumber}
 \usepackage{minted}
-%\usepackage{subfig}
+\usepackage{subfig}
 \usepackage[italian]{babel}
 \usepackage{float}
 %\usepackage{wrapfig}
@@ -908,7 +908,6 @@ Vale allora il teorema secondo cui al termine delle loro ricerche su un qualsias
 espanso da A*$_2$ sarà anche espanso da A*$_1$. Quindi il primo algoritmo espande almeno tanti nodi quanto il secondo algoritmo, quindi l'algoritmo più informato A*$_2$ 
 è più efficiente di A*$_1$. 
 
-%% TODO dim teorema a-star
 
 In generale è più conveniente scegliere un'euristica per cui l'algoritmo è più informato. Per determinare una funzione euristica, un buon approccio consiste nel 
 determinare la funzione di costo effettivo per un problema simile all'originale con minori restrizioni sugli operatori. Infatti il costo effettivo di una soluzione 
@@ -3524,7 +3523,12 @@ Una volta addestrato il modello si può calcolare il training error, definendo l
 \end{equation}
 
 Si considera come cambia questo errore rispetto alla complessità del modello, partendo da un modello costante, ed aumentando il grado della funzione $f(x)$. 
-%% TODO img training error vs complessità del modello 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.65]{training_error.pdf}%
+    \caption{Training Error Rispetto a Complessità del Modello}%
+\end{figure}
 
 Intuitivamente passano da un modello costante ad un modello lineare l'errore diminuisce, 
 questo continua fino ad un modello complesso, che potrebbe passare su tutti i datapoint. 
@@ -3545,7 +3549,12 @@ Da un punto di vista formale si può definire questo valore avvalendosi del valo
 Per valutare i modelli in base a questo errore si considera una rappresentazione 
 del piano $\vect{x},y$ che mostri le diverse gradazioni dei dei vari punti corrispondenti 
 alla distribuzione di probabilità nel data set. 
-%% TODO img generalization error con distribuzione di probabilità
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.65]{generalization_error.pdf}%
+    \caption{Data Set con Distribuzione di Probabilità}%
+\end{figure}
 
 Bisogna determinare come varia questo errore rispetto alla funzione $f$ e come si 
 adatta alle osservazioni del training set, ed in che modo possa predire i valori di dati 
@@ -3554,7 +3563,12 @@ non presenti nel training set, pesati rispetti alle loro probabilità.
 Analogamente al training error, partendo da un modello costante, aumentando la complessità 
 l'errore diminuisce, ma questo non è un andamento costante, poiché si potrebbe 
 verificare il fenomeno dell'over-fitting, dove il modello segue esattamente solo i dati presenti nel training set, e non è in grado di prevedere altri dati al di fuori di questo insieme. Superata una certa complessità quindi l'errore ricomincia a salire. 
-%% TODO img generalization error vs complessità del modello 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.65]{generalization_error_confronto.pdf}%
+    \caption{Generalization Error Rispetto a Complessità del Modello}%
+\end{figure}
 
 Non è possibile calcolare il Generalization Error, poiché dovrebbe essere nota la vera distribuzione di probabilità di tutte le coppie $(\vect{x}, y)$. 
 
@@ -3565,7 +3579,13 @@ punti nel Test Set:
 \end{equation}
 
 Il Test Set deve essere scelto in modo tale da approssimare al meglio il Generalization Error. 
-%% TODO img training, generalization, test error a confronto. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.6]{confronto_errori.pdf}%
+    \caption{Confronto Training, Generalization e Test Error}%
+\end{figure}
+
 
 Il fenomeno del sovra-adattamento si può definire in modo formale dati questi errori. 
 Dato un modello con parametri $\vect{\hat{w}}$, si ha over-fitting se esiste un modello con 
@@ -3790,7 +3810,11 @@ La probabilità di errore corrisponde si ottiene dall'integrale sullo spazio deg
     P(\text{errore})=\displaystyle\int_{\mathbb{R}_1}p(x|w_2)P(w_2)\text{d}x+\int_{\mathbb{R}_2}p(x|w_1)P(w_1)\text{d}x
 \end{equation*}
 
-%% TODO img
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.8]{errore.pdf}%
+    \caption{Errore di Classificazione Binaria}
+\end{figure}
 
 Si può identificare un valore di separazione $x^*$, per determinare l'errore come l'area sotto le due curve. Il valore Bayesiano $x_t$ corrisponde all'intersezione tra le due curve di probabilità, e si può dimostrare che se questo valore corrisponde al valore di separazione, allora l'errore riducibile è pari a zero. 
 
@@ -3818,11 +3842,15 @@ L'approccio parametrico si utilizza quando sono note delle conoscenze dal proble
 
 La densità di probabilità della distribuzione normale, monodimensionale, è:
 \begin{equation*}
-    p(x)=\displaystyle\frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+    p(x)=\displaystyle\frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]
 \end{equation*}
-%% TODO ?:
-% $\exp\left[-\frac{(x-\mu)^2}{2\sigma^2}\right]$
-%% TODO img gaussiana
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.8]{gaussiana.pdf}%
+    \caption{Gaussiana}%
+\end{figure}
+
 Bisogna considerare che la notazione per la densità di probabilità della distribuzione normale e della probabilità è la medesima, e quindi questo potrebbe causare confusione, poiché rappresentano due grandezze diverse. 
 
 Dove $\mu$ è il valore medio, la deviazione standard $\sigma$, la distanza tra il valore medio ed il punto di flesso della gaussiana, ed il suo quadrato $\sigma^2$ chiamato varianza. 
@@ -3831,7 +3859,7 @@ La gaussiana è tale che più ci si allontana dal valore meglio più diminuisce,
 Uno stimatore possibile per determinare i parametri della distribuzione è il metodo della 
 Massima Verosimiglianza, ``Maximum Likelihood''. Consente di massimizzare la realizzazione campionaria, in base ai valori assunti da parametri statistici stimati. 
 
-Il valor medio di determina come la media tra i campioni nel training set:
+Il valor medio si determina come la media tra i campioni nel training set:
 \begin{equation*}
     \mu=\displaystyle\frac{1}{N}\sum_{i=1}^Nx_i
 \end{equation*} 
@@ -3841,6 +3869,12 @@ Per stimare la varianza si calcola la media delle deviazioni standard del campio
 \end{equation*}
 
 In questo modo si può definire la gaussiana dati questi parametri, che rappresenta la densità di probabilità. Per definire la probabilità bisogna moltiplicare questa densità per l'entità di un intervallo. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.8]{massima_verosimiglianza.pdf}%
+    \caption{Metodo della Massima Verosimiglianza}%
+\end{figure}
 
 Tuttavia non si avranno solo due classi o una features, quindi servono dei modi per poter rappresentare queste informazioni. Si utilizza una notazione matriciale, dove ogni pattern $\vect{x}_i$ $i$-esimo rappresenta un vettore con $j$ componenti $x_i^j$. La densità di probabilità nella distribuzione multinormale è definita come:
 \begin{equation}
@@ -3865,10 +3899,20 @@ Gli elementi diagonali $\sigma_{ii}$ rappresentano le varianze dei rispettivi $x
 
 Per $d=2$, la forma della distribuzione è quella di un ellisse, dove il vettore medio $\vect{\mu}=\begin{bmatrix}\mu_1&\mu_2\end{bmatrix}$ individua il centro dell'ellisse, mentre le varianze $\sigma_{11}$ e $\sigma_{22}$ rappresentano l'allungamento dell'ellisse sull'asse 
 principale, questo è legato allo spazio di variazione delle features. 
-I due valori $\sigma_{12}=\sigma_{21}$ determinano la rotazione delle ellissi sugli assi principali. Se questi valori fuori dalla diagonale principale sono nulli, allora le ellissi sono parallele agli assi principali. Se è maggiore di zero l'ellisse è ruotata in senso antiorario, se sono negativi, sarnano rotate in senso orario. 
-Gli assi dell'ellisse sono paralleli agli autovettori di $\Sigma$, i valori si $\sigma_i$ e $\sigma_j$ rappresentano gli autovalori di questa matrice. 
+I due valori $\sigma_{12}=\sigma_{21}$ determinano la rotazione delle ellissi sugli assi principali. Se questi valori fuori dalla diagonale principale sono nulli, allora le ellissi sono parallele agli assi principali. Se è maggiore di zero l'ellisse è ruotata in senso antiorario, se sono negativi, saranno ruotate in senso orario. 
+Gli assi dell'ellisse sono paralleli agli autovettori di $\Sigma$, i valori di $\sigma_i$ e $\sigma_j$ rappresentano gli autovalori di questa matrice. 
 
-%% TODO img ellissi 
+
+\begin{figure}[H]%
+    \centering
+    \savebox{\tempbox}{\hbox{\includegraphics[scale=0.5]{covarianza_positiva.pdf}}}
+    \subfloat[\centering $\sigma_{ij}=\sigma_{ji}=0$]{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}{\includegraphics[scale=0.5]{covarianza_nulla.pdf}}}%
+    \qquad%
+    \subfloat[\centering $\sigma_{ij}=\sigma_{ji}>0$]{\usebox{\tempbox}}%
+    \qquad%
+    \subfloat[\centering $\sigma_{ij}=\sigma_{ji}<0$]{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}{\includegraphics[scale=0.5]{covarianza_negativa.pdf}}}%
+    \caption{Distribuzione Rispetto a Variazione di $\sigma_{ij}=\sigma_{ji}$}%
+\end{figure}
 
 Quando le feature sono statisticamente indipendenti si utilizzano i classificatori di Na\"{i}ve Bayes, e si possono dimostrare lavorare bene su molti dataset. Ma questa caratteristica è molto rara per due features. In realtà si può applicare anche su molti casi dove l'assunzione di indipendenza statistica non viene verificata. 
 
@@ -3879,7 +3923,14 @@ Nella gaussiana bidimensionale l'esponente viene definito come distanza di Mahal
 
 Spesso utilizzata invece della distanza euclidea, tiene conto degli spazi di variazione e di come sono collegati tra di loro. 
 
-Si possono individuare curve di distanze di Mahalanobis costanti, utilizzate per determinare la distanza tra due pattern e la relazione della distanza con lo spazio di variazione della feature e le loro correlazioni. 
+Si possono individuare curve di distanze di Mahalanobis costanti, utilizzate per determinare la distanza tra due pattern e la relazione della distanza con lo spazio di variazione della feature e le loro correlazioni. Queste ellissi sono i luoghi geometrici dei punti a densità costante:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.8]{distanza_mahalanobis.pdf}%
+    \caption{Densità di Probabilità con Curve di Mahalanobis}
+\end{figure}
+
 Per eseguire il calcolo della funzione distribuzione multinormale, si effettua un processo analogo a quello monodimensionale, generalizzando al caso dove i pattern hanno più di una feature. 
 Si può applicare quindi il metodo della massima verosimiglianza allo stesso modo, effettuando le operazioni per ciascuna componente del vettore medio e della matrice di covarianza:
 \begin{equation}
@@ -3900,13 +3951,29 @@ Si può rappresentare quindi in forma vettoriale come:
     \Sigma=\displaystyle\frac{1}{N}\sum_{i=1}^N(\vect{x}_i-\vect{\mu})\cdot(\vect{x}_j-\vect{\mu})^T
 \end{equation}
 
-%% TODO img distribuzione multinormale d=2
+\begin{figure}[H]%
+    \centering 
+    \savebox{\tempbox}{\hbox{\includegraphics[scale=0.8]{distribuzione_multinormale_curve_livello.pdf}}}
+    \subfloat[\centering Vista Laterale]{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}{\includegraphics[scale=0.8]{distribuzione_multinormale.pdf}}}%
+    \qquad
+    \subfloat[\centering Vista Verticale]{\usebox{\tempbox}}%
+    \caption{Distribuzione Normale Bivariata}
+\end{figure}
 
 Si rappresentano in uno spazio tridimensionale come una gaussiana bidimensionale, dove 
 le dimensioni del piano danno le due feature, ed il valore della densità di probabilità rappresenta l'altezza di questa superficie. 
 Analogamente dal valore di separazione, per distinguere due classi tra di loro, date le distribuzioni multinormali di queste classi, si utilizza la superficie di separazione . 
 
-%% TODO img ?? distribuzione multinormale due classi, superficie di separazione
+\begin{figure}[H]%
+    \centering
+    \savebox{\tempbox}{\hbox{\includegraphics[scale=0.8]{superficie_separazione_curve_livello.pdf}}}
+    \subfloat[\centering Vista Laterale]{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}{\includegraphics[scale=0.8]{superficie_separazione.pdf}}}%
+    \qquad
+    \subfloat[\centering Vista Verticale]{\usebox{\tempbox}}%
+    \caption{Superficie Decisionale fra Due Distribuzioni Normali Bivariate}
+\end{figure}
+In questo caso di distribuzione bivariata normale la linea rosso identifica l'iperpiano decisionale tra due classi $w_1$ e $w_2$. 
+
 
 Se il punto cade su una di queste superfici decisionali, allora il suo valore è ambiguo, queste rappresentano zone intermedie tra le distribuzioni di probabilità. 
 Nel caso di due classi, le curve possono assumere due forme, in genere due iperboli, se le matrici di covarianza sono tra di loro uguali, la superficie è un iperpiano, ovvero ha una dimensione inferiore di uno rispetto alla superficie su cui è definita. Altrimenti se le due matrici di covarianza sono diverse tra di loro la superficie decisionale è un iper-quadratica. 

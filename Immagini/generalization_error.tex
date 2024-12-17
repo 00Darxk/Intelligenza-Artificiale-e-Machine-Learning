@@ -1,0 +1,39 @@
+% !TEX TS-program = lualatex
+\documentclass{standalone}
+\usepackage{tikz, pgfplots, amssymb, amsmath, amsfonts}
+\pgfplotsset{compat=1.18}
+\newcommand{\vect}[1]{\boldsymbol{\mathbf{#1}}}
+\begin{document}
+\begin{tikzpicture}
+    \begin{axis}[
+        view={0}{90},
+        axis equal, 
+        xmin=-5, xmax=5,
+        ymin=-2.5,ymax=2.5,
+        xlabel={$\vect{x}$\textcolor{white}{$p(x_i)$}},
+        ylabel={$y$},
+        ylabel style={rotate=-90}
+    ]
+    \addplot3[contour lua, thick, domain=-5:5, y domain=-3:4] 
+        {0.25*exp(-( -0.1*x + 0.5*(y)^2 - 0.1*x*y) )};
+    \addplot[only marks, samples=30, mark size=0.75]{0.15*x+2*rand*exp(x/5-1)};
+    \addplot[blue, smooth, domain=-5:5]{0.15*x} node[pos=0.95](fx){};
+    \draw
+        (fx)node[below left]{$f(\vect{x})$}
+        (4.5,0.2)node[circle, fill=black, inner sep=0.75pt]{}node[below]{$\vect{x}_i$}
+    ;
+    \end{axis}
+\end{tikzpicture}
+\begin{tikzpicture}
+    \begin{axis}[
+        ymin=-4.15,ymax=4.15,
+        xmin=0,
+        xlabel={$p(\vect{x}_i)$},
+        ylabel={$\vect{x}_i$},
+        ylabel style={rotate=-90}
+        ]
+        \addplot[smooth, ]
+            (exp(-(x-0.5)^2),x);
+    \end{axis}
+\end{tikzpicture}
+\end{document}

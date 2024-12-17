@@ -1,0 +1,15 @@
+% !TEX TS-program = lualatex
+\documentclass{standalone}
+\usepackage{tikz, pgfplots, amssymb, amsmath, amsfonts}
+\pgfplotsset{compat=1.18}
+\newcommand{\vect}[1]{\boldsymbol{\mathbf{#1}}}
+\begin{document}
+\def\centerx{2}
+\def\centery{-1}
+\begin{tikzpicture}
+    \begin{axis}[view={0}{90},axis equal]
+    \addplot3[contour lua, thick ,domain=-2:6,domain y=-6:4] 
+        {exp(-( (x-\centerx)^2 + ((y-\centery)^2)/2 +(x-\centerx)*(y-\centery))/3)};
+    \end{axis}
+\end{tikzpicture}
+\end{document}

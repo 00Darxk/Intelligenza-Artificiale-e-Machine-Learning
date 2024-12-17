@@ -1,0 +1,28 @@
+% !TEX TS-program = lualatex
+\documentclass{standalone}
+\usepackage{tikz, pgfplots, amssymb, amsmath, amsfonts}
+\pgfplotsset{compat=1.18}
+\newcommand{\vect}[1]{\boldsymbol{\mathbf{#1}}}
+\begin{document}
+\def\centerx{2}
+\def\centery{-1}
+\begin{tikzpicture}
+    \begin{axis}[view={0}{90},axis equal]
+    \addplot[only marks, samples=100, mark size=0.25]
+        ({\centerx+1.5*exp(-rand-1)*rand}, {\centery+2*exp(-rand-1)*rand});
+    \addplot3[contour lua, thick, domain=-1:5,domain y=-6:4] 
+    {
+        exp(-6*( (x-\centerx)^2 + ((y-\centery)^2)/2-(x-\centerx)*(y-\centery))/3 )
+    };
+    \node[circle,inner sep=1pt,fill=blue,pin=100:$\vect{\mu}$] 
+        at (axis cs:\centerx,\centery,1) {};
+    \draw
+        (2.1,-0.49)node[right] {$r_1$}
+        (2.2,-0.1)node[right] {$r_2$}
+        (2.4,0.25)node[right] {$r_3$}
+        (2.7,0.6)node[right] {$r_4$}
+        (3,1)node[right] {$r_5$}
+    ;
+    \end{axis}
+\end{tikzpicture}
+\end{document}
