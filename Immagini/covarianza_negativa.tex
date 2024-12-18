@@ -9,7 +9,7 @@
 \begin{tikzpicture}
     \begin{axis}[view={0}{90},axis equal]
     \addplot3[contour lua, thick ,domain=-2:6,domain y=-6:4] 
-        {exp(-( (x-\centerx)^2 + ((y-\centery)^2)/2 -(x-\centerx)*(y-\centery))/3)};
+        {exp(-( (x-\centerx)^2 + ((y-\centery)^2)/2 +(x-\centerx)*(y-\centery))/3)};
     \end{axis}
 \end{tikzpicture}
 \end{document}

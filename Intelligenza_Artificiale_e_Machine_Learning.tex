@@ -3697,6 +3697,8 @@ Si possono verificare vari casi, la loss potrebbe decresce con andamento oscilla
 La funzione di loss potrebbe decrescere, ma l'accuratezza potrebbe non aumentare, quindi è stata scelta una funzione di loss errata. 
 
 Inoltre è possibile che l'accuratezza non si avvicini al 100\% sui dati di train, questo può essere poiché i gradi di libertà del modello sono troppo pochi, quindi si dovrebbero aumentare progressivamente per ottenere le prestazioni richieste. 
+I gradi di libertà sono le variabili da specificare affinché sia individuato in maniera univoca il modello utilizzato. Per le reti dipendono dal numero dei neuroni, numero connessioni, etc. Di solito il numero dei gradi di libertà dipende da un iperparametro. 
+
 
 
 Si vorrebbe generalizzare il sistema, ovvero avere un'accuratezza il massimo possibile 
@@ -3882,6 +3884,7 @@ Tuttavia non si avranno solo due classi o una features, quindi servono dei modi 
 \end{equation}
 
 Dove $\Sigma=[\sigma_{ij}]$ rappresenta la matrice di covarianza $d\times d$, e generalizza il concetto di varianza. Questa matrice è sempre simmetrica, ovvero trasposta di sé stessa, e definita positiva, ovvero che gli autovalori sono strettamente positivi. E $\vect{\mu}=[\mu_1,\cdots,\mu_d]$ rappresenta il valore medio, dove $d$ è la dimensione di $\vect{x}$, ovvero il numero di features. 
+In generale la dimensione $d$ della gaussiane dipende dal numero delle features, ed il numero delle gaussiane dal numero di classi. %% TODO check
 
 Si definisce la matrice trasposta data una matrice $\Sigma=[\sigma_{ij}]$ come $\Sigma^T=[\sigma_{ji}]$. Si definisce la matrice inversa $\Sigma^{-1}$ la matrice tale che moltiplicata per la matrice originaria produce la matrice identità $\Sigma\cdot\Sigma^{-1}=I$. Si definisce la matrice trasposta coniugata come la matrice trasposta dove ogni valore viene sostituito al suo complesso coniugato. 
 
@@ -3914,7 +3917,7 @@ Gli assi dell'ellisse sono paralleli agli autovettori di $\Sigma$, i valori di $
     \caption{Distribuzione Rispetto a Variazione di $\sigma_{ij}=\sigma_{ji}$}%
 \end{figure}
 
-Quando le feature sono statisticamente indipendenti si utilizzano i classificatori di Na\"{i}ve Bayes, e si possono dimostrare lavorare bene su molti dataset. Ma questa caratteristica è molto rara per due features. In realtà si può applicare anche su molti casi dove l'assunzione di indipendenza statistica non viene verificata. 
+Quando le feature sono statisticamente indipendenti si utilizzano i classificatori di Na\"{i}ve Bayes, e si possono dimostrare lavorare bene su molti dataset. Ma questa caratteristica è molto rara per due features. In realtà si può applicare anche su molti casi dove l'assunzione di indipendenza statistica non viene verificata. La selezione delle feature va effettuata in modo da minimizzare la correlazione tra le feature, selezionando quelle più indipendenti. Features strettamente correlate tra di loro rappresentano soltanto rumore. 
 
 Nella gaussiana bidimensionale l'esponente viene definito come distanza di Mahalanobis $r$:
 \begin{equation}
@@ -3977,5 +3980,110 @@ In questo caso di distribuzione bivariata normale la linea rosso identifica l'ip
 
 Se il punto cade su una di queste superfici decisionali, allora il suo valore è ambiguo, queste rappresentano zone intermedie tra le distribuzioni di probabilità. 
 Nel caso di due classi, le curve possono assumere due forme, in genere due iperboli, se le matrici di covarianza sono tra di loro uguali, la superficie è un iperpiano, ovvero ha una dimensione inferiore di uno rispetto alla superficie su cui è definita. Altrimenti se le due matrici di covarianza sono diverse tra di loro la superficie decisionale è un iper-quadratica. 
+
+
+% Classificatore di bayes:
+
+% th di bayes, prob a posteriori calcolare, distinzione da probabilità e densità 
+% probabilità condizionale p(x|w) è il problema, quella a priori ed assoluta no
+% si può stimare 
+% quando applicare l'uno e l'altro
+
+% Stimare la classe di appartenenza di un pattern, date due feature, ed una distribuzione in apprendimento supervisionato. Ogni campione è descritto con un etichetta. 
+% Per stimare il vettore medio e la matrice di covarianza si usano le formule, da ricordare: 
+% Media sui vari componenti del vettore e matrice. 
+% Vettore medio solamente media, per le covarianze $\sigma_{ij}$: valore medio differenza quadratica $(x_i-\mu_i)(x_j-\mu_j)$. 
+% Fornisce informazione sulla rotazione dell'ellisse se $i\neq j$, mentre varianza per $i=j$. Se non si ha la probabilità a priori si può assumere equiprobabile. 
+% Si stima dai campioni in caso. La probabilità condizionale si ottiene dalla gaussiana inserendo i parametri per le due classi. La media pesata di queste rispetto alla probabilità delle classi rappresenta la probabilità assoluta stimata. Si ottiene poi le due probabilità con il sistema di bayes, dopo aver controllato che la probabilità di ognuna delle due classi sommata sia pari ad uno. 
+
+% In caso d maggiore di due descrivere cosa bisogna calcolare, senza effettuarlo. 
+
+%% TODO aggiungere ex su esercizi ^^^
+
+Nel momento in cui bisogna solamente assegnare una classe, non è necessario conoscere l'intervallo di confidenza, e quindi è sufficiente calcolare il numeratore del teorema di Bayes, poiché il denominatore è sempre uguale alla probabilità assoluta. La classe di un certo pattern $\vec{x}$ è quindi dato dal prodotto massimo tra la probabilità condizionale rispetto ad una classe $w_j$ e la probabilità a priori della suddetta classe:
+\begin{equation}
+    b=\text{argmax}\left\{p(\vect{x}|w_j)\cdot P(w_j)\right\}
+\end{equation}
+Se le matrici di covarianza sono tutte uguali, non è necessario calcolare la probabilità assoluta per ogni classe, dato che il denominatore è uguale, bisogna solo calcolare l'esponente dell'esponenziale. Solamente il prodotto tra $(\vect{x}-\vect{\mu})^T\cdot(\vect{x}-\vect{\mu})$, poiché $\Sigma$ è uguale, e si assegna la classe per cui questo valore è minimo. La distanza di Mahalanobis in questi casi diventa semplicemente una distanza euclidea. 
+
+Il classificatore di Bayes può essere utilizzato anche in problemi Open Set, poiché fornisce una probabilità che può essere confrontata con un valore di soglia. In questo modo dato l'iperparametro valore di soglia si possono classificare anche pattern di cui non si ha una certezza, ed in caso assegnarli alla classe fittizia. Questo metodo funziona anche con multi-classificatore, più classificatori di Bayes come il modello ``Random Forest'' con più alberi di decisione, e si confrontano in base all'intervallo di confidenza. 
+
+\subsubsection{Approccio Non Parametrico}
+
+Quando si hanno pochi campioni conviene scegliere l'approccio parametrico, dove si ipotizza di conoscere la distribuzione dei campioni, ma se i campioni sono molti allora si può stimare questa funzione direttamente. 
+Con pochi campioni si preferisce una soluzione più semplice per diminuire l'overfitting, poiché una gaussiana ha due gradi di libertà il valore medio o l'eventuale vettore medio, e la varianza o matrice di covarianza, infatti il modello potrebbe essere troppo complesso sui dati di training. 
+
+L'approccio parametrico può portare a dei problemi, poiché in base alla situazione, quest'ipotesi forte potrebbe non coincidere alla realtà. Ovvero la distribuzione dei campioni non rappresenta una gaussiana. Si possono effettuare diversi test formali ed empirici per determinare se veramente si tratta di una gaussiana per determinare se l'approccio sia corretto. 
+In caso è corretto si calcolano i parametri statistici tramite il metodo della verosimiglianza. 
+
+Se i campioni invece sono in numero maggiore da poter stimare direttamente la distribuzione si utilizza questo approccio non parametrico. Questo rappresenta un problema statisticamente più complesso della classificazione. Molto spesso infatti è conveniente scegliere un altro tipo di classificatore invece di quello Bayesiano. Quanti più campioni si hanno più la stima è affidabile. Si conviene applicarlo quando si hanno tanti campioni e poche dimensioni al massimo $d=3$ o $d=4$. 
+Poiché all'aumento delle dimensioni, il volume dello spazio aumenta considerevolmente da diminuire notevolmente la precisione del modello. I campioni diventano sparsi all'aumentare delle dimensioni dell'ipercubo dello spazio dei campioni. 
+
+Per stimare la distribuzione di probabilità si considera la distribuzione binomiale, utilizzata per descrivere un processo di Bernoulli. Avviene in caso di prove ripetute e dove il problema ha solamente due possibilità, di successo o fallimento. Queste prove devono essere indipendenti l'una dall'altra. Se su $n$ prove, la probabilità che l'evento abbia successo $k$ volte è data dalla seguente formula:
+\begin{equation*}
+    P(k\text{ su }n)=\begin{pmatrix}
+        n\\k
+    \end{pmatrix}p^k\cdot(1-p)^{n-k}
+\end{equation*}
+
+Formalizzando il problema in questo modo si può determinare la probabilità che un campione $\vect{x}$ cada in una regione $\mathbb{R}$ oppure no.
+\begin{equation*}
+    P_1=\displaystyle\int_{\mathbb{R}}p(\overline{\vect{x}})\text{d}\overline{\vect{x}}
+\end{equation*}
+Si può quindi estendere la probabilità che tra $n$ pattern indipendenti $k$ cadano all'interno di $\mathbb{R}$:
+\begin{equation*}
+    P(k\text{ su }n)=\begin{pmatrix}
+        n\\k
+    \end{pmatrix}P_1^k\cdot(1-P_1)^{n-k}
+\end{equation*}
+Se si assume un volume abbastanza piccolo della regione $\mathbb{R}$, e la probabilità sia abbastanza costante in esso si può approssimare la probabilità in:
+\begin{gather*}
+    P_1=\displaystyle\int_{\mathbb{R}}p(\overline{\vect{x}})\text{d}\overline{\vect{x}}\approx p(\vect{x})\cdot V\\
+    p(\vect{x})=\displaystyle\frac{P_1}{V}=\frac{k}{n\cdot V}\tageq
+\end{gather*}
+
+Questo volume nel caso più semplice è un ipercubo $d$-dimensionale definito dalla funzione $\varphi$:
+\begin{equation}
+    \varphi(\vect{u})=
+    \begin{cases}
+        1&|u_j|\leq\displaystyle\frac{\strut 1}{\strut 2},\,j=1,\cdots,d\\
+        0&\text{altrimenti}
+    \end{cases}
+\end{equation}
+
+Dato un ipercubo centrato nel campione che si vuole classificare, dato il lato $h_n$ dell'ipercubo anch'esso un iperparametro. Il volume è quindi $V_n=h_n^d$. Il numero di pattern del training set che cadono all'interno dell'ipercubo è data da:
+\begin{equation*}
+    k_n=\displaystyle\sum_{i=1}^n\varphi\left(\frac{\vect{x}_i-\vect{x}}{h_n}\right)
+\end{equation*}
+
+Sostituendo $k_n$ nella formula ottenuta precedente dal processo di Bernoulli: 
+\begin{equation}
+    p(\vect{x})=\displaystyle\frac{1}{n\cdot V}\displaystyle\sum_{i=1}^n\varphi\left(\frac{\vect{x}_i-\vect{x}}{h_n}\right)
+\end{equation}
+
+
+L'ampiezza è un iperparametro, e più la finestra è piccola, più la stima è statisticamente instabile e rumorosa, ovvero la differenza tra due classi è molto piccola. 
+Se la finestra è grande invece la stima è più stabile, ma sfocata. 
+
+Si può dimostrare che per ottenere convergenza la dimensione della finestra deve essere calcolata tenendo conto del numero di campioni del training set:
+\begin{equation*}
+    V_n=\displaystyle\frac{V_1}{\sqrt{n}}
+\end{equation*}
+Dove $V_1$ è un iperparametro. 
+Emanuel Parzen ha introdotto negli anni '60 la teoria sull'utilizzo di Soft Kernel, fornendo una rigorosa dimostrazione matematica. 
+Nell'approccio precedente, se il pattern cade sulla frontiera oppure all'interno del volume, la probabilità non cambia, e le superfici di separazione sono nette e definite. Invece con un Soft Kernel, un pattern contribuisce alla stima della densità in base alla sua distanza dal pattern di cui si vuole stimare. Le superfici decisionali sono quindi molto più regolari. 
+
+Le ``Kernel Function'' devono essere funzioni densità sempre positive, e con integrale su tutto lo spazio unitario. Si utilizza quindi anche in questo caso una funzione gaussiana multinormale, con vettore medio nullo, e matrice di covarianza pari alla matrice identità:
+\begin{equation}
+    \varphi(\vect{u})=\displaystyle\frac{1}{(2\pi)^{d/2}}e^{-\frac{\vect{u}^T\vect{u}}{2}}
+\end{equation}
+
+Si prende quindi come iperparametro la deviazione standard della gaussiana per definire la dimensione di questa finestra, invece del lato dell'ipercubo. 
+Questa rappresenta una funzione Soft Kernel, dove il valore dell'iperparametro $h$ non è legato alla lunghezza del lato ma all'ampiezza della funzione scelta per sostituirlo. 
+
+%% TODO definizione matematica Kernel
+
+L'approccio non parametrico con la Parzen Window produce con una funzione Kernel normale e con un iperparametro basso, oppure con una funzione Kernel ipercubo ed iperparametro elevato, una probabilità molto simile. Le superfici di separazione sono molto più nette con un ipercubo, mentre con una funzione Soft Kernel la frontiera di queste superfici di separazione è sfumata e rappresenta un calo della probabilità all'avvicinarsi ad esse. 
+
 
 \end{document}
