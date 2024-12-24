@@ -1,5 +1,6 @@
 % !TEX TS-program = lualatex
 \documentclass{standalone}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{tikz, pgfplots, amssymb, amsmath, amsfonts}
 \pgfplotsset{compat=1.18}
 \newcommand{\vect}[1]{\boldsymbol{\mathbf{#1}}}
@@ -16,7 +17,7 @@
         (0.1,0.6)node[circle, draw, blue, fill=blue, inner sep=1.5pt]{}
         (0.2,0.5)node[circle, draw, black, fill=black, inner sep=1.5pt]{}
         (0.5,0.55)node[circle, draw, black, fill=black, inner sep=1.5pt]{}
-        (0.7,0.75)node[circle, draw, fill=green, green, inner sep=1.5pt]{}
+        (0.7,0.75)node[circle, draw, fill=OliveGreen, OliveGreen, inner sep=1.5pt]{}
         
     ;
         
@@ -37,7 +38,7 @@
         {0.25*exp(-( -0.1*x + 0.5*(y)^2 - 0.1*x*y) )};
     \addplot[blue, smooth, domain=-5:5, purple]{0.2} node[pos=0.95](f1){};
     \addplot[blue, smooth, domain=-5:5, blue]{0.15*x} node[pos=0.95](f2){};
-    \addplot[blue, smooth, domain=-5:5, green]{0.15*x*sin(-180*(x+4)/pi)} node[pos=0.95](f2){};
+    \addplot[blue, smooth, domain=-5:5, OliveGreen]{0.15*x*sin(-180*(x+4)/pi)} node[pos=0.95](f2){};
     \end{axis}
 \end{tikzpicture}
 \end{document}

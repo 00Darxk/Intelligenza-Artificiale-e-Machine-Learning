@@ -17,8 +17,6 @@
 \usepackage{subfig}
 \usepackage[italian]{babel}
 \usepackage{float}
-%\usepackage{wrapfig}
-%\usepackage[export]{adjustbox}
 \allowdisplaybreaks
 
 \setlength{\headheight}{12.0pt}
@@ -1088,7 +1086,11 @@ In seguito dopo una serie di iterazioni l'algoritmo restituisce uno stato ottimo
 $p$, quindi anche di valore minore. Questa probabilità dipende da un parametro $T$ costante durante l'esecuzione dell'algoritmo. Se vale 1, la probabilità di 
 accettazione è sostanzialmente pari al 100\%. 
 
-%% TODO tabella / andamento rispetto a T di p
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.7]{probabilità_temperatura.pdf}%
+    \caption{Probabilità Con $\Delta E$ Costante}    
+\end{figure}
 
 All'aumentare del valore i $T$ la probabilità di accettazione tende al 50\%, diventa quindi sempre meno importante la differenza della valutazione tra i due punti, 
 effettivamente comporta una ricerca casuale, mentre al diminuire di $T$, la procedura rappresenta un semplice algoritmo Hill-Climbing. 
@@ -1096,13 +1098,15 @@ effettivamente comporta una ricerca casuale, mentre al diminuire di $T$, la proc
 In caso di stati di valore uguale, la probabilità è del 50\%, se il valore dello stato \verb|next| è minore, la probabilità diminuisce, mentre se il valore di \verb|next| 
 è maggiore dello stato corrente, la probabilità aumenta. 
 
-%% TODO tabella / andamento rispetto a $\Delta E$
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.7]{probabilità_valutazione.pdf}%
+    \caption{Probabilità Con $T$ Costante}    
+\end{figure}
 
-Bisogna trovare una ``link function'' tra l'intervallo $\Delta E/T$ e la probabilità $p$. 
+Bisogna trovare una ``link function'' tra l'intervallo $\Delta E/T$ e la probabilità $p$, quindi una funzione che effettua un mapping tra l'intervallo $(-\infty,+\infty)$ della differenza delle valutazioni all'intervallo di probabilità di accettazione $[0,1]$. La funzione utilizzata in questo algoritmo ha l'andamento rappresentato nel grafico precedente. 
 
-%% TODO img andamento link function
-
-La caratteristica di poter scegliere come passo uno stato peggiore questo algoritmo potrebbe evitare massimi locali. 
+La caratteristica di poter scegliere come passo uno stato peggiore rende possibile a questo algoritmo di evitare stati peggiori.  
 
 \subsubsection{Algoritmo di Simulated Annealing}
 
@@ -1114,7 +1118,7 @@ Questo algoritmo è talmente importante che ogni anno vengono riuniti congressi 
 
 Questo algoritmo prende il nome dall'analogia con il processo di metallurgia per temprare un materiale, questo processo infatti raggiungere uno stato di struttura 
 cristallina ad energia minima. La differenza principale con l'algoritmo stocastico, è la possibilità di variare il valore di $T$ diminuisce gradualmente durante l'esecuzione 
-dell'algoritmo. Il valore di $T$ parte da un valore elevato, per poi diminuire nel tempo, come se fosse la temperatura durante un processo di temperatura, per cui l'algoritmo si 
+dell'algoritmo. Il valore di $T$ parte da un valore elevato, per poi diminuire nel tempo, come se fosse la temperatura durante un processo di tempratura, per cui l'algoritmo si 
 comporta in modo molto simile ad un normale hill-climber. Inoltre sceglie sempre uno stato 
 se è migliore del punto corrente. 
 
@@ -1145,7 +1149,13 @@ se è migliore del punto corrente.
 La probabilità di accettazione è leggermente diversa rispetto all'algoritmo precedente, poiché nel simulated annealing si considera solamente un semiasse dell'ascissa, dato che in caso \verb|next| sia migliore non viene calcolata la probabilità di accettazione. Si accetta sempre 
 uno stato di valore migliore, mentre l'accettazione di uno stato peggiore dipende da una probabilità. 
 Quindi il mapping della link function non viene realizzata sull'intero intervallo $(-\infty,+\infty)$, ma solo su metà dell'ascissa, su $[0,+\infty)$, per cui è 
-sufficiente utilizzare la funzione $e^{-\Delta E/T}$ avente come dominio il semiasse $[0,+\infty)$ e come codominio $(0,1]$. 
+sufficiente utilizzare la funzione $e^{-\Delta E/T}$ avente come dominio il semiasse $[0,+\infty)$ e come codominio $(0,1]$:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.7]{link_function_simulated_annealing.pdf}%
+    \caption{Diverse Link-Function per $T$ Costante}%
+\end{figure}
 
 Questo ciclo interno viene effettuato un certo numero di volte fino ad una condizione di 
 terminazione, che verrà trattata nelle implementazioni future. 
@@ -1283,7 +1293,7 @@ Gli operatori seguono un ordine di precedenza naturale, come la sintassi moderna
 \end{enumerate}
 
 In Python sono presenti tutti gli operatori booleani del C come \verb|==| ed operatori di confronto come \verb|<, <=, >, >=|, in aggiunta sono presenti 
-altri operatori \verb|is| ed \verb|is not|. Inoltre sono presenti due versione degli operatori logici \verb|&&| e \verb|and|, || e \verb|or| e \verb|!=| e \verb|not|. 
+altri operatori \verb|is| ed \verb|is not|. Inoltre sono presenti due versione degli operatori logici \verb|&&| e \verb|and|, \texttt{||} e \verb|or| e \verb|!=| e \verb|not|. 
 Come in C un qualsiasi valore diverso da zero corrisponde al booleano \verb|True|, inoltre associa numericamente questo valore ad 1, mentre \verb|False| a 0. \'{E} possibile convertire 
 un tipo di dato booleano ad un tipo di dato numerico come un intero \verb|int| o un numero reale \verb|float|. 
 
@@ -1318,7 +1328,7 @@ built-in più utili sono \verb|max()| e \verb|min()| che restituiscono il caratt
 la lunghezza della stringa. Per convertire variabili in certi tipi è già stata mostrata la funzione \verb|tipo()|, dove al posto di \verb|tipo| si inerisce il 
 tipo specifico, si usa \verb|str| per convertire in una stringa. 
 
-Per importare moduli contenenti altre funzioni si utilizza \verb|importa| seguito dal nome del modulo da scaricare, che crea un object module con quel nome, si può 
+Per importare moduli contenenti altre funzioni si utilizza \verb|import| seguito dal nome del modulo da scaricare, che crea un object module con quel nome, si può 
 rinominare seguendo questa istruzione con \verb|as| seguito dall'alias del modulo. Si utilizza un alias per semplificare la notazione puntata. 
 
 
@@ -1411,9 +1421,9 @@ Per utilizzare un metodo si utilizza la notazione puntata con il nome dell'istan
 Uno dei metodi sulle stringhe è \verb|find()| che prende come argomento una sottostringa, ed un indice opzionale da cui cercare il carattere, e restituisce la prima 
 posizione dell'occorrenza della sottostringa specificata. 
 
-Il metodo \verb|strip()| rimuove lo spazio bianco prima e dopo la stringa. Il metodo \verb|startswith()| restituisce un valore booleano se la stringa comincia 
-con la sottostringa passata come argomento. Il metodo \verb|capitalize()| consente di impostare a maiuscolo il primo carattere, per mettere tutti i caratteri in 
-maiuscolo si utilizza il metodo \verb|upper()|. 
+Il metodo \verb|.strip()| rimuove lo spazio bianco prima e dopo la stringa. Il metodo \verb|.startswith()| restituisce un valore booleano se la stringa comincia 
+con la sottostringa passata come argomento. Il metodo \verb|.capitalize()| consente di impostare a maiuscolo il primo carattere, per mettere tutti i caratteri in 
+maiuscolo si utilizza il metodo \verb|.upper()|. 
 
 L'operatore ``format'' \verb|%| permette di costruire stringhe formattando la stringa rispetto a dati contenuti in altre variabili. All'interno di una stringa 
 chiamata ``format string'' si può inserire questo operatore seguito da una lettera per specificare il tipo di dato associato, chiamate ``format sequences''. Questa 
@@ -1434,7 +1444,7 @@ La tupla deve corrispondere in numero, ordine e tipo alle format sequences nella
 Si utilizza \verb|%d| per numeri interi \verb|%g| per floating point e \verb|%s| per stringhe. Utilizzando numeri è possibile specificare il numero di cifre significative da utilizzare per 
 rappresentare il numero, inserendo un numero subito dopo l'operatore format. 
 
-Esiste un nuovo operatore format, scrivendo tra parentesi graffe \verb|:| seguito dal carattere corrispondente al tipo, dopo la stringa si invoca il metodo \verb|format()| 
+Esiste un nuovo operatore format, scrivendo tra parentesi graffe \verb|:| seguito dal carattere corrispondente al tipo, dopo la stringa si invoca il metodo \verb|.format()| 
 specificando nell'argomento il valore da inserire:
 \begin{minted}{python}
     >>> 'il {:s} è {:d}' .format('numero', 1)
@@ -1524,7 +1534,7 @@ sia un attributo di classe o istanza.
 Gli istance methods sono funzioni definite all'interno di una classe, possono essere invocati da una qualsiasi istanza 
 della classe. 
 
-\'{E} buona norma utilizzare un metodo come \verb|description()| per fornire una stringa contenente informazioni utili per 
+\'{E} buona norma utilizzare un metodo come \verb|.description()| per fornire una stringa contenente informazioni utili per 
 l'istanza della classe. Ma questo non è il modo migliore per ottenere. Si utilizza il metodo \verb|.__str__()| per 
 restituire queste informazioni in formato di stringa:
 \begin{minted}{python}
@@ -1547,8 +1557,6 @@ metodo:
     >>> print(istanza)
     valore1, ..., valoreN
 \end{minted}
-
-%% TODO tutti i metodi con prefisso punto
 
 \subsection{Collezioni}
 
@@ -1597,11 +1605,11 @@ L'operatore slice può essere utilizzato per aggiornare una sequenza di elementi
 lista originaria. 
 
 Come per le stringhe, le liste sono oggetti e contengono metodi built-in. 
-Il metodo \verb|append()|. aggiunge un nuovo elemento alla fine di una lista, il metodo \verb|extend()| prende come argomento una lista e la concatena alla lista su cui 
-si è operato. Se si passa una lista al metodo \verb|append()| si genera una lista annidata. 
+Il metodo \verb|.append()|. aggiunge un nuovo elemento alla fine di una lista, il metodo \verb|.extend()| prende come argomento una lista e la concatena alla lista su cui 
+si è operato. Se si passa una lista al metodo \verb|.append()| si genera una lista annidata. 
 Si può ordinare gli elementi di una lista dal minore al maggiore con \verb|sort()| in ordine alfabetico. Molti dei metodi su liste, come questi, sono metodi void. 
 
-Per estrarre un elemento dalla lista si utilizza il metodo \verb|pop()| che estrae dalla lista l'ultimo elemento, oppure l'elemento di indice specificato, 
+Per estrarre un elemento dalla lista si utilizza il metodo \verb|.pop()| che estrae dalla lista l'ultimo elemento, oppure l'elemento di indice specificato, 
 lo restituisce rimuovendolo dalla lista:
 \begin{minted}{python}
     >>> lista.pop(1)
@@ -1622,18 +1630,18 @@ Utilizzando lo slice si può rimuovere una sottostringa allo stesso modo:
     [[item_3, item_4]]
 \end{minted}
 
-Se non si conosce l'indice dell'elemento da cancellare si può utilizzare il metodo \verb|remove()|, ma non restituisce alcun valore:
+Se non si conosce l'indice dell'elemento da cancellare si può utilizzare il metodo \verb|.remove()|, ma non restituisce alcun valore:
 \begin{minted}{python}
     >>> lista.remove(item_2)
     >>> print(lista)
     [item_1, [item_3, item_4]]
 \end{minted}
 
-Alcuni metodi come \verb|sum()| possono essere invocati solamente se la lista contiene solo numeri, altri metodi possono essere invocati se la lista contiene dati 
+Alcuni metodi come \verb|.sum()| possono essere invocati solamente se la lista contiene solo numeri, altri metodi possono essere invocati se la lista contiene dati 
 confrontabili tra di loro. 
 Si può convertire una stringa in una lista tramite la funzione \verb|list()|, suddividendo la stringa in caratteri singoli, mentre si può suddividere in parole singole, 
 separate da spazi con la funzione \verb|split()|. Si può specificare un delimitatore in questa funzione \verb|split()| da utilizzare al posto del delimitatore di default 
-spazio. La funzione inversa della \verb|split()| è il metodo \verb|join()|, permette di realizzare una stringa, applicato su una stringa contenente il delimitatore 
+spazio. La funzione inversa della \verb|split()| è il metodo \verb|.join()|, permette di realizzare una stringa, applicato su una stringa contenente il delimitatore 
 da utilizzare per separare gli elementi. Si può concatenare senza spazi con la stringa vuota \verb|[]|. 
 
 In Python si possono confrontare due oggetti con l'operatore \verb|is|, se si creano due stringhe di contenuto uguale, Python realizza un unico oggetto stringa, 
@@ -1644,7 +1652,7 @@ Si può assegnare ad una variabile ad un'altra in modo che entrambe si riferisca
 verificato. Un oggetto che ha più di riferimenti ha un ``alias'', più di un nome, e si dice un oggetto ``aliased''. Se gli oggetti sono mutabili questo può essere 
 fonte di errore. 
 Si consiglia di evitare di utilizzare alias quando si lavora con liste ed oggetti mutabili. Si distingue tra operazioni che creano nuove liste ed operazioni che modificano 
-lista, come l'operatore di concatenazione \verb|+| ed il metodo \verb|append()|, quest'ultimo modifica la lista su cui è invocato analogamente di \verb|extend()|, mentre l'operatore di 
+lista, come l'operatore di concatenazione \verb|+| ed il metodo \verb|.append()|, quest'ultimo modifica la lista su cui è invocato analogamente di \verb|.extend()|, mentre l'operatore di 
 concatenazione genera una nuova lista. 
 
 
@@ -1705,7 +1713,7 @@ per determinare se una data chiave è presente in un dizionario, non controlla s
     >>> len(str2num)
     3
 \end{minted}
-Per visualizzare i valori si può utilizzare il metodo \verb|values()| che restituisce elementi su cui si può costruire una lista, su cui è possibile 
+Per visualizzare i valori si può utilizzare il metodo \verb|.values()| che restituisce elementi su cui si può costruire una lista, su cui è possibile 
 verificare la presenza di certi valori tramite \verb|in|. Questo operatore utilizza diversi algoritmi per le liste e per i 
 dizionari, utilizza una ricerca lineare per le liste ed una tabella di hash per i dizionari. 
 
@@ -1755,16 +1763,16 @@ Un'applicazione interessante permette di scambiare i valori tra due variabili co
 \end{minted}
 
 Il numero di valori a destra e sinistra dell'assegnazione devon corrispondere per non sollevare errori. 
-Un altro metodo chiamato \verb|items()| permette di restituire una lista di tuple dove ogni tupla è una coppia 
-chiave-valore. Questa lista non è ordinata, ma essendo le tuple comparabili, si può ordinare con il metodo \verb|sort()|. 
+Un altro metodo chiamato \verb|.items()| permette di restituire una lista di tuple dove ogni tupla è una coppia 
+chiave-valore. Questa lista non è ordinata, ma essendo le tuple comparabili, si può ordinare con il metodo \verb|.sort()|. 
 
 
 Gli insiemi sono collezioni non ordinate di altri oggetti. L'istruzione per creare un insieme è \verb|set()|, inserendo 
 una sequenza di elementi. In un insieme non possono esserci elementi ripetuti quindi vengono rimossi 
 al momento della creazione. 
 
-Si possono effettuare le classi operazioni su insiemi, con metodi di unione \verb|union()|, 
-intersezione \verb|intersection()|, differenza \verb|difference()| e differenza simmetrica \verb|symmetric_difference()|. 
+Si possono effettuare le classi operazioni su insiemi, con metodi di unione \verb|.union()|, 
+intersezione \verb|.intersection()|, differenza \verb|.difference()| e differenza simmetrica \verb|.symmetric_difference()|. 
 
 \subsubsection{Liste Concatenate}
 \label{sec:liste_concatenate}
@@ -1772,7 +1780,7 @@ intersezione \verb|intersection()|, differenza \verb|difference()| e differenza 
 Il tipo di dato astratto lista concatenata è diversa dal tipo di dato predefinito lista già presente su Python. Si parlerà di 
 liste singolarmente concatenate. Questa lista è composta da un nodo, contenente il dato ed un puntatore all'elemento successivo 
 di questa struttura concatenata. L'ultimo nodo della lista contiene un puntatore nullo. Per accedere agli elementi si hanno 
-due puntatori di accesso, \verb|head| e \verb|tail|, per accedere in testa o in coda alla lista. 
+due puntatori di accesso, \verb|.head| e \verb|.tail|, per accedere in testa o in coda alla lista. 
 
 \'{E} comodo avere un accesso facilitato a queste due posizioni per effettuare facilmente operazioni di aggiunta, rimozione, 
 modifica in testa o in coda. Un nodo è una classe contenente questi due unici attributi:
@@ -1806,7 +1814,7 @@ primo elemento della lista:
 \begin{minted}{python}
     p = self.__head
 \end{minted}
-Per passare all'elemento successivo bisogna assegnare questo puntatore al valore del puntatore a \verb|next| contenuto 
+Per passare all'elemento successivo bisogna assegnare questo puntatore al valore del puntatore a \verb|.next| contenuto 
 nel nodo corrente:
 \begin{minted}{python}
     p = p.next
@@ -1830,11 +1838,11 @@ corrisponde al valore \verb|None|:
 Per cominciare a scandire la lista da un punto preciso si può inserire un parametro di classe \verb|Node| a cui 
 assegnare \verb|p|. Si vogliono realizzare i seguenti metodi sulle liste singolarmente concatenate:
 \begin{itemize}
-    \item \verb|append|: Inserimento in coda;
-    \item \verb|insert_head|: Inserimento in testa;
-    \item \verb|insert_position|: Inserimento in una posizione intermedia;
-    \item \verb|delete|: Cancellazione di un elemento;
-    \item \verb|is_empty|: Verifica se la lista è vuota. 
+    \item \verb|.append|: Inserimento in coda;
+    \item \verb|.insert_head|: Inserimento in testa;
+    \item \verb|.insert_position|: Inserimento in una posizione intermedia;
+    \item \verb|.delete|: Cancellazione di un elemento;
+    \item \verb|.is_empty|: Verifica se la lista è vuota. 
 \end{itemize}
 
 \begin{minted}{python}
@@ -1918,9 +1926,9 @@ da inserire. Si considera la chiave e la lista ordinata in modo crescente:
 
 Una pila è un tipo di dato astratto basato sul modello delle liste che gestisce 
 gli elementi, implementando la disciplina LIFO, ``Last-In, First-Out''. 
-Le operazioni vengono effettuate su un estremo della lista chiamato testa \verb|top|. 
+Le operazioni vengono effettuate su un estremo della lista chiamato testa \verb|.top|. 
 
-La classe \verb|Node| è sempre la stessa, viene definita con un attributo None 
+La classe \verb|Node| è sempre la stessa, viene definita con un attributo \verb|.size| 
 inizializzato a \verb|None| e può essere comodo avere a disposizione una variabile che indica 
 il numero di elementi nella pila:
 \begin{minted}{python}
@@ -2849,16 +2857,197 @@ valore predetto ed il valore reale. Si potrebbe considerare anche la media tra i
 quadrato per compensarlo. 
 
 \begin{equation}
-    \text{RMSE}=\displaystyle\sqrt{\displaystyle\frac{1}{2}\sum_{i=1}^N\left(\texttt{pred}_i-\texttt{true}_i\right)^2}
+    \text{RMSE}=\displaystyle\sqrt{\displaystyle\frac{1}{N}\sum_{i=1}^N\left(\texttt{pred}_i-\texttt{true}_i\right)^2}
 \end{equation}
+
+\subsection{Valutazione delle Prestazioni: Regressione e Classificazione}
+
+La valutazione delle prestazioni di un sistema è estremamente cruciale, ed i criteri di 
+valutazione permettono di scegliere modelli migliori, per cui è necessario definire 
+delle metriche per poter valutare questi diversi modelli.
+
+\subsubsection{Training, Generalization e Test Error}
+
+Nel caso della regressione si definisce quindi una 
+funzione di ``Loss'', utilizzata anche in altri modelli, che rappresenta quanto si perde utilizzando la previsione del modello $f_{\vect{\hat{w}}}(\vect{x})$, dopo essere stato addestrato, invece che il valore reale $\hat{y}$:
+\begin{equation}
+    L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]
+\end{equation}
+
+Questa funzione $L$ rappresenta il costo che si ha con la funzione $f$, con il vettore dei 
+pesi $\vect{\hat{w}}$, su di un input $\vect{x}$. 
+
+Può essere definita come errore assoluto:
+\begin{equation*}
+    L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]=|\hat{y}- f_{\vect{\hat{w}}}(\vect{x})|
+\end{equation*}
+Oppure come errore quadratico:
+\begin{equation*}
+    L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]=(\hat{y}- f_{\vect{\hat{w}}}(\vect{x}))^2
+\end{equation*}
+
+Ai fini della valutazione del ``loss'', bisogna definire il Training Error, l'errore di 
+un sistema addestrato minimizzando l'errore sul training set. 
+Il Generalization Error o True Error, è l'errore sul valore effettivo, ma non è possibile 
+calcolarlo, poiché richiederebbe di conoscere a priori tutti i possibili valori e associazioni del problema. Il Test Error si utilizza per approssimare il True Error, 
+valutando il modello sul test set. 
+
+Si considerano gli andamenti di questi errori, ed il problema dell'``Over-Fitting'', non solo su modelli di ML, ma anche in generale. 
+
+Dato un insieme di dati non bisogna utilizzarle tutte per allenare il modello, bisogna 
+dividere quest'insieme in un insieme di training ed uno di testing. Si sceglie quindi 
+un modello e si calcolano i pesi $\vect{w}$ da minimizzare con la funzione RSS. 
+Una volta addestrato il modello si può calcolare il training error, definendo la funzione di Loss. Definita questa funzione si può calcolare il training errore come l'errore medio definito sugli $N$ punti dell'insieme di training:
+\begin{equation}
+    \text{Training Error}=\displaystyle\frac{1}{N}\cdot\sum_{i=1}^NL[y_i,f_{\vect{\hat{w}}}(\vect{x}_i)]
+\end{equation}
+
+Si considera come cambia questo errore rispetto alla complessità del modello, partendo da un modello costante, ed aumentando il grado della funzione $f(x)$. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.65]{training_error.pdf}%
+    \caption{Training Error Rispetto a Complessità del Modello}%
+\end{figure}
+
+Intuitivamente passano da un modello costante ad un modello lineare l'errore diminuisce, 
+questo continua fino ad un modello complesso, che potrebbe passare su tutti i datapoint. 
+Ma il Training Errore non è una buona metrica, poiché è troppo ottimistico. Non rappresenta una buona misura delle prestazioni di previsione del sistema, infatti un modello polinomiale potrebbe essere molto buono solamente con i dati del training set, mentre risulta 
+poco accurato su altri insiemi di dati. 
+
+Per valutare questa caratteristica si considerano tutte le possibili coppie $(\vect{x},y)$ 
+per un certo problema. E l'errore di generalizzazione si calcola come la media della funzione di Loss su tutti questi punti. Ma questo è irrealizzabile, quindi bisogna approssimare questo errore effettivo, avendo un numero limitato di osservazioni. 
+
+Bisognerebbe cercare di pesare tutte le coppie $(\vect{x}, y)$ in base alla loro probabilità di essere presenti nella zona di interesse, quindi prendendo in considerazione la 
+distribuzione dell'insieme rispetto a $\vect{x}$ ed anche la distribuzione del valore $y$ in a parità di $\vect{x}$. 
+
+Da un punto di vista formale si può definire questo valore avvalendosi del valore atteso:
+\begin{equation}
+    \text{Generalization Error}=E_{\vect{x},y}[L(\hat{y}, f_{\vect{\hat{w}}}(\vect{x}))] 
+\end{equation}
+
+Per valutare i modelli in base a questo errore si considera una rappresentazione 
+del piano $\vect{x},y$ che mostri le diverse gradazioni dei dei vari punti corrispondenti 
+alla distribuzione di probabilità nel data set. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.65]{generalization_error.pdf}%
+    \caption{Data Set con Distribuzione di Probabilità}%
+\end{figure}
+
+Bisogna determinare come varia questo errore rispetto alla funzione $f$ e come si 
+adatta alle osservazioni del training set, ed in che modo possa predire i valori di dati 
+non presenti nel training set, pesati rispetti alle loro probabilità. 
+
+Analogamente al training error, partendo da un modello costante, aumentando la complessità 
+l'errore diminuisce, ma questo non è un andamento costante, poiché si potrebbe 
+verificare il fenomeno dell'over-fitting, dove il modello segue esattamente solo i dati presenti nel training set, e non è in grado di prevedere altri dati al di fuori di questo insieme. Superata una certa complessità quindi l'errore ricomincia a salire. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.65]{generalization_error_confronto.pdf}%
+    \caption{Generalization Error Rispetto a Complessità del Modello}%
+\end{figure}
+
+Non è possibile calcolare il Generalization Error, poiché dovrebbe essere nota la vera distribuzione di probabilità di tutte le coppie $(\vect{x}, y)$. 
+
+L'ultimo tipo di errore è il Test Error, calcolato come la media della somma del Loss, nei 
+punti nel Test Set:
+\begin{equation}
+    \text{Test Error}=\displaystyle\frac{1}{N_\text{test}}\sum_{i\in1}^{N_{\text{test}}}L[y_i,f_{\vect{\hat{w}}}(\vect{x}_i)]
+\end{equation}
+
+Il Test Set deve essere scelto in modo tale da approssimare al meglio il Generalization Error. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.6]{confronto_errori.pdf}%
+    \caption{Confronto Training, Generalization e Test Error}%
+\end{figure}
+
+
+Il fenomeno del sovra-adattamento si può definire in modo formale dati questi errori. 
+Dato un modello con parametri $\vect{\hat{w}}$, si ha over-fitting se esiste un modello con 
+parametri stimati $\vect{w}'$, tale che il training error del primo modello è 
+minore, mentre il true error del primo modello è maggiore di quello relativo al secondo 
+modello. 
+
+\subsubsection{Selezione Iperparametri}
+
+In generale sul training set vengono determinati i parametri $\Theta$, possono essere i pesi delle connessioni di una rete neurale, mentre il validation set si utilizza per definire 
+gli iperparametri $H$, ma questi devono essere scelti a priori prima di effettuare l'addestramento, per poi cercare i loro valori ottimali. 
+
+Per evitare il sovra-adattamento quando il dataset lo consente si effettua la procedura chiamata ``$k$-Fold Cross-Validation'', ovvero si divide il set di training in $k$, in genere 5 o 10, fold, ovvero piccoli dataset mescolati. Si effettua $k$ volte l'addestramento, dove $k-1$ vengono scelti come set di addestramento e l'ultimo come insieme di testing. In questo modo le prestazioni del modello sono la media delle prestazioni su questi $k$ insiemi e si possono 
+valutare più combinazioni di iperparametri $H$, individuando la combinazione con l'accuratezza migliore. Dopo aver scelto questi iperparametri ottimali si riaddestra il modello sull'intero training set ed a questo punto si possono valutare le prestazioni con il test set. 
+
+Se i dataset sono di piccoli dimensione, si può arrivare al caso estremo del ``Leave One Out'', dove tutti i fold hanno dimensione pari ad uno. Si utilizza come dataset di validation quindi un singolo data point. 
+
+Per effettuare questa procedura bisogna suddividere il dataset, e bisogna mantenere le corrispondenze corrette con le etichette, nonostante gli elementi vengano rimescolati casualmente. 
+Si utilizza la libreria Python Scikit Learn, \verb|sklearn| per effettuare questo processo, tramite le funzioni \verb|shuffling|, \verb|train_test_split| e \verb|cross_val_score|, che valuta da un unico training set $k$ il sistema, restituendo un array con i valori di prestazioni su ognuno dei $k$ addestramenti. 
+In questa libreria sono presenti metodi di classificazione, regressione e clustering. 
+Questa libreria offre la ``Support Vector Machine'', SVM, che permette di valutare ogni iperparametri singolarmente per poter determinare il loro valore ottimale, utilizzando diversi kernel, sempre offerti dalla libreria. 
+
+Gli iperparametri vanno scelti a monte del modello e la ricerca dei valori ottimali può essere laboriosa. Quindi si vuole automatizzare la loro ricerca, il metodo ``Grid Search'' 
+consiste nell'utilizzo di questa SVM, definendo per ogni iperparametro un insieme di valori da provare. Si può quindi effettuare un'analisi sulle combinazioni di tutti i questi possibili valori per tutti gli iperparametri, operazione molto costosa, poiché presenta dei raffinamenti incrementali delle prestazioni. 
+Il kernel rappresenta il modello della SVM utilizzata, può essere lineare o polinomiale. 
+
+Un'altra maniera di operare consiste nella ``Random Search'' selezionando casualmente le 
+combinazioni di valori degli iperparametri. 
+Altre tecniche sono la Bayesian Optimization, selezionando ulteriori combinazioni da verificare dal punto di vista probabilistico, e la ``Evolutionary Optimization'', che si 
+basa sul concetto di evoluzione, dove la popolazione più forte che sopravvive consiste nella combinazione migliore di iperparametri. Una sottoclasse consiste negli algoritmi genetici, che verranno trattati approfonditamente in successivi corsi di Intelligenza Artificiale. 
+
+\subsubsection{Controllare l'Overfitting}
+
+L'obiettivo che si vuole ottenere è la convergenza, ovvero che l'accuratezza aumenti 
+e la funzione di loss diminuisca, sui valori del training set. Si vuole ottenere la convergenza sull'insieme di test per avere un modello adeguato. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{convergenza.pdf}%
+\end{figure}
+
+Si possono verificare vari casi, la loss potrebbe decresce con andamento oscillatorio, quindi il metodo di ottimizzazione potrebbe non essere efficace, oppure gli iperparametri potrebbero non essere ottimali, oppure il learning rate è inadeguato, questo rappresenta uno dei parametri più complessi da assegnare, quindi è necessaria una ricerca migliore. 
+
+La funzione di loss potrebbe decrescere, ma l'accuratezza potrebbe non aumentare, quindi è stata scelta una funzione di loss errata. 
+
+Inoltre è possibile che l'accuratezza non si avvicini al 100\% sui dati di train, questo può essere poiché i gradi di libertà del modello sono troppo pochi, quindi si dovrebbero aumentare progressivamente per ottenere le prestazioni richieste. 
+I gradi di libertà sono le variabili da specificare affinché sia individuato in maniera univoca il modello utilizzato. Per le reti dipendono dal numero dei neuroni, numero connessioni, etc. Di solito il numero dei gradi di libertà dipende da un iperparametro. 
+
+
+
+Si vorrebbe generalizzare il sistema, ovvero avere un'accuratezza il massimo possibile 
+anche sul valid test, dopo aver addestrato il sistema sul training test. Quindi si cerca la capacità di trasferire l'elevata accuratezza dall'insieme di training ad un altro insieme, su cui il sistema ancora non è stato addestrato. 
+Alcune volte si indica valid invece di test set, quindi si suppone che il valid test sia 
+rappresentativo di test. Il problema che si riscontra da questa analisi è quello del sovra-adattamento. In caso il sistema abbia elevati gradi di libertà, è possibile abbia una accuratezza elevata sul training set, ma il modello non riesce a trasferire l'accuratezza anche su altri insiemi di test. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{overfitting.pdf}%
+\end{figure}
+
+Si vuole quindi arrestare l'addestramento quando si raggiunge il picco nell'accuratezza sul test set, e questo rappresenta il modello ideale per il dato problema, con certi iperparametri scelti. Per cui monitorando l'andamento dell'accuratezza si può decidere quando arrestare l'addestramento, se questo viene effettuato iterativamente. 
+
+La soglia di Occam, è un principio di economia o parsimonia, ed afferma che se sono possibili più soluzioni, di privilegiare quella più semplice. 
+Si parte quindi da un certo numero di gradi di libertà, analizzando diversi parametri, oltre l'accuratezza, come la regolarità della soluzione appresa. La regolarità può essere controllata introducendo un ulteriore iperparametro, chiamato fattore di regolarizzante alla 
+funzione di loss che penalizza soluzioni irregolari. 
+
+In generale si consiglia di utilizzare dati il più possibile rappresentativi di tutte le possibili situazioni, e di un numero adeguato. Altrimenti si può effettuare del cloud sourcing per etichettare i dati. 
+Nel caso dove è difficile avere pattern rappresentativi del problema si possono trovare delle aree del piano delle soluzioni non necessariamente corrette, e quindi in caso rimuoverle. 
+
+Inoltre è consigliabile automatizzare fin dall'inizio le procedure di valutazione delle prestazioni. Diversi modelli vanno testati utilizzando gli stessi protocolli. Bisogna effettuare test statistici per escludere a priori l'ipotesi nulla, ovvero che le differenza tra vari algoritmi siano dovute al caso, soprattutto in ambienti dove diversi modelli sono molti simili tra di loro. 
 
 \subsubsection{Matrice di Confusione}
 
 Un'altra modalità per valutare le prestazioni di un classificatore è la matrice di confusione, una heatmap realizzata operando su un dataset con un certo numero $n$ di classi. 
-La matrice $n\times n$, presente sulle righe i valori reali e sulle colonne i valori predetti. Un classificatore sempre accurato avrebbe valori non nulli presenti solamente sulle diagonali, quindi avrebbe un'esatta corrispondenza tra i valori predetti e quelli 
+La matrice $n\times n$, presente sulle righe i valori reali e sulle colonne i valori predetti. 
+Un classificatore sempre accurato avrebbe valori non nulli presenti solamente sulle diagonali, quindi avrebbe un'esatta corrispondenza tra i valori predetti e quelli 
 attuali. Nella realtà su ogni colonna è presente un valore percentuale che indica la probabilità secondo cui quell'elemento viene attribuito ad una determinata classe. 
-
-%% TODO img matrice di confusione
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.7]{matrice_confusione.pdf}%
+    \caption{Esempio di una Matrice di Confusione}%
+\end{figure}
 
 \subsubsection{Problemi Closed e Open Set}
 
@@ -2922,19 +3111,321 @@ TPR pari ad uno ed un FPR pari a zero.
     \includegraphics{det_roc.pdf}%
 \end{figure}
 
-Sulla base della curva ROC per valutare se un classificatore è meglio di un altro si determina il suo integrale sotto la curva (AUC). Questo è uno scalare nell'intervallo $[0,1]$. Questo determina la prestazione media del classificatore, può essere calcolato come un 
+Sulla base della curva ROC per valutare se un classificatore è meglio di un altro si determina il suo integrale sotto la curva (AUC). Questo è uno scalare nell'intervallo $[0,1]$:
+\begin{equation*}
+    \text{AUC}=\displaystyle\int_0^1\text{ROC}(\text{FPR})\text{dFPR}
+\end{equation*} 
+Questo determina la prestazione media del classificatore, può essere calcolato come un 
 integrale numerico. Un classificatore casuale ha una percentuale di falsi positivi pari al 
-50\%, come la percentuale di falsi negativi, quindi la curva ROC è una bisettrice del piano, 
-con un AUC pari a $0.5$. 
+50\%, come la percentuale di falsi negativi, quindi la curva ROC è una bisettrice del piano, poiché all'aumentare della soglia le due grandezze TPR e FPR aumentano analogamente 
+con un AUC pari a $0.5$
+
+\subsubsection{Classificatori Binari}
+
+Per valutare le prestazioni si possono utilizzare metriche generiche, oppure metriche più 
+consone al task del modello. Nel ML si possono utilizzare metriche molto usate nell'ambito dell'``Information Retrieval'', ovvero dei motori di ricerca, come Precision e Recall negli anni '60. 
+Molto spesso utilizzate quando si ha una classificazione binaria, per i motori di ricerca i risultati possono essere determinanti o non determinanti ad una certa query. 
+
+La precision e la recall sono delle metriche ancora migliori di altre metriche come il RSS per valutare le prestazioni di un classificatore binario. 
+
+La precision si può definire come la percentuale di risultati rilevanti che sono 
+recuperati:
+\begin{equation}
+    \text{p}=\displaystyle\frac{\text{TP}}{\text{TP}+\text{FP}}
+\end{equation}
+
+La recall invece si definisce come la percentuale dei risultati recuperati che sono 
+rivelanti:
+\begin{equation}
+    \text{r}=\displaystyle\frac{\text{TP}}{\text{TP}+\text{FN}}=\text{TPR}
+\end{equation}
+
+Il seguente grafico rappresenta l'andamento della precision e della recall per una data soglia, dove ogni punto della curva rappresenta un valore di soglia, di coordinate date dai rispettivi valori di precision e recall:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{precision_recall.pdf}%
+\end{figure}
+
+In un sistema di ML generalmente queste due metriche sono tra di loro inversamente proporzionali. Più che la precision e la recall bisogna considerare un parametro che tiene conto di entrambi chiamato $F_1$-Score, definito come la media armonica di precision e recall, è quindi il reciproco della media dei reciproci delle due metriche:
+\begin{equation}
+    F_1=\displaystyle\frac{2}{\frac{1}{\text{p}}+\frac{1}{\text{r}}}=2\cdot\frac{\text{p}\cdot\text{r}}{\text{p}+\text{r}}
+\end{equation}
+
+Per valori di soglia elevati la possibilità di individuare elementi rilevanti diminuisce, mentre se si abbassa la soglia molti più elementi vengono individuati come rilevanti, quindi 
+diminuisce la precisione del sistema. 
+
+All'aumentare delle prove, la precision diminuisce mentre la recall aumenta. 
+
+La ``Specificity'' indica quando è accurato il sistema, indica la percentuale di non 
+positivi dichiarati positivi:
+\begin{equation}
+    \text{s}=\displaystyle\frac{\text{TN}}{\text{TN}+\text{FP}}=\text{TNR}
+\end{equation}
+
+Mentre la ``Sensitivity'' coincide alla recall. 
+Molto spesso queste metriche dipendono dall'applicazione. 
+
+In modelli di object detection bisogna individuare le istanze di un elemento ed in seguito 
+viene classificato. Per cui le valutazioni devono essere divise in queste due fasi, prima si controlla che individua correttamente un oggetto tramite la sua bounding box, ed in seguito determinare che la classificazione sia corretta. 
+Se fosse un modello di face detection allora sarebbe un classificatore binario. 
+
+Si possono definire diverse metriche per questi modelli, per i diversi tipi di errore, come 
+classe errata o bounding box non trovata, o sbagliata. La prima fase coincide con un modello di regressione e può essere analizzata con gli strumenti descritti nelle sezioni precedenti, per risolvere il problema di segmentazione o identificazione della bounding box, la seconda fase consiste nel classificare gli oggetti contenuti nelle bounding box o segmenti identificati. 
+\begin{itemize}
+    \item AP, ``Average Precision'': definita come l'AUC sotto la curva Recall-Precision per oggetti della singola classe:
+    \begin{equation}
+        \text{AP}=\displaystyle\int_0^1\text{p}(\text{r})\text{dr}
+    \end{equation}
+    \item mAP, mean AP: definita come la media delle AP su tutte le classi:
+    \begin{equation}
+        \text{mAP}=\displaystyle\frac{1}{N}\sum_{i=1}^N\text{AP}_i
+    \end{equation}
+    \item IoU, ``Intersection over Union'': rappresenta la percentuale della bounding box che si trova all'interno della bounding box definita nell'insieme.  
+\end{itemize}
+
+In generale se questo valore di IoU è maggiore di $0.5$ si considera la classe giusta, altrimenti si considera errata. Questo è un valore che viene determinato alla creazione del modello per poter calcolare TP e FP, con una certa confidenza. 
+
+\subsection{Nozioni di Matematica}
+
+\subsubsection{Funzioni Convesse}
+
+Un insieme $C$ in uno spazio vettoriale $V^k(O)$, si dice convesso se per ogni due punti $\vect{v},\vect{w}\in C$, il segmento che unisce i due punti appartiene anch'esso all'insieme $C$:
+\begin{equation}
+    \forall\vect{v},\,\vect{w}\in C,,\,\forall\lambda\in[0,1]\text{ t.c. }\lambda\vect{v}+(1-\lambda)\vect{w}\in C\implies C:\text{ Convesso}
+\end{equation}
+
+Ovvero tutti i punti appartenenti a questo segmento appartengono all'insieme $C$. 
+
+Si può esprimere l'espressione come:
+\begin{equation*}
+    \lambda\vect{v}+(1-\lambda)\vect{w}=\vect{w}+\lambda(\vect{v}-\vect{w})
+\end{equation*}
+
+Per ogni valore di $\lambda\in[0,1]$, quindi si ha che questo punto appartiene all'insieme $C$, poiché si ottiene traslando il vettore $\vect{w}$, certamente appartenente all'insieme, 
+di un fattore ottenuto dalla differenza con $\vect{v}$, quindi anche questo dovrà appartenere all'insieme. 
+Si può osservare come questo rappresenti una traslazione di un punto già presente nell'insieme lungo la retta $C$. 
+
+
+Nel caso bidimensionale si può verificare graficamente questa condizione, considerando un 
+insieme $C$ convesso, ed una retta:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.7]{insieme_convesso.pdf}%
+    \caption{Insieme Convesso $C$ Bidimensionale}%
+\end{figure}
+
+Una funzione $g:C\to\mathbb{R}$ si dice convessa, se per ogni coppia di punti appartenenti 
+all'insieme $C$, $\vect{v},\vect{w}\in C$, la funzione $g$ nell'intervallo tra questi due punti è sempre al di sotto del segmento generato collegando i punti $g(\vect{v})$ e 
+$g(\vect{w})$ sulla funzione:
+\begin{equation}
+    \forall\vect{v},\,\vect{w}\in C,\,\lambda\in[0,1]\text{ t.c. }g(\lambda\vect{v}-(1-\lambda)\vect{w})\leq\lambda g(\vect{v})+(1-\lambda)g(\vect{w})\implies g: \text{Convessa}
+\end{equation}
+
+Si può verificare graficamente data una funzione $g:\mathbb{R}\to\mathbb{R}$, con $C\equiv\mathbb{R}$, quindi si considera ogni coppia di scalari $v,w\in\mathbb{R}$, e si suppone che l'insieme $\mathbb{R}$ sia convesso. 
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.7]{gradiente_monodimensionale.pdf}%
+    \caption{Funzione Convessa}
+\end{figure}
+
+
+
+Per una funzione convessa $g(\vect{w})$ differenziabile, per ogni punto dell'insieme di 
+definizione $\mathbb{D}$, il piano tangente a questo punto della funzione giace sempre al di sotto 
+della funzione:
+\begin{equation*}
+    \forall\vect{v},\vect{w}\in \mathbb{D}\implies g(\vect{w})\geq g(\vect{w})+\nabla g(\vect{v})^T(\vect{w-\vect{v}})
+\end{equation*}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.7]{proprietà_gradiente.pdf}%
+\end{figure}
+
+\subsubsection{Derivate Parziali}
+
+Si considera una funzione $g$ definita su un campo $A$, di due variabili $w_0$ e $w_1$. Si 
+considera un punto $\overline{P}$ appartenente ad $A$, di coordinate $(\overline{w}_0, \overline{w}_1)$. Esiste allora un interno circolare di centro $\overline{P}$ e opportuno 
+raggio $\sigma$, contenuto in $A$:
+\begin{equation*}
+    0<|\Delta w_0|<\sigma
+\end{equation*}
+
+Si ha $(\overline{w}_0+\Delta w_0, \overline{w}_1)\in A$, e si può calcolare il suo rapporto incrementale parziale rispetto alla variabile $w_0$:
+\begin{equation*}
+    \displaystyle\frac{g(\overline{w}_0+\Delta w_0,\overline{w}_1)-g(\overline{w}_0,\overline{w}_1)}{\Delta w_0}
+\end{equation*}
+Il limite di questo rapporto incrementale si definisce derivata parziale rispetto a $w_0$, 
+se esiste la funzione $g$ si dice parzialmente derivabile rispetto ad $w_0$ nel punto di $\overline{P}$:
+\begin{equation*}
+    \lim_{\Delta w_0\to 0}\displaystyle\frac{g(\overline{w}_0+\Delta w_0,\overline{w}_1)-g(\overline{w}_0,\overline{w}_1)}{\Delta w_0}
+\end{equation*} 
+
+Se questa funzione $g$ è parzialmente derivabile non solo in questo punto, ma su ogni punto 
+nel campo $A$ dov'è definita, ed assume per ogni punto un valore definito e determinato, 
+allora si definisce la derivata parziale di $g$ rispetto a $w_0$, sul campo $A$ di due 
+variabili $w_0$ e $w_1$:
+\begin{equation}
+    \displaystyle\frac{\partial g(\vect{w})}{\partial w_0}
+\end{equation}
+
+Analogamente si può definire il limite del rapporto incrementale rispetto a $w_1$, sul 
+punto $\overline{P}$, se questo rapporto incrementale ha un limite ben definito su ogni 
+punto del campo $A$, allora si può definire analogamente la derivata parziale di 
+$g$ rispetto a $w_1$, sul campo $A$ di due variabili $w_0$ e $w_1$:
+\begin{gather*}
+    \lim_{\Delta w_1\to 0}\displaystyle\frac{g(\overline{w}_1,\overline{w}_1+\Delta w_1)-g(\overline{w}_0,\overline{w}_1)}{\Delta w_1}=\frac{\partial g(\vect{w})}{\partial w_1}
+\end{gather*}
+
+Per funzioni a più di una variabile però la continuità in un punto non dipende dalla 
+derivabilità della funzione. La funzione $g$ può quindi essere derivabile rispetto ad 
+entrambe le sue variabili nel punto $\overline{P}$, ma essere comunque discontinua nel stesso punto. 
+
+Queste derivate parziali si possono definire analogamente per funzioni di più variabili $g(\vect{w})$. 
+
+\subsubsection{Gradiente di una Funzione}
+
+Il gradiente si può considerare la generalizzazione del concetto di derivata, per 
+variabili a più variabili. Si considera una funzione $g(\vect{w})$ di $n$ variabili, 
+allora si definisce il gradiente il vettore le cui componenti sono le derivate parziali 
+della funzione:
+\begin{equation}
+    \nabla g(\vect{w})=\begin{bmatrix}
+        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_0}\\\vdots\\
+        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_n}
+    \end{bmatrix}
+\end{equation}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.8]{gradiente.pdf}%
+    \caption{Gradiente}
+\end{figure}
+
+Si considera un caso bidimensionale con $g(\vect{w})=g(w_0,w_1)$. Si considera quindi 
+una retta $n$ sul piano $w_0,\,w_1$, la cui intersezione con il gradiente genera due 
+angoli i cui coseni sono rispettivamente $\alpha$ con l'asse $w_0$ e $\beta$ con l'asse $w_1$. 
+
+Si considera un punto $P$ di coordinate iniziali $(w_0,w_1)$, se ci si sposta di una 
+distanza $\rho$ su questa retta $n$, si raggiungerà un punto $Q$ di coordinate $(w_0+\alpha\rho,w_1+\beta\rho)$. 
+Si considera il rapporto incrementale dello spostamento effettuato su questa retta $n$ 
+partendo dal punto $P$. Il limite di questo rapporto incrementale, se determinato e 
+finito viene chiamato derivata rispetto ad una direzione $n$ della funzione $g$. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.8]{derivata_direzionale.pdf}%
+    \caption{Derivata Direzionale}
+\end{figure}
+
+Si può dimostrare che questa derivata direzionale gode delle seguenti proprietà:
+\begin{equation}
+    \displaystyle\frac{\partial g(\vect{w})}{\partial n}=\alpha\cdot\frac{\partial g(\vect{w})}{\partial w_0}+\beta\cdot\frac{\partial g(\vect{w})}{\partial w_1}
+\end{equation}
+
+Definito $\hat{vect{n}}$ il versore della direzione $n$, allora la derivata direzionale 
+si può esprimere come il prodotto scalare tra questo versore ed il gradiente della funzione $g$:
+\begin{gather*}
+    \nabla g(w_0,w_1)\cdot\hat{\vect{n}}=
+    \begin{bmatrix}
+        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_0}\\        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_1}
+    \end{bmatrix}\cdot\begin{bmatrix}
+        \alpha&\beta
+    \end{bmatrix}=\alpha\cdot\frac{\partial g(\vect{w})}{\partial w_0}+\beta\cdot\frac{\partial g(\vect{w})}{\partial w_1}
+\end{gather*}
+
+La derivata direzionale di una funzione $g$ su una retta $n$ rappresenta una proiezione del gradiente $\nabla g$ sulla retta $n$. Ed è massima quando la direzione del gradiente coincide con la direzione della retta $n$, e minima quando le due direzioni sono tra di loro 
+ortogonali. 
+
+\subsubsection{Algoritmo di Gradient Descent}
+
+La proprietà del gradiente di fornire la direzione di pendenza più ripida permette di 
+realizzare due algoritmi di ricerca duali su spazi continui, di salita l'algoritmo di 
+Hill-Climbing, per la ricerca di massimi, ed algoritmi di Gradient Descent, per la ricerca 
+di minimi. 
+
+Questi algoritmi partono da uno stato iniziale $\vect{w}^{(t)}$ e si spostano nella stessa o opposta direzione del gradiente, di un passo $\alpha$, per passare ad un nuovo 
+stato $w^{(t+1)}$, cercando di arrivare ad un punto di massimo o di minimo, oppure un punto 
+molto vicino. 
+
+\begin{minted}[escapeinside=//, mathescape]{c}
+    /$\vect{w}^{(1)}$/ <- /$\vect{0}$/
+    t <- 1
+    while /$||\nabla g(\vect{w}^{(t)})||_2>\varepsilon$/
+        /$\vect{w}^{(t+1)}\rightarrow\vect{w}^{(t)}+\alpha\nabla g(\vect{w}^{(t)})$/
+        t <- t + 1
+\end{minted}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.8]{gradient_descent.pdf}%
+    \caption{Gradient Descent}%
+\end{figure}
+
+
+Lo stato iniziale può essere scelto casualmente oppure assegnato al vettore nullo. 
+Si definisce una soglia, sopra la quale l'algoritmo continua la sua discesa, o salita. Questo 
+algoritmo funziona molto bene su funzioni convesse, invece su funzioni non convesse, dove 
+si trovano dei punti di minimo locali, allora riscontra gli stessi problemi discussi per l'algoritmo di Hill-Climbing, precedentemente. 
+
+\subsubsection{Calcolo di Probabilità}
+
+Variabili aleatorie sono quantità di interesse determinate dal risultato di un esperimento 
+casuale, ovvero non determinabile a priori con certezza. Per cui è possibile 
+assegnare una probabilità ai suoi possibili valori. 
+
+Il valore atteso è uno dei concetti più importanti del campo della statistica. Data 
+una variabile aleatoria discreta $X$, che può assumere i valori $x_1,\cdots,x_N$, si definisce il valore atteso come la media pesata di questi valori, dove i pesi sono 
+la probabilità di ognuno di questi valori:
+\begin{equation}
+    E[X]\triangleq\sum_{i=1}^N(x_iP(X=x_i))
+\end{equation}
+
+Si chiama anche media di $X$, oppure ``Expectation''. Anche se viene chiamato valore 
+atteso di $X$, non rappresenta uno dei possibili valori della variabile aleatoria $X$, ma 
+rappresenta il limite a cui tende il valore della variabile su un numero infinito di 
+misurazioni. 
+
+Si definisce l'``Indicator Function'' di un evento $A$ come:
+\begin{equation*}
+    I[A]\triangleq\begin{cases}
+        1&\text{Se }A\text{ si verifica}\\
+        0&\text{Se }A\text{ non si verifica}
+    \end{cases}
+\end{equation*}
+Il suo valore atteso è quindi:
+\begin{equation*}
+    E[I]=1\cdot P(I=1)+\cancelto{0}{0\cdot P(I=0)}=P(A)
+\end{equation*}
+
+Il valore atteso di un Indicator Function è la probabilità stessa dell'evento $A$ corrispondente. 
+
+Per la funzione valore atteso valgono le seguenti proprietà:
+\begin{gather*}
+    E[a+b]=E[a]+E[b]\\
+    E[k\cdot a]=k\cdot E[a]\\
+    E[a\cdot b]=E[a]\cdot E[b]
+\end{gather*}
+
+Dove $k$ è costante ed $a$ e $b$ sono due eventi indipendenti, nell'ultima proprietà. 
+
+Si definisce la varianza di una funzione aleatoria $X$ come:
+\begin{equation}
+    \sigma^2_x=\text{Var}(X)\triangleq E[(X-\mu_x)^2]
+\end{equation}
+
+Si può esprimere alternativamente come:
+\begin{gather*}
+    \text{Var}(X)\triangleq E[(X-\mu_x)^2]=E[X^2-2\mu_xX+\mu_x^2]=E[X^2]-2\mu\cdot\cancelto{\mu_x}{E[X]}+\mu_x^2\cdot\cancel{E[1]}\\
+    \text{Var}(X)\triangleq E[X^2]-2\mu_x^2+\mu_x^2=E[X^2]-\mu_x^2=E[X^2]-E[X]^2\tageq
+\end{gather*}
 
 \subsection{Regressione}
 
 I modelli a regressione sono molto utilizzati per prevedere variabili su una scala continua, utili per risolvere problemi in diversi ambiti per analizzare variabili, predire andamenti, 
 etc. Con questi metodi bisogna addestrare un agente a prevedere il valore una variabile target, a differenza della classificazione dove viene predetta una certa categoria. 
 
-\subsubsection{Simple Regression}
-
-Il modello a regressione lineare semplice, chiamata anche univariata. Consiste nel 
+Il modello a regressione lineare semplice, chiamata anche univariata, consiste nel 
 provare le relazioni esistenti tra una variabile descrittiva $x$ e la variabile target $y$. 
 
 Per prevedere un certo valore bisogna effettuare prima delle misurazioni o osservazioni 
@@ -2948,6 +3439,8 @@ approssima al meglio le osservazioni. Queste seguono una funzione sconosciuta al
 
 Non è facile stabilire data un'ipotesi $f$ se questa si tratta di una buona approssimazione, della funzione sconosciuta. Una buona ipotesi verrà generalizzata bene, prevedendo 
 correttamente esempi che non ha ancora incontrato. 
+
+\subsubsection{Simple Regression}
 
 Nel modello Simple Linear Regression Model, si vuole utilizzare un modello lineare per la 
 funzione $f$, dove per ogni valore dell'ascissa, si ha un valore vero $y_i$, ed un valore 
@@ -3125,8 +3618,6 @@ Per addestrare il sistema, analogamente alla regressione lineare, si può utiliz
 
 Si può dimostrare che questa funzione di costo RSS è convessa. 
 
-%% TODO img processo di training (anche per regressione lineare senza estrazione delle features)
-
 Molte volte è comodo rappresentare questa funzione, relativa all'$i$-esimo valore di $y$ in notazione matriciale:
 \begin{gather*}
     y_i=\displaystyle\sum_{j=0}^Dw_j\phi_j(\vect{x}_i)+\varepsilon_i\\
@@ -3147,14 +3638,14 @@ Quindi dati questi tre vettori:
         \vect{w}_i=\begin{bmatrix}
             \strut w_{0}\\\vdots\\\strut w_{D}
         \end{bmatrix}&
-        \phi(\vect{x}_i)=\begin{bmatrix}
+        \vect{\phi}(\vect{x}_i)=\begin{bmatrix}
             \strut\phi_{0}(\vect{x}_i)\\\vdots\\\strut\phi_{D}(\vect{x}_i)
         \end{bmatrix}            
     \end{matrix}
 \end{gather*}
 Si può definire il valore $i$-esimo di $y$ come:
 \begin{equation*}
-    y_i=\vect{w}^T\cdot\vect{\phi}(\vect{x}_i)+\varepsilon_i=\phi(\vect{x_i})^T\cdot\vect{w}+\varepsilon_i
+    y_i=\vect{w}^T\cdot\vect{\phi}(\vect{x}_i)+\varepsilon_i=\vect{\phi}(\vect{x_i})^T\cdot\vect{w}+\varepsilon_i
 \end{equation*}
 
 Si possono quindi rappresentare tutte le osservazioni $\vect{y}$ in modo compatto come:
@@ -3165,10 +3656,10 @@ Si possono quindi rappresentare tutte le osservazioni $\vect{y}$ in modo compatt
         \phi_0(\vect{x}_1)&\cdots&\phi_D(\vect{x}_1)\\
         \vdots&\ddots&\vdots\\
         \phi_0(\vect{x}_N)&\cdots&\phi_D(\vect{x}_N)\\
-    \end{bmatrix}\cdots\begin{bmatrix}
+    \end{bmatrix}\cdot\begin{bmatrix}
         \strut w_{0}\\\vdots\\\strut w_{D}
     \end{bmatrix}+\begin{bmatrix}
-        \strut \varepsilon_{1}\\\vdots\\\strut \varepsilon{N}
+        \strut \varepsilon_{1}\\\vdots\\\strut \varepsilon_{N}
     \end{bmatrix}\\
     \vect{y}=\vect{\Phi}\cdot\vect{w}+\vect{\varepsilon}\tageq
 \end{gather*}
@@ -3183,7 +3674,7 @@ Definiti questi vettori si può esprimere allora la funzione di valutazione RSS 
 Si può ricavare il vettore $\vect{\varepsilon}$, dalla forma compatta delle osservazioni $\vect{y}$:
 \begin{gather*}
     \vect{y}=\vect{\Phi}\cdot\vect{w}+\vect{\varepsilon}\rightarrow\vect{\varepsilon}=\vect{y}-\vect{\Phi}\cdot\vect{w}\\
-    \text{RSS}(\vect{w})=\left(\vect{y}-\vect{\Phi}\cdot\vect{w}\right)^T\cdot\left(\vect{y}-\vect{\Phi}\cdot\vect{w}\right)\tageq
+    \text{RSS}(\vect{w})=\left(\vect{y}-\vect{\Phi}\cdot\vect{w}\right)^T\cdot\left(\vect{y}-\vect{\Phi}\cdot\vect{w}\right)%\tageq
 \end{gather*}
 Si è ottenuta la funzione RSS in forma matriciale. Si può quindi rappresentare il gradiente mediante regole del calcolo differenziale matriciale come:
 \begin{equation}
@@ -3239,6 +3730,14 @@ Si definisce l'algoritmo quindi come:
 
 \subsubsection{Workflow}
 
+Il processo di addestramento di un modello di regressione può essere schematizzato nel seguente modo:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{processo_training.pdf}%
+    \caption{Processo di Training}%
+\end{figure}
+
+
 Le due task da affrontare per attuare una regressione sono la scelta del modello e la valutazione del modello. Nella selezione del modello bisogna scegliere dei parametri di 
 tuning $\lambda$ per controllare il modello. Dopo averlo scelto bisogna effettuare una valutazione del ``Generalization Error'' o ``True Error''. Quindi bisogna avere un ulteriore insieme di dati di osservazione, non appartenenti al training set, su cui puoi essere valutato questo modello. L'errore dei dati di test dovrebbe avvicinarci il più possibile all'errore vero, non noto. Se fosse possibile determinare l'errore vero, allora non servirebbe creare un modello per predire il valore $y$. 
 
@@ -3249,478 +3748,9 @@ Questo approccio ha un difetto intrinseco, poiché determina i valori dei parame
 Questo fenomeno nell'area dell'IA si chiama ``Peaking'', dove l'ipotesi viene selezionata in base alle sue prestazioni sull'insieme di test. 
 
 L'informazione di test avrebbe dovuto rimanere confinata nel test, ma si è infiltrata nell'algoritmo di apprendimento. 
-Una soluzione consiste nell'utilizzare tre diversi set, se ciò è permesso dal numero di osservazioni, creando un ulteriore validation set. Se si risparmiano osservazioni sul training set, allora non si crea un modello adeguato, se si risparmia sul training set allora non viene valutato adeguatamente il modello. 
+Una soluzione consiste nell'utilizzare tre diversi set, se ciò è permesso dal numero di osservazioni, creando un ulteriore validation set. Se si risparmiano osservazioni sul valid set, allora non si crea un modello adeguato, se si risparmia sul test set allora non viene valutato adeguatamente il modello. 
 Nella fase di addestramento invece di addestrare il sistema sul test set, si valuta sul validation set. Quindi si determina l'ipotesi migliore su questo set e si valuta sul test set. 
 Non è presente una regola generale per dividere i dati, in generale il training set comporta la maggior percentuale, mentre il training ed il set test hanno all'incirca la stessa percentuale delle osservazioni totali. 
-
-\subsection{Nozioni di Matematica}
-
-\subsubsection{Funzioni Convesse}
-
-Un insieme $C$ in uno spazio vettoriale $V^k(O)$, si dice convesso se per ogni due punti $\vect{v},\vect{w}\in C$, il segmento che unisce i due punti appartiene anch'esso all'insieme $C$:
-\begin{equation}
-    \forall\vect{v},\,\vect{w}\in C,,\,\forall\lambda\in[0,1]\text{ t.c. }\lambda\vect{v}+(1-\lambda)\vect{w}\in C\implies C:\text{ Convesso}
-\end{equation}
-
-Ovvero tutti i punti appartenenti a questo segmento appartengono all'insieme $C$. 
-
-Nel caso bidimensionale si può verificare graficamente questa condizione, considerando un 
-insieme $C$ convesso, una retta:
-%% TODO img insieme convesso caso bidimensionale (retta)
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-Si può esprimere l'espressione come:
-\begin{equation*}
-    \lambda\vect{v}+(1-\lambda)\vect{w}=\vect{w}+\lambda(\vect{v}-\vect{w})
-\end{equation*}
-
-Per ogni valore di $\lambda\in[0,1]$, quindi si ha che questo punto appartiene all'insieme $C$, poiché si ottiene traslando il vettore $\vect{w}$, certamente appartenente all'insieme, 
-di un fattore ottenuto dalla differenza con $\vect{v}$, quindi anche questo dovrà appartenere all'insieme. 
-Si può osservare come questo rappresenti una traslazione di un punto già presente nell'insieme lungo la retta $C$. 
-
-
-Una funzione $g:C\to\mathbb{R}$ si dice convessa, se per ogni coppia di punti appartenenti 
-all'insieme $C$, $\vect{v},\vect{w}\in C$, la funzione $g$ nell'intervallo tra questi due punti è sempre al di sotto del segmento generato collegando i punti $g(\vect{v})$ e 
-$g(\vect{w})$ sulla funzione:
-\begin{equation}
-    \forall\vect{v},\,\vect{w}\in C,\,\lambda\in[0,1]\text{ t.c. }g(\lambda\vect{v}-(1-\lambda)\vect{w})\leq\lambda g(\vect{v})+(1-\lambda)g(\vect{w})\implies g: \text{Convessa}
-\end{equation}
-
-Si può verificare graficamente data una funzione $g:\mathbb{R}\to\mathbb{R}$, con $C\equiv\mathbb{R}$, quindi si considera ogni coppia di scalari $v,w\in\mathbb{R}$, e si suppone che l'insieme $\mathbb{R}$ sia convesso. 
-%% TODO img funzione convessa caso monodimensionale (parabola) 
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-
-%% TODO add strongly convex (saltata nel programma)
-
-
-Per una funzione convessa $g(\vect{w})$ differenziabile, per ogni punto dell'insieme di 
-definizione $\mathbb{D}$, il piano tangente a questo punto della funzione giace sempre al di sotto 
-della funzione:
-\begin{equation*}
-    \forall\vect{v},\vect{w}\in \mathbb{D}\implies(\vect{w})\geq g(\vect{w})+\nabla g(\vect{v})^T(\vect{w-\vect{v}})
-\end{equation*}
-%% TODO img proprietà funzione convessa caso monodimensionale (parabola) 
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-
-\subsubsection{Derivate Parziali}
-
-Si considera una funzione $g$ definita su un campo $A$, di due variabili $w_0$ e $w_1$. Si 
-considera un punto $\overline{P}$ appartenente ad $A$, di coordinate $(\overline{w}_0, \overline{w}_1)$. Esiste allora un interno circolare di centro $\overline{P}$ e opportuno 
-raggio $\sigma$, contenuto in $A$:
-\begin{equation*}
-    0<|\Delta w_0|<\sigma
-\end{equation*}
-
-Si ha $(\overline{w}_0+\Delta w_0, \overline{w}_1)\in A$, e si può calcolare il suo rapporto incrementale parziale rispetto alla variabile $w_0$:
-\begin{equation*}
-    \displaystyle\frac{g(\overline{w}_0+\Delta w_0,\overline{w}_1)-g(\overline{w}_0,\overline{w}_1)}{\Delta w_0}
-\end{equation*}
-Il limite di questo rapporto incrementale si definisce derivata parziale rispetto a $w_0$, 
-se esiste la funzione $g$ si dice parzialmente derivabile rispetto ad $w_0$ nel punto di $\overline{P}$:
-\begin{equation*}
-    \lim_{\Delta w_0\to 0}\displaystyle\frac{g(\overline{w}_0+\Delta w_0,\overline{w}_1)-g(\overline{w}_0,\overline{w}_1)}{\Delta w_0}
-\end{equation*} 
-
-Se questa funzione $g$ è parzialmente derivabile non solo in questo punto, ma su ogni punto 
-nel campo $A$ dov'è definita, ed assume per ogni punto un valore definito e determinato, 
-allora si definisce la derivata parziale di $g$ rispetto a $w_0$, sul campo $A$ di due 
-variabili $w_0$ e $w_1$:
-\begin{equation}
-    \displaystyle\frac{\partial g}{\partial w_0}
-\end{equation}
-
-Analogamente si può definire il limite del rapporto incrementale rispetto a $w_1$, sul 
-punto $\overline{P}$, se questo rapporto incrementale ha un limite ben definito su ogni 
-punto del campo $A$, allora si può definire analogamente la derivata parziale di 
-$g$ rispetto a $w_1$, sul campo $A$ di due variabili $w_0$ e $w_1$:
-\begin{gather*}
-    \lim_{\Delta w_1\to 0}\displaystyle\frac{g(\overline{w}_1,\overline{w}_1+\Delta w_1)-g(\overline{w}_0,\overline{w}_1)}{\Delta w_1}\\
-    \displaystyle\frac{\partial g}{\partial w_1}
-\end{gather*}
-
-Per funzioni a più di una variabile però la continuità in un punto non dipende dalla 
-derivabilità della funzione. La funzione $g$ può quindi essere derivabile rispetto ad 
-entrambe le sue variabili nel punto $\overline{P}$, ma essere comunque discontinua nel stesso punto. 
-
-Queste derivate parziali si possono definire analogamente per funzioni di più variabili $g(\vect{w})$. 
-
-\subsubsection{Gradiente di una Funzione}
-
-Il gradiente si può considerare la generalizzazione del concetto di derivata, per 
-variabili a più variabili. Si considera una funzione $g(\vect{w})$ di $n$ variabili, 
-allora si definisce il gradiente il vettore le cui componenti sono le derivate parziali 
-della funzione:
-\begin{equation}
-    \nabla g(\vect{w})=\begin{bmatrix}
-        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_0}\\\vdots\\
-        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_n}
-    \end{bmatrix}
-\end{equation}
-
-%% TODO img gradiente funzione convessa caso bidimensionale (paraboloide) 
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-
-Si considera un caso bidimensionale con $g(\vect{w})=g(w_0,w_1)$. Si considera quindi 
-una retta $n$ sul piano $w_0,\,w_1$, la cui intersezione con il gradiente genera due 
-angoli i cui coseni sono rispettivamente $\alpha$ con l'asse $w_0$ e $\beta$ con l'asse $w_1$. 
-
-Si considera un punto $P$ di coordinate iniziali $(w_0,w_1)$, se ci si sposta di una 
-distanza $\rho$ su questa retta $n$, si raggiungerà un punto $Q$ di coordinate $(w_0+\alpha\rho,w_1+\beta\rho)$. 
-Si considera il rapporto incrementale dello spostamento effettuato su questa retta $n$ 
-partendo dal punto $P$. Il limite di questo rapporto incrementale, se determinato e 
-finito viene chiamato derivata rispetto ad una direzione $n$ della funzione $g$. 
-
-%% TODO img derivate direzionale funzione convessa caso bidimensionale (paraboloide) 
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-
-Si può dimostrare che questa derivata direzionale gode delle seguenti proprietà:
-\begin{equation}
-    \displaystyle\frac{\partial g(\vect{w})}{\partial n}=\alpha\cdot\frac{\partial g(\vect{w})}{\partial w_0}+\beta\cdot\frac{\partial g(\vect{w})}{\partial w_1}
-\end{equation}
-
-Definito $\hat{vect{n}}$ il versore della direzione $n$, allora la derivata direzionale 
-si può esprimere come il prodotto scalare tra questo versore ed il gradiente della funzione $g$:
-\begin{gather*}
-    \nabla g(w_0,w_1)\cdot\hat{\vect{n}}=
-    \begin{bmatrix}
-        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_0}\\        \displaystyle\frac{\strut\partial g(\vect{w})}{\strut\partial w_1}
-    \end{bmatrix}\cdot\begin{bmatrix}
-        \alpha&\beta
-    \end{bmatrix}=\alpha\cdot\frac{\partial g(\vect{w})}{\partial w_0}+\beta\cdot\frac{\partial g(\vect{w})}{\partial w_1}
-\end{gather*}
-
-La derivata direzionale di una funzione $g$ su una retta $n$ rappresenta una proiezione del gradiente $\nabla g$ sulla retta $n$. Ed è massima quando la direzione del gradiente coincide con la direzione della retta $n$, e minima quando le due direzioni sono tra di loro 
-ortogonali. 
-
-\subsubsection{Algoritmo di Gradient Descent}
-
-La proprietà del gradiente di fornire la direzione di pendenza più ripida permette di 
-realizzare due algoritmi di ricerca duali su spazi continui, di salita l'algoritmo di 
-Hill-Climbing, per la ricerca di massimi, ed algoritmi di Gradient Descent, per la ricerca 
-di minimi. 
-
-Questi algoritmi partono da uno stato iniziale $\vect{w}^{(t)}$ e si spostano nella stessa o opposta direzione del gradiente, di un passo $\alpha$, per passare ad un nuovo 
-stato $w^{(t+1)}$, cercando di arrivare ad un punto di massimo o di minimo, oppure un punto 
-molto vicino. 
-
-\begin{minted}[escapeinside=//, mathescape]{c}
-    /$\vect{w}^{(1)}$/ <- /$\vect{0}$/
-    t <- 1
-    while /$||\nabla g(\vect{w}^{(t)})||_2>\varepsilon$/
-        /$\vect{w}^{(t+1)}\rightarrow\vect{w}^{(t)}\pm\alpha\nabla g(\vect{w}^{(t)})$/
-        t <- t + 1
-\end{minted}
-
-Lo stato iniziale può essere scelto casualmente oppure assegnato al vettore nullo. 
-Si definisce una soglia, sopra la quale l'algoritmo continua la sua discesa, o salita. Questo 
-algoritmo funziona molto bene su funzioni convesse, invece su funzioni non convesse, dove 
-si trovano dei punti di minimo locali, allora riscontra gli stessi problemi discussi per l'algoritmo di Hill-Climbing, precedentemente. 
-
-\subsubsection{Calcolo di Probabilità}
-
-Variabili aleatorie sono quantità di interesse determinate dal risultato di un esperimento 
-casuale, ovvero non determinabile a priori con certezza. Per cui è possibile 
-assegnare una probabilità ai suoi possibili valori. 
-
-Il valore atteso è uno dei concetti più importanti del campo della statistica. Data 
-una variabile aleatoria discreta $X$, che può assumere i valori $x_1,\cdots,x_N$, si definisce il valore atteso come la media pesata di questi valori, dove i pesi sono 
-la probabilità di ognuno di questi valori:
-\begin{equation}
-    E[X]\triangleq\sum_{i=1}^N(x_iP(X=x_i))
-\end{equation}
-
-Si chiama anche media di $X$, oppure ``Expectation''. Anche se viene chiamato valore 
-atteso di $X$, non rappresenta uno dei possibili valori della variabile aleatoria $X$, ma 
-rappresenta il limite a cui tende il valore della variabile su un numero infinito di 
-misurazioni. 
-
-Si definisce l'``Indicator Function'' di un evento $A$ come:
-\begin{equation*}
-    I[A]\triangleq\begin{cases}
-        1&\text{Se }A\text{ si verifica}\\
-        0&\text{Se }A\text{ non si verifica}
-    \end{cases}
-\end{equation*}
-Il suo valore atteso è quindi:
-\begin{equation*}
-    E[I]=1\cdot P(I=1)+\cancelto{0}{0\cdot P(I=0)}=P(A)
-\end{equation*}
-
-Il valore atteso di un Indicator Function è la probabilità stessa dell'evento $A$ corrispondente. 
-
-Per la funzione valore atteso valgono le seguenti proprietà:
-\begin{gather*}
-    E[a+b]=E[a]+E[b]\\
-    E[k\cdot a]=k\cdot E[a]\\
-    E[a\cdot b]=E[a]\cdot E[b]
-\end{gather*}
-
-Dove $k$ è costante ed $a$ e $b$ sono due eventi indipendenti, nell'ultima proprietà. 
-
-Si definisce la varianza di una funzione aleatoria $X$ come:
-\begin{equation}
-    \sigma^2_x=\text{Var}(X)\triangleq E[(X-\mu_x)^2]
-\end{equation}
-
-Si può esprimere alternativamente come:
-\begin{gather*}
-    \text{Var}(X)\triangleq E[(X-\mu_x)^2]=E[X^2-2\mu_xX+\mu_x^2]=E[X^2]-2\mu\cdot\cancelto{\mu_x}{E[X]}+\mu_x^2\cdot\cancel{E[1]}\\
-    \text{Var}(X)\triangleq E[X^2]-2\mu_x^2+\mu_x^2=E[X^2]-\mu_x^2=E[X^2]-E[X]^2\tageq
-\end{gather*}
-
-\subsection{Valutatone delle Prestazioni}
-
-La valutazione delle prestazioni di un sistema è estremamente cruciale, ed i criteri di 
-valutazione permettono di scegliere modelli migliori, per cui è necessario definire 
-delle metriche per poter valutare questi diversi modelli, in questo caso di regressione, ma si utilizzano anche per altri tipi di sistemi. Si definisce quindi una 
-funzione di ``Loss'', che definisce quanto si perde utilizzano previsione del modello $f_{\vect{\hat{w}}}(\vect{x})$, dopo essere stato addestrato, invece che il valore reale $\hat{y}$:
-\begin{equation}
-    L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]
-\end{equation}
-
-Questa funzione $L$ rappresenta il costo che si ha con la funzione $f$, con il vettore dei 
-pesi $\vect{\hat{w}}$, su di un input $\vect{x}$. 
-
-Può essere definita come errore assoluto:
-\begin{equation*}
-    L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]=|\hat{y}- f_{\vect{\hat{w}}}(\vect{x})|
-\end{equation*}
-Oppure come errore quadratico:
-\begin{equation*}
-    L[\hat{y}, f_{\vect{\hat{w}}}(\vect{x})]=(\hat{y}- f_{\vect{\hat{w}}}(\vect{x}))^2
-\end{equation*}
-
-\subsubsection{Training, Generalization e Test Error}
-
-Ai fini della valutazione del ``loss'', bisogna definire il Training Error, l'errore di 
-un sistema addestrato minimizzando l'errore sul training set. 
-Il Generalization Error o True Error, è l'errore sul valore effettivo, ma non è possibile 
-calcolarlo, poiché richiederebbe di conoscere a priori tutti i possibili valori e associazioni del problema. Il Test Error si utilizza per approssimare il True Error, 
-valutando il modello sul test set. 
-
-Si considerano gli andamenti di questi errori, ed il problema dell'``Over-Fitting'', non solo su modelli di ML, ma anche in generale. 
-
-Dato un insieme di dati non bisogna utilizzarle tutte per allenare il modello, bisogna 
-dividere quest'insieme in un insieme di training ed uno di testing. Si sceglie quindi 
-un modello e si calcolano i pesi $\vect{w}$ da minimizzare con la funzione RSS. 
-Una volta addestrato il modello si può calcolare il training error, definendo la funzione di Loss. Definita questa funzione si può calcolare il training errore come l'errore medio definito sugli $N$ punti dell'insieme di training:
-\begin{equation}
-    \text{Training Error}=\displaystyle\frac{1}{N}\cdot\sum_{i=1}^NL[y_i,f_{\vect{\hat{w}}}(\vect{x}_i)]
-\end{equation}
-
-Si considera come cambia questo errore rispetto alla complessità del modello, partendo da un modello costante, ed aumentando il grado della funzione $f(x)$. 
-
-\begin{figure}[H]%
-    \centering%
-    \includegraphics[scale=0.65]{training_error.pdf}%
-    \caption{Training Error Rispetto a Complessità del Modello}%
-\end{figure}
-
-Intuitivamente passano da un modello costante ad un modello lineare l'errore diminuisce, 
-questo continua fino ad un modello complesso, che potrebbe passare su tutti i datapoint. 
-Ma il Training Errore non è una buona metrica, poiché è troppo ottimistico. Non rappresenta una buona misura delle prestazioni di previsione del sistema, infatti un modello polinomiale potrebbe essere molto buono solamente con i dati del training set, mentre risulta 
-poco accurato su altri insiemi di dati. 
-
-Per valutare questa caratteristica si considerano tutte le possibili coppie $(\vect{x},y)$ 
-per un certo problema. E l'errore di generalizzazione si calcola come la media della funzione di Loss su tutti questi punti. Ma questo è irrealizzabile, quindi bisogna approssimare questo errore effettivo, avendo un numero limitato di osservazioni. 
-
-Bisognerebbe cercare di pesare tutte le coppie $(\vect{x}, y)$ in base alla loro probabilità di essere presenti nella zona di interesse, quindi prendendo in considerazione la 
-distribuzione dell'insieme rispetto a $\vect{x}$ ed anche la distribuzione del valore $y$ in a parità di $\vect{x}$. 
-
-Da un punto di vista formale si può definire questo valore avvalendosi del valore atteso:
-\begin{equation}
-    \text{Generalization Error}=E_{\vect{x},y}[L(\hat{y}, f_{\vect{\hat{w}}}(\vect{x}))] 
-\end{equation}
-
-Per valutare i modelli in base a questo errore si considera una rappresentazione 
-del piano $\vect{x},y$ che mostri le diverse gradazioni dei dei vari punti corrispondenti 
-alla distribuzione di probabilità nel data set. 
-
-\begin{figure}[H]%
-    \centering%
-    \includegraphics[scale=0.65]{generalization_error.pdf}%
-    \caption{Data Set con Distribuzione di Probabilità}%
-\end{figure}
-
-Bisogna determinare come varia questo errore rispetto alla funzione $f$ e come si 
-adatta alle osservazioni del training set, ed in che modo possa predire i valori di dati 
-non presenti nel training set, pesati rispetti alle loro probabilità. 
-
-Analogamente al training error, partendo da un modello costante, aumentando la complessità 
-l'errore diminuisce, ma questo non è un andamento costante, poiché si potrebbe 
-verificare il fenomeno dell'over-fitting, dove il modello segue esattamente solo i dati presenti nel training set, e non è in grado di prevedere altri dati al di fuori di questo insieme. Superata una certa complessità quindi l'errore ricomincia a salire. 
-
-\begin{figure}[H]%
-    \centering%
-    \includegraphics[scale=0.65]{generalization_error_confronto.pdf}%
-    \caption{Generalization Error Rispetto a Complessità del Modello}%
-\end{figure}
-
-Non è possibile calcolare il Generalization Error, poiché dovrebbe essere nota la vera distribuzione di probabilità di tutte le coppie $(\vect{x}, y)$. 
-
-L'ultimo tipo di errore è il Test Error, calcolato come la media della somma del Loss, nei 
-punti nel Test Set:
-\begin{equation}
-    \text{Test Error}=\displaystyle\frac{1}{N_\text{test}}\sum_{i\in1}^{N_{\text{test}}}L[y_i,f_{\vect{\hat{w}}}(\vect{x}_i)]
-\end{equation}
-
-Il Test Set deve essere scelto in modo tale da approssimare al meglio il Generalization Error. 
-
-\begin{figure}[H]%
-    \centering%
-    \includegraphics[scale=0.6]{confronto_errori.pdf}%
-    \caption{Confronto Training, Generalization e Test Error}%
-\end{figure}
-
-
-Il fenomeno del sovra-adattamento si può definire in modo formale dati questi errori. 
-Dato un modello con parametri $\vect{\hat{w}}$, si ha over-fitting se esiste un modello con 
-parametri stimati $\vect{w}'$, tale che il training error del primo modello è 
-minore, mentre il true error del primo modello è maggiore di quello relativo al secondo 
-modello. 
-
-\subsubsection{Classificatori Binari}
-
-Per valutare le prestazioni si possono utilizzare metriche generiche, oppure metriche più 
-consone al task del modello. Nel ML si possono utilizzare metriche molto usate nell'ambito dell'``Information Retrieval'', ovvero dei motori di ricerca, come Precision e Recall negli anni '60. 
-Molto spesso utilizzate quando si ha una classificazione binaria, per i motori di ricerca i risultati possono essere determinanti o non determinanti ad una certa query. 
-
-La precision e la recall sono delle metriche ancora migliori di altre metriche come il RSS per valutare le prestazioni di un classificatore binario. 
-
-La precision si può definire come la percentuale di risultati rilevanti che sono 
-recuperati:
-\begin{equation}
-    \text{p}=\displaystyle\frac{\text{TP}}{\text{TP}+\text{FP}}
-\end{equation}
-
-La recall invece si definisce come la percentuale dei risultati recuperati che sono 
-rivelanti:
-\begin{equation}
-    \text{r}=\displaystyle\frac{\text{TP}}{\text{TP}+\text{FN}}=\text{TPR}
-\end{equation}
-
-Il seguente grafico rappresenta l'andamento della precision e della recall per una data soglia, dove ogni punto della curva rappresenta un valore di soglia, di coordinate date dai rispettivi valori di precision e recall:
-\begin{figure}[H]%
-    \centering%
-    \includegraphics{precision_recall.pdf}%
-\end{figure}
-
-In un sistema di ML generalmente queste due metriche sono tra di loro inversamente proporzionali. Più che la precision e la recall bisogna considerare un parametro che tiene conto di entrambi chiamato $F_1$-Score, definito come la media armonica di precision e recall, è quindi il reciproco della media dei reciproci delle due metriche:
-\begin{equation}
-    F_1=\displaystyle\frac{2}{\frac{1}{\text{p}}+\frac{1}{\text{r}}}=2\cdot\frac{\text{p}\cdot\text{r}}{\text{p}+\text{r}}
-\end{equation}
-
-Per valori di soglia elevati la possibilità di individuare elementi rilevanti diminuisce, mentre se si abbassa la soglia molti più elementi vengono individuati come rilevanti, quindi 
-diminuisce la precisione del sistema. 
-
-All'aumentare delle prove, la precision diminuisce mentre la recall aumenta. 
-
-La ``Specificity'' indica quando è accurato il sistema, indica la percentuale di non 
-positivi dichiarati positivi:
-\begin{equation}
-    \text{s}=\displaystyle\frac{\text{TN}}{\text{TN}+\text{FP}}
-\end{equation}
-
-Mentre la ``Sensitivity'' coincide alla recall. 
-Molto spesso queste metriche dipendono dall'applicazione. 
-
-In modelli di object detection bisogna individuare le istanze di un elemento ed in seguito 
-viene classificato. Per cui le valutazioni devono essere divise in queste due fasi, prima si controlla che individua correttamente un oggetto tramite la sua bounding box, ed in seguito determinare che la classificazione sia corrette. 
-Se fosse un modello di face detection allora sarebbe un classificatore binario. 
-
-Si possono definire diverse metriche per questi modelli, per i diversi tipi di errore, come 
-classe errata o bounding box non trovata, o sbagliata. La prima fase coincide con un modello di regressione e può essere analizzata con gli strumenti descritti nelle sezioni precedenti, 
-\begin{itemize}
-    \item AP, ``Average Precision'': definita come l'AUC sotto la curva Recall-Precision per oggetti della singola classe:
-    \begin{equation}
-        \text{AP}=\displaystyle\int_0^1\text{p}(\text{r})\text{dr}
-    \end{equation}
-    \item mAP, mean AP: definita come la media delle AP su tutte le classi:
-    \begin{equation}
-        \text{mAP}=\displaystyle\frac{1}{N}\sum_{i=1}^N\text{AP}_i
-    \end{equation}
-    \item IoU, ``Intersection over Union'': rappresenta la percentuale della bounding box che si trova all'interno della bounding box definita nell'insieme.  
-\end{itemize}
-
-In generale se questo valore di IoU è maggiore di $0.5$ si considera la classe giusta, altrimenti si considera errata. Questo è un valore che viene determinato alla creazione del modello per poter calcolare TP e FP, con una certa confidenza. 
-
-\subsubsection{Selezione Iperparametri}
-
-In generale sul training set vengono determinati i parametri $\Theta$, possono essere i pesi delle connessioni di una rete neurale, mentre il validation set si utilizza per definire 
-gli iperparametri $H$, ma questi devono essere scelti a priori prima di effettuare l'addestramento, per poi cercare i loro valori ottimali. 
-
-Per evitare il sovra-adattamento quando il dataset lo consente si effettua la procedura chiamata ``$k$-Fold Cross-Validation'', ovvero si divide il set di training in $k$, in genere 5 o 10, fold, ovvero piccoli dataset mescolati. Si effettua $k$ volte l'addestramento, dove $k-1$ vengono scelti come set di addestramento e l'ultimo come insieme di testing. In questo modo le prestazioni del modello sono la media delle prestazioni su questi $k$ insiemi e si possono 
-valutare più combinazioni di iperparametri $H$, individuando la combinazione con l'accuratezza migliore. Dopo aver scelto questi iperparametri ottimali si riaddestra il modello sull'intero training set ed a questo punto si possono valutare le prestazioni con il test set. 
-
-Se i dataset sono di piccoli dimensione, si può arrivare al caso estremo del ``Leave One Out'', dove tutti i fold hanno dimensione pari ad uno. Si utilizza come dataset di validation quindi un singolo data point. 
-
-Per effettuare questa procedura bisogna suddividere il dataset, e bisogna mantenere le corrispondenze corrette con le etichette, nonostante gli elementi vengano rimescolati casualmente. 
-Si utilizza la libreria Python Scikit Learn, \verb|sklearn| per effettuare questo processo, tramite le funzioni \verb|shuffling|, \verb|train_test_split| e \verb|cross_val_score|, che valuta da un unico training set $k$ il sistema, restituendo un array con i valori di prestazioni su ognuno dei $k$ addestramenti. 
-In questa libreria sono presenti metodi di classificazione, regressione e clustering. 
-Questa libreria offre la ``Support Vector Machine'', SVM, che permette di valutare ogni iperparametri singolarmente per poter determinare il loro valore ottimale, utilizzando diversi kernel, sempre offerti dalla libreria. 
-
-Gli iperparametri vanno scelti a monte del modello e la ricerca dei valori ottimali può essere laboriosa. Quindi si vuole automatizzare la loro ricerca, il metodo ``Grid Search'' 
-consiste nell'utilizzo di questa SVM, definendo per ogni iperparametro un insieme di valori da provare. Si può quindi effettuare un'analisi sulle combinazioni di tutti i questi possibili valori per tutti gli iperparametri, operazione molto costosa, poiché presenta dei raffinamenti incrementali delle prestazioni. 
-Il kernel rappresenta il modello della SVM utilizzata, può essere lineare o polinomiale. 
-
-Un'altra maniera di operare consiste nella ``Random Search'' selezionando casualmente le 
-combinazioni di valori degli iperparametri. 
-Altre tecniche sono la Bayesian Optimization, selezionando ulteriori combinazioni da verificare dal punto di vista probabilistico, e la ``Evolutionary Optimization'', che si 
-basa sul concetto di evoluzione, dove la popolazione più forte che sopravvive consiste nella combinazione migliore di iperparametri. Una sottoclasse consiste negli algoritmi genetici, che verranno trattati approfonditamente nel corso di Intelligenza Artificiale. 
-
-\subsubsection{Controllare l'Overfitting}
-
-L'obiettivo che si vuole ottenere è la convergenza, ovvero che l'accuratezza aumenti 
-e la funzione di loss diminuisca, sui valori del training set. Si vuole ottenere la convergenza sull'insieme di test per avere un modello adeguato. 
-
-\begin{figure}[H]%
-    \centering%
-    \includegraphics{convergenza.pdf}%
-\end{figure}
-
-Si possono verificare vari casi, la loss potrebbe decresce con andamento oscillatorio, quindi il metodo di ottimizzazione potrebbe non essere efficace, oppure gli iperparametri potrebbero non essere ottimali, oppure il learning rate è inadeguato, questo rappresenta uno dei parametri più complessi da assegnare, quindi è necessaria una ricerca migliore. 
-
-La funzione di loss potrebbe decrescere, ma l'accuratezza potrebbe non aumentare, quindi è stata scelta una funzione di loss errata. 
-
-Inoltre è possibile che l'accuratezza non si avvicini al 100\% sui dati di train, questo può essere poiché i gradi di libertà del modello sono troppo pochi, quindi si dovrebbero aumentare progressivamente per ottenere le prestazioni richieste. 
-I gradi di libertà sono le variabili da specificare affinché sia individuato in maniera univoca il modello utilizzato. Per le reti dipendono dal numero dei neuroni, numero connessioni, etc. Di solito il numero dei gradi di libertà dipende da un iperparametro. 
-
-
-
-Si vorrebbe generalizzare il sistema, ovvero avere un'accuratezza il massimo possibile 
-anche sul valid test, dopo aver addestrato il sistema sul training test. Quindi si cerca la capacità di trasferire l'elevata accuratezza dall'insieme di training ad un altro insieme, su cui il sistema ancora non è stato addestrato. 
-Alcune volte si indica valid invece di test set, quindi si suppone che il valid test sia 
-rappresentativo di test. Il problema che si riscontra da questa analisi è quello del sovra-adattamento. In caso il sistema abbia elevati gradi di libertà, è possibile abbia una accuratezza elevata sul training set, ma il modello non riesce a trasferire l'accuratezza anche su altri insiemi di test. 
-
-\begin{figure}[H]%
-    \centering%
-    \includegraphics{overfitting.pdf}%
-\end{figure}
-
-Si vuole quindi arrestare l'addestramento quando si raggiunge il picco nell'accuratezza sul test set, e questo rappresenta il modello ideale per il dato problema, con certi iperparametri scelti. Per cui monitorando l'andamento dell'accuratezza si può decidere quando arrestare l'addestramento, se questo viene effettuato iterativamente. 
-
-La soglia di Occam, è un principio di economia o parsimonia, ed afferma che se sono possibili più soluzioni, di privilegiare quella più semplice. 
-Si parte quindi da un certo numero di gradi di libertà, analizzando diversi parametri, oltre l'accuratezza, come la regolarità della soluzione appresa. La regolarità può essere controllata introducendo un ulteriore iperparametro, chiamato fattore di regolarizzante alla 
-funzione di loss che penalizza soluzioni irregolari. 
-
-In generale si consiglia di utilizzare dati il più possibile rappresentativi di tutte le possibili situazioni, e di un numero adeguato. Altrimenti si può effettuare del cloud sourcing per etichettare i dati. 
-Nel caso dove è difficile avere pattern rappresentativi del problema si possono trovare delle aree del piano delle soluzioni non necessariamente corrette, e quindi in caso rimuoverle. 
-
-Inoltre è consigliabile automatizzare fin dall'inizio le procedure di valutazione delle prestazioni. Diversi modelli vanno testati utilizzando gli stessi protocolli. Bisogna effettuare test statistici per escludere a priori l'ipotesi nulla, ovvero che le differenza tra vari algoritmi siano dovute al caso, soprattutto in ambienti dove diversi modelli sono molti simili tra di loro. 
 
 \subsection{Classificatore di Bayes}
 
@@ -3766,7 +3796,7 @@ Una probabilità deve rispettare gli assiomi di Kolmogorov:
 \end{itemize}
 Due eventi disgiunti quindi non hanno alcuna correlazione statistica, quindi due feature disgiunte tra di loro non avranno in alcun modo impatto l'una sull'altra. 
 
-Dato uno spazio di probabilità $(\Omega, \mathscr{A},P)$due eventi $A, B\in\mathscr{A}$ si definiscono disgiunti se 
+Dato uno spazio di probabilità $(\Omega, \mathscr{A},P)$due eventi $A, B\in\mathscr{A}$ si definiscono indipendenti se 
 vale la seguente proprietà sulle loro probabilità:
 \begin{equation*}
     P(A\cap B)=P(A)\cdot P(B)
@@ -3784,7 +3814,7 @@ Rappresenta una correzione delle aspettative dell'evento $A$, in seguito all'oss
 
 Si può dimostrare che in condizioni probabilistiche, con distribuzioni di probabilità note, 
 l'approccio probabilistico è la soluzione migliore. 
-Si suppone di avere uno spazio $\vect{V}$ $d$-dimensionale di pattern e un insieme di $s$ classi $W=\left\{w_1\cdots,s\right\}$ disgiunte costituite da elementi di $\vect{V}$. 
+Si suppone di avere uno spazio $\vect{V}$ $d$-dimensionale di pattern e un insieme di $s$ classi $W=\left\{w_1\cdots,w_s\right\}$ disgiunte costituite da elementi di $\vect{V}$. 
 
 Una densità di probabilità diventa una probabilità se viene moltiplicata per un intervallo, 
 arbitrariamente piccolo. 
@@ -3807,21 +3837,36 @@ Dato un pattern $\vect{x}$ da classificare in una delle $s$ classi $w_j$, e note
 
 Quindi massimizzare la probabilità a posteriori corrisponde a massimizzare la probabilità condizionata. Si può dimostrare che la regola di Bayes è quella ottima, poiché minimizza l'errore di classificazione $P(\text{errore})$. Si considera un caso di un classificatore binario, ed uno spazio monodimensionale $\vect{V}$. Data una densità di probabilità, il suo integrale corrisponde alla probabilità di quell'evento. 
 
-La probabilità di errore corrisponde si ottiene dall'integrale sullo spazio degli eventi $\mathbb{R}_i$ della classe $w_i$, dell'evento $x\in V$ di classe $w_j$ e probabilità condizionata $p(x|w_j)\cdot P(w_j)$. Questo si effettua per entrambi le classi e si somma la probabilità di errore in entrambi i casi:
+La probabilità di errore corrispondente si ottiene dalla probabilità che un pattern $\vect{x}\in\vect{V}$, di classe $w_j$, venga identificato come appartenente alla classe $w_i$, nel dominio di definizione $R_i$. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.7]{errore.pdf}%
+    \caption{Errore di Classificazione Binaria}
+\end{figure}
+
+Questo si effettua per entrambi le classi e si somma la probabilità di errore in entrambi i casi:
 \begin{equation*}
     P(\text{errore})=\displaystyle\int_{\mathbb{R}_1}p(x|w_2)P(w_2)\text{d}x+\int_{\mathbb{R}_2}p(x|w_1)P(w_1)\text{d}x
 \end{equation*}
 
-\begin{figure}[H]%
-    \centering%
-    \includegraphics[scale=0.8]{errore.pdf}%
-    \caption{Errore di Classificazione Binaria}
-\end{figure}
-
 Si può identificare un valore di separazione $x^*$, per determinare l'errore come l'area sotto le due curve. Il valore Bayesiano $x_t$ corrisponde all'intersezione tra le due curve di probabilità, e si può dimostrare che se questo valore corrisponde al valore di separazione, allora l'errore riducibile è pari a zero. 
 
-Mentre per le probabilità a priori $P(w_i)$ delle varie classi il calcolo è semplice, 
-per calcolare la densità probabilità condizionale $p(\vect{x}|w_i)$ il procedimento è più complesso. Dato un pattern $\vect{x}\in\vect{V}$, si può considerare un cerchio di raggio $r$, dove $r$ rappresenta un iperparametro, si può stimare la densità di probabilità contando le occorrenze delle varie classi $w_j\in W$ che cadono nell'intorno centrato in $\vect{x}$. 
+Mentre per le probabilità a priori $P(w_i)$ delle varie classi il calcolo è semplice:
+\begin{equation}
+    P(w_i)=\displaystyle\frac{\text{dim}\,\Omega_i}{\text{dim}\,\Omega}
+\end{equation}
+Per calcolare la densità probabilità condizionale $p(\vect{x}|w_i)$ il procedimento è più complesso. Dato un pattern $\vect{x}\in\vect{V}$, si può considerare un cerchio di raggio $r$, dove $r$ rappresenta un iperparametro, e si può stimare la densità di probabilità contando le occorrenze delle varie classi $w_j\in W$ che cadono nell'intorno centrato in $\vect{x}$ $I_r(\vect{x})$:
+\begin{equation}
+    P(\vect{x}|w_i)=\displaystyle\frac{\text{dim}\,I_r^i(\vect{x})}{\text{dim}\,\Omega}
+\end{equation}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.7]{massima_verosimiglianza.pdf}%
+    \caption{Metodo della Massima Verosimiglianza}%
+\end{figure}
+
 La probabilità assoluta $p(\vect{x})$ quindi si calcola date queste due approssimazioni moltiplicando la probabilità a priori delle probabilità delle classi per la densità di probabilità condizionale delle varie classi, da cui si può 
 ottenere grazie al teorema di Bayes le probabilità a posteriori $P(w_i|\vect{x})$. 
 L'approccio Bayesiano assegna quindi un pattern alla probabilità a posteriori maggiore calcolata in questo modo. 
@@ -3849,7 +3894,7 @@ La densità di probabilità della distribuzione normale, monodimensionale, è:
 
 \begin{figure}[H]%
     \centering%
-    \includegraphics[scale=0.8]{gaussiana.pdf}%
+    \includegraphics[scale=0.7]{gaussiana.pdf}%
     \caption{Gaussiana}%
 \end{figure}
 
@@ -3872,19 +3917,14 @@ Per stimare la varianza si calcola la media delle deviazioni standard del campio
 
 In questo modo si può definire la gaussiana dati questi parametri, che rappresenta la densità di probabilità. Per definire la probabilità bisogna moltiplicare questa densità per l'entità di un intervallo. 
 
-\begin{figure}[H]%
-    \centering%
-    \includegraphics[scale=0.8]{massima_verosimiglianza.pdf}%
-    \caption{Metodo della Massima Verosimiglianza}%
-\end{figure}
 
-Tuttavia non si avranno solo due classi o una features, quindi servono dei modi per poter rappresentare queste informazioni. Si utilizza una notazione matriciale, dove ogni pattern $\vect{x}_i$ $i$-esimo rappresenta un vettore con $j$ componenti $x_i^j$. La densità di probabilità nella distribuzione multinormale è definita come:
+Tuttavia non si avranno solo due classi o una features, quindi servono dei modi per poter rappresentare queste informazioni. Si utilizza una notazione matriciale, dove ogni pattern $\vect{x}_i$ $i$-esimo rappresenta un vettore con $d$ componenti $x_i^j$. La densità di probabilità nella distribuzione multinormale è definita come:
 \begin{equation}
     p(\vect{x})=\displaystyle\frac{1}{(2\pi)^{d/2}{|\Sigma|}^{1/2}}e^{-\frac{1}{2}(\vect{x}-\vect{\mu})^T\Sigma^{-1}(\vect{x}-\vect{\mu})}
 \end{equation}
 
 Dove $\Sigma=[\sigma_{ij}]$ rappresenta la matrice di covarianza $d\times d$, e generalizza il concetto di varianza. Questa matrice è sempre simmetrica, ovvero trasposta di sé stessa, e definita positiva, ovvero che gli autovalori sono strettamente positivi. E $\vect{\mu}=[\mu_1,\cdots,\mu_d]$ rappresenta il valore medio, dove $d$ è la dimensione di $\vect{x}$, ovvero il numero di features. 
-In generale la dimensione $d$ della gaussiane dipende dal numero delle features, ed il numero delle gaussiane dal numero di classi. %% TODO check
+In generale la dimensione $d$ della gaussiane dipende dal numero delle features, ed il numero delle gaussiane dal numero di classi. 
 
 Si definisce la matrice trasposta data una matrice $\Sigma=[\sigma_{ij}]$ come $\Sigma^T=[\sigma_{ji}]$. Si definisce la matrice inversa $\Sigma^{-1}$ la matrice tale che moltiplicata per la matrice originaria produce la matrice identità $\Sigma\cdot\Sigma^{-1}=I$. Si definisce la matrice trasposta coniugata come la matrice trasposta dove ogni valore viene sostituito al suo complesso coniugato. 
 
@@ -3942,7 +3982,7 @@ Si può applicare quindi il metodo della massima verosimiglianza allo stesso mod
     \end{bmatrix}=\begin{bmatrix}
         \displaystyle\frac{1}{N}\sum_{j=1}^Nx_j^1\\\vdots\\
         \displaystyle\frac{1}{N}\sum_{j=1}^Nx_j^d
-    \end{bmatrix}=\displaystyle\sum_{i=1}^N\vect{x}_i
+    \end{bmatrix}=\displaystyle\frac{1}{N}\sum_{i=1}^N\vect{x}_i
 \end{equation}
 
 La matrice di covarianza si calcola per ogni $\sigma_{ij}$:
@@ -3951,7 +3991,7 @@ La matrice di covarianza si calcola per ogni $\sigma_{ij}$:
 \end{equation*}
 Si può rappresentare quindi in forma vettoriale come:
 \begin{equation}
-    \Sigma=\displaystyle\frac{1}{N}\sum_{i=1}^N(\vect{x}_i-\vect{\mu})\cdot(\vect{x}_j-\vect{\mu})^T
+    \Sigma=\displaystyle\frac{1}{N}\sum_{i=1}^N(\vect{x}_i-\vect{\mu})\cdot(\vect{x}_i-\vect{\mu})^T
 \end{equation}
 
 \begin{figure}[H]%
@@ -3965,7 +4005,7 @@ Si può rappresentare quindi in forma vettoriale come:
 
 Si rappresentano in uno spazio tridimensionale come una gaussiana bidimensionale, dove 
 le dimensioni del piano danno le due feature, ed il valore della densità di probabilità rappresenta l'altezza di questa superficie. 
-Analogamente dal valore di separazione, per distinguere due classi tra di loro, date le distribuzioni multinormali di queste classi, si utilizza la superficie di separazione . 
+Analogamente dal valore di separazione, per distinguere due classi tra di loro, date le distribuzioni multinormali di queste classi, si utilizza la superficie di separazione. 
 
 \begin{figure}[H]%
     \centering
@@ -3973,7 +4013,7 @@ Analogamente dal valore di separazione, per distinguere due classi tra di loro, 
     \subfloat[\centering Vista Laterale]{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}{\includegraphics[scale=0.8]{superficie_separazione.pdf}}}%
     \qquad
     \subfloat[\centering Vista Verticale]{\usebox{\tempbox}}%
-    \caption{Superficie Decisionale fra Due Distribuzioni Normali Bivariate}
+    \caption{Divisione Superficie Decisionale fra Due Distribuzioni Normali Bivariate}
 \end{figure}
 In questo caso di distribuzione bivariata normale la linea rosso identifica l'iperpiano decisionale tra due classi $w_1$ e $w_2$. 
 
@@ -3982,25 +4022,7 @@ Se il punto cade su una di queste superfici decisionali, allora il suo valore è
 Nel caso di due classi, le curve possono assumere due forme, in genere due iperboli, se le matrici di covarianza sono tra di loro uguali, la superficie è un iperpiano, ovvero ha una dimensione inferiore di uno rispetto alla superficie su cui è definita. Altrimenti se le due matrici di covarianza sono diverse tra di loro la superficie decisionale è un iper-quadratica. 
 
 
-% Classificatore di bayes:
-
-% th di bayes, prob a posteriori calcolare, distinzione da probabilità e densità 
-% probabilità condizionale p(x|w) è il problema, quella a priori ed assoluta no
-% si può stimare 
-% quando applicare l'uno e l'altro
-
-% Stimare la classe di appartenenza di un pattern, date due feature, ed una distribuzione in apprendimento supervisionato. Ogni campione è descritto con un etichetta. 
-% Per stimare il vettore medio e la matrice di covarianza si usano le formule, da ricordare: 
-% Media sui vari componenti del vettore e matrice. 
-% Vettore medio solamente media, per le covarianze $\sigma_{ij}$: valore medio differenza quadratica $(x_i-\mu_i)(x_j-\mu_j)$. 
-% Fornisce informazione sulla rotazione dell'ellisse se $i\neq j$, mentre varianza per $i=j$. Se non si ha la probabilità a priori si può assumere equiprobabile. 
-% Si stima dai campioni in caso. La probabilità condizionale si ottiene dalla gaussiana inserendo i parametri per le due classi. La media pesata di queste rispetto alla probabilità delle classi rappresenta la probabilità assoluta stimata. Si ottiene poi le due probabilità con il sistema di bayes, dopo aver controllato che la probabilità di ognuna delle due classi sommata sia pari ad uno. 
-
-% In caso d maggiore di due descrivere cosa bisogna calcolare, senza effettuarlo. 
-
-%% TODO aggiungere ex su esercizi ^^^
-
-Nel momento in cui bisogna solamente assegnare una classe, non è necessario conoscere l'intervallo di confidenza, e quindi è sufficiente calcolare il numeratore del teorema di Bayes, poiché il denominatore è sempre uguale alla probabilità assoluta. La classe di un certo pattern $\vec{x}$ è quindi dato dal prodotto massimo tra la probabilità condizionale rispetto ad una classe $w_j$ e la probabilità a priori della suddetta classe:
+Nel momento in cui bisogna solamente assegnare una classe, non è necessario conoscere l'intervallo di confidenza, e quindi è sufficiente calcolare il numeratore del teorema di Bayes, poiché il denominatore è sempre uguale alla probabilità assoluta. La classe di un certo pattern $\vect{x}$ è quindi dato dal prodotto massimo tra la probabilità condizionale rispetto ad una classe $w_j$ e la probabilità a priori della suddetta classe:
 \begin{equation}
     b=\text{argmax}\left\{p(\vect{x}|w_j)\cdot P(w_j)\right\}
 \end{equation}
@@ -4081,9 +4103,6 @@ Le ``Kernel Function'' devono essere funzioni densità sempre positive, e con in
 Si prende quindi come iperparametro la deviazione standard della gaussiana per definire la dimensione di questa finestra, invece del lato dell'ipercubo. 
 Questa rappresenta una funzione Soft Kernel, dove il valore dell'iperparametro $h$ non è legato alla lunghezza del lato ma all'ampiezza della funzione scelta per sostituirlo. 
 
-%% TODO definizione matematica Kernel
-
 L'approccio non parametrico con la Parzen Window produce con una funzione Kernel normale e con un iperparametro basso, oppure con una funzione Kernel ipercubo ed iperparametro elevato, una probabilità molto simile. Le superfici di separazione sono molto più nette con un ipercubo, mentre con una funzione Soft Kernel la frontiera di queste superfici di separazione è sfumata e rappresenta un calo della probabilità all'avvicinarsi ad esse. 
-
 
 \end{document}

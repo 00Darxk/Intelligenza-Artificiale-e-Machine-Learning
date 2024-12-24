@@ -13,10 +13,10 @@
         exp(-6*( (x-\centerx)^2 + ((y-\centery)^2)/2+(x-\centerx)*(y-\centery))/3 )+
         exp(-6*( (x-\centerx+1)^2 + ((y-\centery+1)^2)/2+(x-\centerx+1)*(y-\centery+1))/3 )
     };
-    \addplot[purple, thick, smooth, domain=-1:4]{-x};
+    \addplot[purple, thick, smooth, domain=-0.5:3.5]{-1.4*x+0.5};
     \node[circle,inner sep=1pt,fill=blue,pin=90:$\vect{\mu}_1$] 
         at (axis cs:\centerx,\centery,2) {};
-    \node[circle,inner sep=1pt,fill=blue,pin=90:$\vect{\mu}_2$] 
+    \node[circle,inner sep=1pt,fill=blue,pin=113:$\vect{\mu}_2$] 
         at (axis cs:\centerx-1,\centery-1,2) {};
     \end{axis}
 \end{tikzpicture}

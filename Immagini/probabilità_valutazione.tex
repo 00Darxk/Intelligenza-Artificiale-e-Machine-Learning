@@ -1,0 +1,17 @@
+% !TEX TS-program = lualatex
+\documentclass{standalone}
+\usepackage{tikz, pgfplots}
+\pgfplotsset{compat=1.18}
+\begin{document}
+\begin{tikzpicture}
+    \begin{axis}[
+        xlabel=$\Delta E$,
+        ylabel=$p$,
+        ymin=0, ymax=1,
+        xmin=-100,xmax=100,
+    ]
+        \addplot[smooth, domain=-100:100]{1/(1+exp(x/20))};
+        \draw[dashed,orange](0,0)--(0,0.5)node[black,draw, circle, fill=black, inner sep=0.75pt]{}--(-100,0.5)node[black ,midway, above]{$0.5$};
+    \end{axis}
+\end{tikzpicture}
+\end{document}

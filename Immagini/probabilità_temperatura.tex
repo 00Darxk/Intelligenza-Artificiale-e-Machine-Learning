@@ -1,0 +1,17 @@
+% !TEX TS-program = lualatex
+\documentclass{standalone}
+\usepackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={$T$},
+    ylabel={$p$},
+    xmin=1,xmax=50,
+    ymin=0, ymax=1,
+]
+    \addplot[smooth,domain=1:50]{1/(1+exp(-10/x))};
+    \draw[dashed, orange](0,0.5)--++(50,0)node[midway, above,black]{$0.5$};
+\end{axis}
+\end{tikzpicture}
+\end{document}
